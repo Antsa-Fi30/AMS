@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+*.manifest
+*.spec
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# Django
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+*.mo
+__pycache__/
+local_settings.py
+
+# Django migrations
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# Pytest / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# VSCode / IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node (if frontend inside repo)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# OS files
+.DS_Store
+Thumbs.db
