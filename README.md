@@ -1,1 +1,1 @@
-# Appointment Management System (for doctor)
+# Appointment Management System (for doctors)
