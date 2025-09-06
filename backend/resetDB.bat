@@ -1,13 +1,13 @@
 @echo off
 echo ============================================
-echo 🔄 RESET COMPLET DE LA BASE DE DONNEES DJANGO
+echo  RESET COMPLET DE LA BASE DE DONNEES DJANGO
 echo ============================================
 
 if exist db.sqlite3 (
     del db.sqlite3
     echo  Base de donnees supprimee
 ) else (
-    echo ⚠️ Pas de fichier db.sqlite3 trouve
+    echo Pas de fichier db.sqlite3 trouve
 )
 
 echo  Suppression des fichiers de migrations...
