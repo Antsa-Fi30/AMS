@@ -118,7 +118,7 @@ const SignInCard = () => {
             id="phone"
             name="phone"
             type="tel"
-            placeholder="without 0 or +261"
+            placeholder="ex: 342577814"
             autoComplete="tel"
             required
             fullWidth

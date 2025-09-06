@@ -35,6 +35,7 @@ export const green = {
   700: "hsl(120, 75%, 16%)",
   800: "hsl(120, 84%, 10%)",
   900: "hsl(120, 87%, 6%)",
+  custom: "hsl(152.11,66.36%,20.98%)",
 };
 
 export const orange = {

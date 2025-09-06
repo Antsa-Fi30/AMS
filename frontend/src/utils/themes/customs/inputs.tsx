@@ -6,7 +6,7 @@ import { toggleButtonClasses } from "@mui/material/ToggleButton";
 import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutlineBlankRounded";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
-import { gray, brand } from "../colors";
+import { gray, brand, green } from "../colors";
 
 export const inputsCustomizations: Components<Theme> = {
   MuiButtonBase: {
@@ -56,13 +56,14 @@ export const inputsCustomizations: Components<Theme> = {
             },
             style: {
               color: "white",
-              backgroundColor: gray[900],
-              backgroundImage: `linear-gradient(to bottom, ${gray[700]}, ${gray[800]})`,
-              boxShadow: `inset 0 1px 0 ${gray[600]}, inset 0 -1px 0 1px hsl(220, 0%, 0%)`,
-              border: `1px solid ${gray[700]}`,
+              backgroundColor: green["custom"],
+              // backgroundImage: `linear-gradient(to bottom, ${gray[700]}, ${gray[800]})`,
+              // boxShadow: `inset 0 1px 0 ${gray[600]}, inset 0 -1px 0 1px hsl(220, 0%, 0%)`,
+              // border: `1px solid ${gray[700]}`,
+              border: `2px solid ${green[300]}`,
               "&:hover": {
                 backgroundImage: "none",
-                backgroundColor: gray[700],
+                backgroundColor: green[400],
                 boxShadow: "none",
               },
               "&:active": {
