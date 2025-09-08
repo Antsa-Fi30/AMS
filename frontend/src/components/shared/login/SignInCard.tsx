@@ -2,20 +2,28 @@ import { useState, type FormEvent } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
-import Checkbox from "@mui/material/Checkbox";
-import Divider from "@mui/material/Divider";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import ForgotPassword from "./ForgotPassword";
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from "../CustomIcons";
 import { IconButton, InputAdornment } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Person from "@mui/icons-material/Person";
+import PhoneIcon from "@mui/icons-material/Phone";
+import {
+  authenticate,
+  signIn,
+  type AuthData,
+  type RegisterData,
+} from "../../../services/AuthServices";
+// import Checkbox from "@mui/material/Checkbox";
+// import { GoogleIcon, FacebookIcon, SitemarkIcon } from "../CustomIcons";
+// import Divider from "@mui/material/Divider";
+// import FormControlLabel from "@mui/material/FormControlLabel";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -35,7 +43,11 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }),
 }));
 
-const SignInCard = () => {
+interface SignInCardProps {
+  register?: boolean;
+}
+
+const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
   const [phoneError, setPhoneError] = useState(false);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
@@ -59,18 +71,53 @@ const SignInCard = () => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    console.log({
-      phone: `+261${data.get("phone")}`,
-      password: data.get("password"),
-    });
+
+    if (!register) {
+      const rawPassword = data.get("password");
+      const answers: AuthData = {
+        phone_number: `+261${data.get("phone")}`,
+        password: typeof rawPassword === "string" ? rawPassword : null,
+      };
+
+      authenticate(answers);
+    } else {
+      const rawPassword = data.get("password");
+      const rawName = data.get("name");
+      const rawPasswordConfirmation = data.get("confirmPassword");
+      const rawEmail = data.get("email");
+
+      const answers: RegisterData = {
+        name: typeof rawName === "string" ? rawName : null,
+        email: typeof rawEmail === "string" ? rawEmail : null,
+        phone_number: `+261${data.get("phone")}`,
+        password1: typeof rawPassword === "string" ? rawPassword : null,
+        password2:
+          typeof rawPasswordConfirmation === "string"
+            ? rawPasswordConfirmation
+            : null,
+      };
+
+      signIn(answers);
+    }
   };
 
   const validateInputs = () => {
+    const email = document.getElementById("email") as HTMLInputElement;
     const phone = document.getElementById("phone") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
 
     let isValid = true;
 
+    if (register) {
+      if (!email.value) {
+        setPhoneError(true);
+        setPhoneErrorMessage("Please enter a valid email address");
+        isValid = false;
+      } else {
+        setPhoneError(false);
+        setPhoneErrorMessage("");
+      }
+    }
     if (!phone.value) {
       setPhoneError(true);
       setPhoneErrorMessage("Please enter a valid phone number");
@@ -94,22 +141,75 @@ const SignInCard = () => {
 
   return (
     <Card variant="outlined">
-      <Box sx={{ display: { xs: "flex", md: "none" } }}>
+      {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>
         <SitemarkIcon />
-      </Box>
-      <Typography
-        component="h1"
-        variant="h4"
-        sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
-      >
-        Sign in
-      </Typography>
+      </Box> */}
+      {register ? (
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+        >
+          Sign in
+        </Typography>
+      ) : (
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+        >
+          Log In
+        </Typography>
+      )}
       <Box
         component="form"
         onSubmit={handleSubmit}
         noValidate
         sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2 }}
       >
+        {register && (
+          <>
+            <FormControl>
+              <FormLabel htmlFor="phone">Your name</FormLabel>
+              <TextField
+                error={phoneError}
+                helperText={phoneErrorMessage}
+                id="name"
+                name="name"
+                type="text"
+                placeholder="ex: Rabe"
+                autoComplete="tel"
+                required
+                fullWidth
+                variant="outlined"
+                color={phoneError ? "error" : "primary"}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Person />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                name="email"
+                autoComplete="email"
+                variant="outlined"
+                color={passwordError ? "error" : "primary"}
+              />
+            </FormControl>
+          </>
+        )}
         <FormControl>
           <FormLabel htmlFor="phone">Phone Number</FormLabel>
           <TextField
@@ -134,7 +234,9 @@ const SignInCard = () => {
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">+261</InputAdornment>
+                  <InputAdornment position="start">
+                    <PhoneIcon sx={{ marginRight: 1 }} /> +261
+                  </InputAdornment>
                 ),
               },
               htmlInput: {
@@ -147,15 +249,17 @@ const SignInCard = () => {
         <FormControl>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <FormLabel htmlFor="password">Password</FormLabel>
-            <Link
-              component="button"
-              type="button"
-              onClick={handleClickOpen}
-              variant="body2"
-              sx={{ alignSelf: "baseline" }}
-            >
-              Forgot your password?
-            </Link>
+            {!register && (
+              <Link
+                component="button"
+                type="button"
+                onClick={handleClickOpen}
+                variant="body2"
+                sx={{ alignSelf: "baseline" }}
+              >
+                Forgot your password?
+              </Link>
+            )}
           </Box>
           <TextField
             error={passwordError}
@@ -187,10 +291,57 @@ const SignInCard = () => {
             color={passwordError ? "error" : "primary"}
           />
         </FormControl>
-        <FormControlLabel
+        {register && (
+          <FormControl>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <FormLabel htmlFor="password">Confirm your password</FormLabel>
+              {!register && (
+                <Link
+                  component="button"
+                  type="button"
+                  onClick={handleClickOpen}
+                  variant="body2"
+                  sx={{ alignSelf: "baseline" }}
+                >
+                  Forgot your password?
+                </Link>
+              )}
+            </Box>
+            <TextField
+              error={passwordError}
+              helperText={passwordErrorMessage}
+              name="confirmPassword"
+              placeholder="••••••"
+              type={typePassword ? "text" : "password"}
+              id="confirmPassword"
+              autoComplete="current-password"
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setTypePassword(!typePassword)}
+                        edge="end"
+                        disableRipple={false}
+                      >
+                        {typePassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              autoFocus
+              required
+              fullWidth
+              variant="outlined"
+              color={passwordError ? "error" : "primary"}
+            />
+          </FormControl>
+        )}
+        {/* <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}
           label="Remember me"
-        />
+        /> */}
         <ForgotPassword open={open} handleClose={handleClose} />
         <Button
           type="submit"
@@ -200,28 +351,39 @@ const SignInCard = () => {
         >
           Sign in
         </Button>
-        <Typography sx={{ textAlign: "center" }}>
-          Don&apos;t have an account?{" "}
-          <span>
-            <Link
-              href="/material-ui/getting-started/templates/sign-in/"
-              variant="body2"
-              sx={{ alignSelf: "center" }}
-            >
-              Sign up
-            </Link>
-          </span>
-        </Typography>
+        {register ? (
+          <Typography sx={{ textAlign: "center" }}>
+            Already have an account?{" "}
+            <span>
+              <Link href="/" variant="body2" sx={{ alignSelf: "center" }}>
+                Log in
+              </Link>
+            </span>
+          </Typography>
+        ) : (
+          <Typography sx={{ textAlign: "center" }}>
+            Don&apos;t have an account?{" "}
+            <span>
+              <Link
+                href="/signin "
+                variant="body2"
+                sx={{ alignSelf: "center" }}
+              >
+                Sign up
+              </Link>
+            </span>
+          </Typography>
+        )}
       </Box>
-      <Divider>or</Divider>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      {/*<Divider>or</Divider>
+       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <Button
           fullWidth
           variant="outlined"
           onClick={() => alert("Sign in with Google")}
           startIcon={<GoogleIcon />}
         >
-          Sign in with Google
+          {!register ? "Log in" : "Sign in"} with Google
         </Button>
         <Button
           fullWidth
@@ -229,9 +391,9 @@ const SignInCard = () => {
           onClick={() => alert("Sign in with Facebook")}
           startIcon={<FacebookIcon />}
         >
-          Sign in with Facebook
+          {!register ? "Log in" : "Sign in"} in with Facebook
         </Button>
-      </Box>
+      </Box> */}
     </Card>
   );
 };

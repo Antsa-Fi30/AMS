@@ -4,8 +4,14 @@ import { Box } from "@mui/material";
 const Register = () => {
   return (
     <div>
-      <Box margin={"auto"}>
-        <SignInCard />
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+        p={2}
+      >
+        <SignInCard register />
       </Box>
     </div>
   );

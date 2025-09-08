@@ -39,7 +39,7 @@ class UserLoginAPIView(GenericAPIView):
         data = serializer.data
         data["tokens"] = {"refresh": str(token), "access": str(token.access_token)}
 
-        return Response(data, status=status.HTTP_202_ACCEPTED)
+        return Response(data["tokens"], status=status.HTTP_202_ACCEPTED)
 
 
 class UserLogoutAPIView(GenericAPIView):
