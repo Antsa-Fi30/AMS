@@ -3,5 +3,11 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": ".", // dit à TS que la racine est le dossier du projet
+    "paths": {
+      "@/*": ["src/*"] // dit que "@/..." pointe vers "src/..."
+    }
+  }
 }
