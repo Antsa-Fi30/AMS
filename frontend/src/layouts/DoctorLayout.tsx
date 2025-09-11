@@ -1,13 +1,41 @@
-import Header from "../components/doctor/Header";
-import { Outlet } from "react-router-dom";
+import { alpha } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import AppNavbar from "../components/doctor/AppNavbar";
+
+import Sidebar from "../components/doctor/Sidebar";
 
 const DoctorLayout = () => {
   return (
-    <div>
-      <Header />
-      <Outlet />
-    </div>
+    <>
+      <Box sx={{ display: "flex" }}>
+        <Sidebar />
+        <AppNavbar />
+        {/* Main content */}
+        <Box
+          component="main"
+          sx={(theme) => ({
+            flexGrow: 1,
+            backgroundColor: theme.vars
+              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+              : alpha(theme.palette.background.default, 1),
+            overflow: "auto",
+          })}
+        >
+          <Stack
+            spacing={2}
+            sx={{
+              alignItems: "center",
+              mx: 3,
+              pb: 5,
+              mt: { xs: 8, md: 0 },
+            }}
+          >
+            <>Hello World</>
+          </Stack>
+        </Box>
+      </Box>
+    </>
   );
 };
-
 export default DoctorLayout;

@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import AppointmentViewSet, doctor_appointments, accepted_appointment
+from .views import AppointmentViewSet
 
 # from .views import create_checkout_session
 

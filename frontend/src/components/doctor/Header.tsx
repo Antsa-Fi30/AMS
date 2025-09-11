@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { logout } from "../../services/AuthServices";
 import { useNavigate } from "react-router-dom";
 
@@ -26,9 +26,11 @@ const Header = () => {
 
   return (
     <div>
-      <Button onClick={handleLogOut} variant="contained" color="error">
-        Log out
-      </Button>
+      <Box className="shadow-2xl bg-red-300">
+        <Button onClick={handleLogOut} variant="contained" color="error">
+          Log out
+        </Button>
+      </Box>
     </div>
   );
 };
