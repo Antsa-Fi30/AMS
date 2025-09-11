@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import Header from "../components/doctor/Header";
 
 const DoctorLayout = () => {
   return (
-    <div>DoctorLayout</div>
-  )
-}
+    <div>
+      <Header />
+      Doctor
+    </div>
+  );
+};
 
-export default DoctorLayout
+export default DoctorLayout;

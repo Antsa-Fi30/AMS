@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
@@ -47,6 +47,8 @@ interface SignInCardProps {
   register?: boolean;
 }
 
+import { useNavigate } from "react-router-dom";
+
 const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
   const [phoneError, setPhoneError] = useState(false);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
@@ -55,6 +57,14 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
   const [open, setOpen] = useState(false);
   const [typePassword, setTypePassword] = useState<boolean>(false);
   const [phone, setPhone] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("refresh")) {
+      navigate("/doctor");
+    }
+  }, []);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -79,12 +89,49 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
         password: typeof rawPassword === "string" ? rawPassword : null,
       };
 
-      authenticate(answers);
+      const auth = async (answers: AuthData) => {
+        try {
+          const data = await authenticate(answers);
+          localStorage.setItem("access", data.access);
+          localStorage.setItem("refresh", data.refresh);
+          if (localStorage.getItem("refresh")) {
+            navigate("/doctor");
+          }
+          alert("login successfull");
+        } catch (err) {
+          if (err instanceof Error) {
+            console.error(err.message);
+            alert("login failed : " + err.message);
+          } else {
+            console.error(err);
+          }
+        }
+      };
+
+      auth(answers);
     } else {
       const rawPassword = data.get("password");
       const rawName = data.get("name");
       const rawPasswordConfirmation = data.get("confirmPassword");
       const rawEmail = data.get("email");
+      const register = async (answers: RegisterData) => {
+        try {
+          const data = await signIn(answers);
+          localStorage.setItem("access", data.tokens.access);
+          localStorage.setItem("refresh", data.tokens.refresh);
+          if (localStorage.getItem("refresh")) {
+            navigate("/doctor");
+          }
+          alert("regsiter successfull");
+        } catch (err) {
+          if (err instanceof Error) {
+            console.error(err.message);
+            alert("regsiter failed : " + err.message);
+          } else {
+            console.error(err);
+          }
+        }
+      };
 
       const answers: RegisterData = {
         name: typeof rawName === "string" ? rawName : null,
@@ -97,7 +144,7 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
             : null,
       };
 
-      signIn(answers);
+      register(answers);
     }
   };
 
