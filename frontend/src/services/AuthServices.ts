@@ -40,3 +40,16 @@ export const signIn = async (data: RegisterData) => {
     throw new Error(errorMessage);
   }
 };
+
+export const logout = async (token: string | null) => {
+  try {
+    const response = await axios.post(`${apiUrl}logout/`, { refresh: token });
+    return response.data;
+  } catch (err) {
+    let errorMessage = "Logging out failed";
+    if (err instanceof Error) {
+      errorMessage += " : " + err.message;
+    }
+    throw new Error(errorMessage);
+  }
+};

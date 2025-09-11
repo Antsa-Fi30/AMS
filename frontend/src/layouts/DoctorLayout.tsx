@@ -1,9 +1,13 @@
-import React from 'react'
+import Header from "../components/doctor/Header";
+import { Outlet } from "react-router-dom";
 
 const DoctorLayout = () => {
   return (
-    <div>DoctorLayout</div>
-  )
-}
+    <div>
+      <Header />
+      <Outlet />
+    </div>
+  );
+};
 
-export default DoctorLayout
+export default DoctorLayout;
