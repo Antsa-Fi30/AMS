@@ -1,10 +1,10 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
   const access = localStorage.getItem("access");
 
   if (access) {
-    return <Navigate to={"/doctor"} replace />;
+    return <Outlet />;
   }
 
   return <Navigate to="/login" />;

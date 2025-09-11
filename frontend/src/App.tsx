@@ -16,9 +16,9 @@ const App = () => {
         <Route path="/signin" element={<Register />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="doctor/" element={<DoctorLayout />}>
+          <Route path="doctor" element={<DoctorLayout />}>
             <Route index element={<Navigate to="home" replace />} />
-            <Route path="home" index element={<Dashboard />} />
+            <Route path="home" element={<Dashboard />} />
           </Route>
         </Route>
 
