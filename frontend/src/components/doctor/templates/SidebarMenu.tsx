@@ -7,12 +7,12 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
-import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
+// import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 
 const mainListItems = [
   { text: "Home", icon: <HomeRoundedIcon />, path: "/doctor/home" },
   { text: "Tickets", icon: <AnalyticsRoundedIcon />, path: "/doctor/tickets" },
-  { text: "Clients", icon: <PeopleRoundedIcon />, path: "/doctor/clients" },
+  // { text: "Clients", icon: <PeopleRoundedIcon />, path: "/doctor/clients" },
 ];
 
 const SidebarMenu = () => {

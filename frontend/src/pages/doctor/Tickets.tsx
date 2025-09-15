@@ -1,4 +1,4 @@
-import DataTables from "../../components/doctor/DataTables";
+import DataTables from "../../components/doctor/templates/DataTables";
 
 const Tickets = () => {
   return (
