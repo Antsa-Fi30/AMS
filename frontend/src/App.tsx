@@ -5,13 +5,13 @@ import Register from "./pages/shared/Register";
 import DoctorLayout from "./layouts/DoctorLayout";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 import Dashboard from "./pages/doctor/Dashboard";
+import Tickets from "./pages/doctor/Tickets";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
-
         <Route path="/login" element={<Login />} />
         <Route path="/signin" element={<Register />} />
 
@@ -19,6 +19,7 @@ const App = () => {
           <Route path="doctor" element={<DoctorLayout />}>
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<Dashboard />} />
+            <Route path="tickets" element={<Tickets />} />
           </Route>
         </Route>
 
