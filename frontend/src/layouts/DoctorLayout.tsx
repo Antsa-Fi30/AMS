@@ -1,9 +1,11 @@
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import AppNavbar from "../components/doctor/AppNavbar";
+import AppNavbar from "../components/doctor/templates/AppNavbar";
 
-import Sidebar from "../components/doctor/Sidebar";
+import Sidebar from "../components/doctor/templates/Sidebar";
+import { Outlet } from "react-router-dom";
+import Header from "../components/doctor/templates/Header";
 
 const DoctorLayout = () => {
   return (
@@ -22,16 +24,11 @@ const DoctorLayout = () => {
             overflow: "auto",
           })}
         >
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: "center",
-              mx: 3,
-              pb: 5,
-              mt: { xs: 8, md: 0 },
-            }}
-          >
-            <>Hello World</>
+          <Box sx={{ mb: 3 }}>
+            <Header />
+          </Box>
+          <Stack spacing={5} sx={{ p: 2 }}>
+            <Outlet />
           </Stack>
         </Box>
       </Box>

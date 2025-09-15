@@ -11,7 +11,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import MenuButton from "./MenuButton";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../services/AuthServices";
+import { logout } from "../../../services/AuthServices";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",

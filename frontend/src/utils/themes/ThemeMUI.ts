@@ -11,6 +11,11 @@ import { inputsCustomizations } from "./customs/inputs";
 import { navigationCustomizations } from "./customs/navigations";
 import { surfacesCustomizations } from "./customs/surfaces";
 
+//Fonts
+import PoppinsBold from "../../assets/fonts/Poppins-Bold.ttf";
+import PoppinsMedium from "../../assets/fonts/Poppins-Medium.ttf";
+import Poppins from "../../assets/fonts/Poppins-Regular.ttf";
+
 declare module "@mui/material/Paper" {
   interface PaperPropsVariantOverrides {
     highlighted: true;
@@ -135,44 +140,47 @@ export const getDesignTokens = (mode: PaletteMode) => {
       },
     },
     typography: {
-      fontFamily: "Inter, sans-serif",
+      fontFamily: "Poppins, Arial, sans-serif",
       h1: {
         fontSize: defaultTheme.typography.pxToRem(48),
-        fontWeight: 600,
+        fontWeight: 700,
         lineHeight: 1.2,
         letterSpacing: -0.5,
       },
       h2: {
         fontSize: defaultTheme.typography.pxToRem(36),
-        fontWeight: 600,
+        fontWeight: 700,
         lineHeight: 1.2,
       },
       h3: {
         fontSize: defaultTheme.typography.pxToRem(30),
         lineHeight: 1.2,
+        fontWeight: 400, // normal
       },
       h4: {
         fontSize: defaultTheme.typography.pxToRem(24),
-        fontWeight: 600,
+        fontWeight: 700,
         lineHeight: 1.5,
       },
       h5: {
         fontSize: defaultTheme.typography.pxToRem(20),
-        fontWeight: 600,
+        fontWeight: 700,
       },
       h6: {
         fontSize: defaultTheme.typography.pxToRem(18),
-        fontWeight: 600,
+        fontWeight: 700,
       },
       subtitle1: {
         fontSize: defaultTheme.typography.pxToRem(18),
+        fontWeight: 400,
       },
       subtitle2: {
         fontSize: defaultTheme.typography.pxToRem(14),
-        fontWeight: 500,
+        fontWeight: 500, // Medium
       },
       body1: {
         fontSize: defaultTheme.typography.pxToRem(14),
+        fontWeight: 400,
       },
       body2: {
         fontSize: defaultTheme.typography.pxToRem(14),
@@ -357,12 +365,45 @@ export const shadows = defaultShadows;
 export const createAppTheme = (mode: "light" | "dark") =>
   createTheme({
     ...getDesignTokens(mode),
-    typography,
     shape,
     shadows,
     components: {
       ...inputsCustomizations,
       ...navigationCustomizations,
       ...surfacesCustomizations,
+      MuiCssBaseline: {
+        styleOverrides: `
+        @font-face {
+          font-family: 'Poppins';
+          font-style: normal;
+          font-display: swap;
+          font-weight: 400;
+          src: local('Poppins'),
+              local('Poppins-Regular'),
+              url(${Poppins}) format('truetype');
+          unicode-range: U+0000-00FF;
+        }
+
+        @font-face {
+          font-family: 'Poppins';
+          font-style: normal;
+          font-display: swap;
+          font-weight: 500; /* Medium */
+          src: local('Poppins Medium'),
+              local('Poppins-Medium'),
+              url(${PoppinsMedium}) format('truetype');
+        }
+
+        @font-face {
+          font-family: 'Poppins';
+          font-style: normal;
+          font-display: swap;
+          font-weight: 700; /* Bold */
+          src: local('Poppins Bold'),
+              local('Poppins-Bold'),
+              url(${PoppinsBold}) format('truetype');
+        }
+      `,
+      },
     },
   });

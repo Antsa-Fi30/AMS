@@ -33,6 +33,18 @@ const Sidebar = () => {
     >
       <Box
         sx={{
+          p: 2,
+          borderBottom: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Doctor Dashboard
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
           overflow: "auto",
           height: "100%",
           display: "flex",
