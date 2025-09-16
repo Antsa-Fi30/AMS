@@ -15,6 +15,7 @@ import {
   CalendarToday,
 } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
+import type React from "react";
 
 // Composants stylisés
 
@@ -42,7 +43,19 @@ const IconWrapper = styled(Box)(({ theme }) => ({
   marginRight: "12px",
 }));
 
-const UpcomingAppointment = () => {
+type Appointment = {
+  id: number;
+  name: string;
+  date: string;
+  service: string;
+};
+
+const UpcomingAppointment: React.FC<Appointment> = ({
+  id,
+  name,
+  date,
+  service,
+}) => {
   return (
     <Card sx={{ maxWidth: 480, width: "100%" }}>
       <CardContent sx={{ p: 3 }}>
@@ -66,7 +79,7 @@ const UpcomingAppointment = () => {
             }}
           />
           <Typography variant="body2" color="text.secondary">
-            #APPT-12345
+            #APPT-12345{id}
           </Typography>
         </Box>
 
@@ -84,10 +97,7 @@ const UpcomingAppointment = () => {
           />
           <Box sx={{ ml: 2 }}>
             <Typography variant="h6" fontWeight="600">
-              Dr. Remy Sharp
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Dental Surgeon
+              {name}
             </Typography>
           </Box>
         </Box>
@@ -110,12 +120,12 @@ const UpcomingAppointment = () => {
                 Date
               </Typography>
               <Typography variant="body1" fontWeight="500">
-                February 22, 2024
+                {date}
               </Typography>
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+          {/* <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
             <IconWrapper>
               <AccessTime color="primary" fontSize="small" />
             </IconWrapper>
@@ -124,10 +134,10 @@ const UpcomingAppointment = () => {
                 Time
               </Typography>
               <Typography variant="body1" fontWeight="500">
-                05:00 AM - 05:45 AM
+                {time}
               </Typography>
             </Box>
-          </Box>
+          </Box> */}
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconWrapper>
@@ -138,7 +148,7 @@ const UpcomingAppointment = () => {
                 Reason:
               </Typography>
               <Typography variant="body1" fontWeight="500">
-                Dentition - Routine Checkup
+                {service}
               </Typography>
             </Box>
           </Box>
