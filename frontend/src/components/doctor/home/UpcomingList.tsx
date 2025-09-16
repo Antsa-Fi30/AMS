@@ -12,7 +12,7 @@ import UpcomingAppointment from "./UpcomingAppointment";
 const UpcomingList = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const scrollContainerRef = React.useRef(null);
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
   // Sample data for appointments
   const appointments = [
@@ -66,7 +66,7 @@ const UpcomingList = () => {
     },
   ];
 
-  const scroll = (direction) => {
+  const scroll = (direction: string) => {
     if (scrollContainerRef.current) {
       const scrollAmount = 500;
       if (direction === "left") {
@@ -88,10 +88,10 @@ const UpcomingList = () => {
           top: "50%",
           transform: "translateY(-50%)",
           zIndex: 2,
-          backgroundColor: "white",
+          backgroundColor: "background.paper",
           boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
           "&:hover": {
-            backgroundColor: "grey.100",
+            backgroundColor: "background.100",
           },
           display: { xs: "none", md: "flex" },
         }}
@@ -107,10 +107,10 @@ const UpcomingList = () => {
           top: "50%",
           transform: "translateY(-50%)",
           zIndex: 2,
-          backgroundColor: "white",
+          backgroundColor: "background.paper",
           boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
           "&:hover": {
-            backgroundColor: "grey.100",
+            backgroundColor: "background.100",
           },
           display: { xs: "none", md: "flex" },
         }}

@@ -35,8 +35,8 @@ const Stats = () => {
     },
   ];
   return (
-    <div className="m-auto">
-      <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+    <div>
+      <Box display="flex" justifyContent="center" alignItems="center">
         <Box>
           <Stack
             direction={{ xs: "column", md: "row" }}
