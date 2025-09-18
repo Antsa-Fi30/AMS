@@ -9,7 +9,8 @@ class Appointment(models.Model):
         ("rejected", "Rejected"),
         ("canceled", "Canceled"),
     ]
-    title = models.CharField(max_length=150, null=True, blank=True)
+    descriptions = models.CharField(max_length=150, null=True, blank=True)
+    reason = models.CharField(max_length=150, null=True, blank=True)
     patient = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # It's a place for a model, but here ...an exception
         on_delete=models.CASCADE,
