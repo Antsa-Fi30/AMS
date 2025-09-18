@@ -1,6 +1,6 @@
-import { Box, IconButton, OutlinedInput, InputAdornment } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { Box, IconButton } from "@mui/material";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import Searchbar from "./Searchbar";
 
 const Header = () => {
   return (
@@ -16,20 +16,7 @@ const Header = () => {
       }}
     >
       {/* Champ de recherche */}
-      <OutlinedInput
-        placeholder="Rechercher..."
-        startAdornment={
-          <InputAdornment position="start">
-            <SearchIcon color="action" />
-          </InputAdornment>
-        }
-        sx={{
-          width: 300,
-          borderRadius: 3,
-          backgroundColor: "background.default",
-        }}
-      />
-
+      <Searchbar />
       {/* Bouton notification */}
       <IconButton color="primary">
         <NotificationsOutlinedIcon />

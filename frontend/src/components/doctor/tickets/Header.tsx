@@ -1,12 +1,22 @@
-import { IconButton } from "@mui/material";
-import React from "react";
+import { Button, IconButton, Stack, Typography } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import Searchbar from "../templates/Searchbar";
+
 const Header = () => {
   return (
     <div>
-      <IconButton>
-        <RefreshIcon />
-      </IconButton>
+      <Stack direction={"row"} justifyContent={"space-between"}>
+        <Typography variant="h3" fontWeight={700}>
+          Appointment tickets
+          <IconButton>
+            <RefreshIcon />
+          </IconButton>
+        </Typography>
+        <Stack direction={"row"} spacing={5}>
+          <Searchbar />
+          <Button variant="contained">Export to csv</Button>
+        </Stack>
+      </Stack>
     </div>
   );
 };
