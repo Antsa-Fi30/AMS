@@ -11,14 +11,14 @@ class AppointmentSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = [
             "id",
-            "title",
+            "reason",
             "patient",
             "patient_name",
             "patient_phone",
             "doctor",
             "doctor_name",
             "status",
-            "notes",
+            "descriptions",
             "date",
             "time",
             "expire",

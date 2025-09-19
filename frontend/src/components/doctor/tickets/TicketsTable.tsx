@@ -1,100 +1,97 @@
-import * as React from "react";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
+import React, { useState } from "react";
+import type { AppointmentType } from "../../../redux/appointmentsApi";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Chip,
+  IconButton,
+  Stack,
+  TablePagination,
+} from "@mui/material";
+
+import { Close, Done } from "@mui/icons-material";
 
 interface Column {
-  id: "patient" | "doctor" | "reason" | "date" | "time" | "status";
+  id:
+    | "id"
+    | "Patient"
+    | "Phone"
+    | "Reason"
+    | "Created"
+    | "Status"
+    | "Date"
+    | "Time";
   label: string;
   minWidth?: number;
-  align?: "right" | "left" | "center";
+  align?: "right";
+  format?: (value: number) => string;
 }
 
 const columns: readonly Column[] = [
-  { id: "patient", label: "Patient", minWidth: 150 },
-  { id: "doctor", label: "Doctor", minWidth: 150 },
-  { id: "reason", label: "Reason", minWidth: 200 },
-  { id: "date", label: "Date", minWidth: 100 },
-  { id: "time", label: "Time", minWidth: 100 },
-  { id: "status", label: "Status", minWidth: 120, align: "center" },
+  { id: "id", label: "Id", minWidth: 170 },
+  { id: "Patient", label: "Patient", minWidth: 100 },
+  {
+    id: "Phone",
+    label: "Phone",
+    minWidth: 170,
+    align: "right",
+    // format: (value: number) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "Reason",
+    label: "Reason",
+    minWidth: 170,
+    align: "right",
+    // format: (value: number) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "Created",
+    label: "Created_at",
+    minWidth: 170,
+    align: "right",
+    // format: (value: number) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "Status",
+    label: "Status",
+    minWidth: 170,
+    align: "right",
+    // format: (value: number) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "Date",
+    label: "Date",
+    minWidth: 170,
+    align: "right",
+    // format: (value: number) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "Time",
+    label: "Time",
+    minWidth: 170,
+    align: "right",
+    // format: (value: number) => value.toFixed(2),
+  },
 ];
 
-interface Appointment {
-  id: number;
-  patient: string;
-  doctor: string;
-  reason: string;
-  date: string;
-  time: string;
-  status: "pending" | "confirmed" | "rejected" | "canceled";
+interface TicketsTableProps {
+  appointments: AppointmentType[];
 }
 
-// Liste de patients et docteurs pour le mock
-const patients = [
-  "John Doe",
-  "Jane Roe",
-  "Alice Brown",
-  "Bob White",
-  "Charlie Green",
-  "Diana Black",
-  "Eve Silver",
-  "Frank Gold",
-];
-const doctors = ["Dr. Smith", "Dr. Adams", "Dr. Clark", "Dr. Lewis"];
-const reasons = [
-  "Checkup",
-  "Dental Cleaning",
-  "Consultation",
-  "Follow-up",
-  "Vaccination",
-  "Therapy",
-];
+const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-// Génération aléatoire de 25 appointments
-const generateMockAppointments = (): Appointment[] => {
-  const appointments: Appointment[] = [];
-  for (let i = 1; i <= 25; i++) {
-    const patient = patients[Math.floor(Math.random() * patients.length)];
-    const doctor = doctors[Math.floor(Math.random() * doctors.length)];
-    const reason = reasons[Math.floor(Math.random() * reasons.length)];
-    const date = new Date();
-    date.setDate(date.getDate() + Math.floor(Math.random() * 10)); // dans les 10 prochains jours
-    const hour = 9 + Math.floor(Math.random() * 8); // entre 9h et 16h
-    const minute = Math.random() < 0.5 ? "00" : "30";
-    const statusOptions: Appointment["status"][] = [
-      "pending",
-      "confirmed",
-      "rejected",
-      "canceled",
-    ];
-    const status =
-      statusOptions[Math.floor(Math.random() * statusOptions.length)];
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
 
-    appointments.push({
-      id: i,
-      patient,
-      doctor,
-      reason,
-      date: date.toISOString().split("T")[0],
-      time: `${hour}:${minute}`,
-      status,
-    });
-  }
-  return appointments;
-};
-
-const mockAppointments = generateMockAppointments();
-
-const TicketsTable = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (_: unknown, newPage: number) => setPage(newPage);
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -102,25 +99,13 @@ const TicketsTable = () => {
     setPage(0);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "orange";
-      case "confirmed":
-        return "green";
-      case "rejected":
-        return "red";
-      case "canceled":
-        return "gray";
-      default:
-        return "black";
-    }
-  };
+  const hasPending = appointments.some((app) => app.status === "pending");
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 370 }}>
-        <Table stickyHeader aria-label="appointments table">
+      <TableContainer sx={{ maxHeight: 440 }}>
+        <Table stickyHeader aria-label="sticky table">
+          {/* Header */}
           <TableHead>
             <TableRow>
               {columns.map((column) => (
@@ -132,39 +117,47 @@ const TicketsTable = () => {
                   {column.label}
                 </TableCell>
               ))}
+              {hasPending && <TableCell>Actions</TableCell>}
             </TableRow>
           </TableHead>
+
+          {/* Body */}
           <TableBody>
-            {mockAppointments
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        sx={{
-                          color:
-                            column.id === "status"
-                              ? getStatusColor(value)
-                              : "inherit",
-                        }}
-                      >
-                        {value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              ))}
+            {appointments.map((appointment) => (
+              <TableRow key={appointment.id}>
+                <TableCell>{appointment.id}</TableCell>
+                <TableCell>{appointment.patient_name}</TableCell>
+                <TableCell>{appointment.patient_phone}</TableCell>
+                <TableCell>{appointment.reason}</TableCell>
+                <TableCell>{appointment.requested_at}</TableCell>
+                <TableCell>
+                  <Chip label={appointment.status} color="warning" />
+                </TableCell>
+                <TableCell>{appointment.date ?? "—"}</TableCell>
+                <TableCell>{appointment.time ?? "—"}</TableCell>
+                {appointment.status === "pending" && (
+                  <>
+                    <TableCell>
+                      <Stack direction={"row"} spacing={2}>
+                        <IconButton aria-label="decline" size="small">
+                          <Close />
+                        </IconButton>
+                        <IconButton aria-label="accept" size="small">
+                          <Done />
+                        </IconButton>
+                      </Stack>
+                    </TableCell>
+                  </>
+                )}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={mockAppointments.length}
+        count={appointments.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
