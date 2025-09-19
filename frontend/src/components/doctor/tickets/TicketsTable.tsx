@@ -15,7 +15,7 @@ import {
   TablePagination,
 } from "@mui/material";
 
-import { Close, Done } from "@mui/icons-material";
+import { Close, Done, RemoveRedEye } from "@mui/icons-material";
 
 interface Column {
   id:
@@ -34,48 +34,47 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: "id", label: "Id", minWidth: 170 },
   { id: "Patient", label: "Patient", minWidth: 100 },
   {
     id: "Phone",
     label: "Phone",
     minWidth: 170,
-    align: "right",
+    // align: "right",
     // format: (value: number) => value.toLocaleString("en-US"),
   },
   {
     id: "Reason",
     label: "Reason",
     minWidth: 170,
-    align: "right",
+    // align: "right",
     // format: (value: number) => value.toLocaleString("en-US"),
   },
   {
     id: "Created",
     label: "Created_at",
     minWidth: 170,
-    align: "right",
+    // align: "right",
     // format: (value: number) => value.toLocaleString("en-US"),
   },
   {
     id: "Status",
     label: "Status",
     minWidth: 170,
-    align: "right",
+    // align: "right",
     // format: (value: number) => value.toLocaleString("en-US"),
   },
   {
     id: "Date",
     label: "Date",
     minWidth: 170,
-    align: "right",
+    // align: "right",
     // format: (value: number) => value.toLocaleString("en-US"),
   },
   {
     id: "Time",
     label: "Time",
     minWidth: 170,
-    align: "right",
+    // align: "right",
     // format: (value: number) => value.toFixed(2),
   },
 ];
@@ -99,7 +98,7 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
     setPage(0);
   };
 
-  const hasPending = appointments.some((app) => app.status === "pending");
+  // const hasPending = appointments.some((app) => app.status === "pending");
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -117,7 +116,7 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
                   {column.label}
                 </TableCell>
               ))}
-              {hasPending && <TableCell>Actions</TableCell>}
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
 
@@ -125,7 +124,6 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
           <TableBody>
             {appointments.map((appointment) => (
               <TableRow key={appointment.id}>
-                <TableCell>{appointment.id}</TableCell>
                 <TableCell>{appointment.patient_name}</TableCell>
                 <TableCell>{appointment.patient_phone}</TableCell>
                 <TableCell>{appointment.reason}</TableCell>
@@ -135,20 +133,24 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
                 </TableCell>
                 <TableCell>{appointment.date ?? "—"}</TableCell>
                 <TableCell>{appointment.time ?? "—"}</TableCell>
-                {appointment.status === "pending" && (
-                  <>
-                    <TableCell>
-                      <Stack direction={"row"} spacing={2}>
-                        <IconButton aria-label="decline" size="small">
-                          <Close />
-                        </IconButton>
+
+                <TableCell>
+                  <Stack direction={"row"} spacing={2}>
+                    <IconButton aria-label="accept" size="small">
+                      <RemoveRedEye />
+                    </IconButton>
+                    {appointment.status === "pending" && (
+                      <>
                         <IconButton aria-label="accept" size="small">
                           <Done />
                         </IconButton>
-                      </Stack>
-                    </TableCell>
-                  </>
-                )}
+                        <IconButton aria-label="decline" size="small">
+                          <Close />
+                        </IconButton>
+                      </>
+                    )}
+                  </Stack>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
