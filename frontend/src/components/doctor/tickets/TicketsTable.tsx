@@ -10,12 +10,13 @@ import {
   TableRow,
   Paper,
   Chip,
-  IconButton,
   Stack,
   TablePagination,
 } from "@mui/material";
 
-import { Close, Done, RemoveRedEye } from "@mui/icons-material";
+import DialogDescriptionComponent from "./DialogDescriptionComponent";
+import RejectDialog from "./RejectDialog";
+import AcceptDialog from "./AcceptDialog";
 
 interface Column {
   id:
@@ -87,7 +88,13 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    newPage: number
+  ) => {
+    if (event) {
+      event.preventDefault();
+    }
     setPage(newPage);
   };
 
@@ -98,7 +105,7 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
     setPage(0);
   };
 
-  // const hasPending = appointments.some((app) => app.status === "pending");
+  const hasPending = appointments.some((app) => app.status === "pending");
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -116,7 +123,7 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
                   {column.label}
                 </TableCell>
               ))}
-              <TableCell>Actions</TableCell>
+              {hasPending && <TableCell>Actions</TableCell>}
             </TableRow>
           </TableHead>
 
@@ -136,17 +143,16 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
 
                 <TableCell>
                   <Stack direction={"row"} spacing={2}>
-                    <IconButton aria-label="accept" size="small">
-                      <RemoveRedEye />
-                    </IconButton>
+                    <DialogDescriptionComponent
+                      description={
+                        appointment.descriptions || "No descriptions found"
+                      }
+                      client={appointment.patient_name}
+                    />
                     {appointment.status === "pending" && (
                       <>
-                        <IconButton aria-label="accept" size="small">
-                          <Done />
-                        </IconButton>
-                        <IconButton aria-label="decline" size="small">
-                          <Close />
-                        </IconButton>
+                        <AcceptDialog client={appointment.patient_name} />
+                        <RejectDialog client={appointment.patient_name} />
                       </>
                     )}
                   </Stack>

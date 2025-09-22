@@ -16,12 +16,10 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     const refresh = localStorage.getItem("refresh");
 
-    // If unauthorized & we haven't already retried
     if (error.response?.status === 401 && refresh && !originalRequest._retry) {
       originalRequest._retry = true; // avoid infinite loops
 
       try {
-        // Request a new access token
         const res = await axios.post(
           "http://localhost:8000/api/token/refresh/",
           { refresh }
@@ -30,21 +28,18 @@ axiosInstance.interceptors.response.use(
         const newAccess = res.data.access;
         localStorage.setItem("access", newAccess);
 
-        // Update headers
         axiosInstance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${newAccess}`;
         originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
 
-        // Retry the original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         console.error("Token refresh failed", refreshError);
 
-        // 🔴 Auto logout
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
-        window.location.href = "/login"; // redirect to login
+        window.location.href = "/login";
       }
     }
 

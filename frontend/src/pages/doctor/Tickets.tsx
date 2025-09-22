@@ -2,7 +2,6 @@ import { CircularProgress, Box, Typography } from "@mui/material";
 import { useGetAppointmentsQuery } from "../../redux/appointmentsApi";
 import Header from "../../components/doctor/tickets/Header";
 import TicketsTable from "../../components/doctor/tickets/TicketsTable";
-
 const Tickets = () => {
   const { data, error, isLoading } = useGetAppointmentsQuery();
 
@@ -21,6 +20,8 @@ const Tickets = () => {
       </Typography>
     );
   }
+
+  console.log(data);
 
   return (
     <Box sx={{ p: 2 }}>

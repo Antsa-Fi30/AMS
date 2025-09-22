@@ -46,7 +46,7 @@ const Dashboard = () => {
             </Stack>
           </Grid>
         </Grid>
-        <Card elevation={2}>
+        <Card sx={{ marginY: 2 }} elevation={2}>
           <CardContent>
             <Story />
           </CardContent>
