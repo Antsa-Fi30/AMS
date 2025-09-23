@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { AppointmentType } from "../../../redux/appointmentsApi";
+import type { AppointmentType } from "../../../services/AppointmentServices";
 
 import {
   Table,
@@ -107,6 +107,19 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
 
   const hasPending = appointments.some((app) => app.status === "pending");
 
+  const getChipColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "warning";
+      case "rejected":
+        return "error";
+      case "confirmed":
+        return "success";
+      default:
+        return "default";
+    }
+  };
+
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -136,7 +149,10 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
                 <TableCell>{appointment.reason}</TableCell>
                 <TableCell>{appointment.requested_at}</TableCell>
                 <TableCell>
-                  <Chip label={appointment.status} color="warning" />
+                  <Chip
+                    label={appointment.status}
+                    color={getChipColor(appointment.status)}
+                  />
                 </TableCell>
                 <TableCell>{appointment.date ?? "—"}</TableCell>
                 <TableCell>{appointment.time ?? "—"}</TableCell>
@@ -151,8 +167,15 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
                     />
                     {appointment.status === "pending" && (
                       <>
-                        <AcceptDialog client={appointment.patient_name} />
-                        <RejectDialog client={appointment.patient_name} />
+                        <AcceptDialog
+                          appointment={appointment}
+                          id={appointment.id}
+                          client={appointment.patient_name}
+                        />
+                        <RejectDialog
+                          id={appointment.id}
+                          client={appointment.patient_name}
+                        />
                       </>
                     )}
                   </Stack>

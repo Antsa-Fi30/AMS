@@ -1,28 +1,41 @@
 import React from "react";
 import GenericDialog from "../../common/GenericDialog";
-import { Button, DialogContentText, IconButton } from "@mui/material";
+import { Button, DialogContentText, IconButton, Tooltip } from "@mui/material";
 import { Close } from "@mui/icons-material";
+import { updateAppointment } from "../../../services/AppointmentServices";
+
 interface RejectDialogProps {
   client: string;
+  id: number;
 }
 
-const RejectDialog: React.FC<RejectDialogProps> = ({ client }) => {
+const RejectDialog: React.FC<RejectDialogProps> = ({ client, id }) => {
+  const handleConfirm = async (close: () => void, id: number) => {
+    try {
+      await updateAppointment(id, { status: "rejected" });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      close();
+    }
+  };
   return (
     <>
       <GenericDialog
         title={`${client} 's appointment ticket`}
         renderTrigger={(open) => (
-          <IconButton aria-label="decline" size="small" onClick={open}>
-            <Close />
-          </IconButton>
+          <Tooltip title="Reject appointment">
+            <IconButton aria-label="decline" size="small" onClick={open}>
+              <Close />
+            </IconButton>
+          </Tooltip>
         )}
         actions={(close) => (
           <Button
             variant="contained"
             color="error"
             onClick={() => {
-              console.log("Rejected");
-              close();
+              handleConfirm(close, id);
             }}
           >
             Reject

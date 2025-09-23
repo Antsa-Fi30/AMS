@@ -4,9 +4,10 @@ import {
   IconButton,
   Stack,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { useGetAppointmentsQuery } from "../../../redux/appointmentsApi";
+import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 
 const Header = () => {
   const { refetch, isFetching } = useGetAppointmentsQuery();
@@ -22,13 +23,15 @@ const Header = () => {
           <Typography variant="h3" fontWeight={700}>
             Appointment tickets
           </Typography>
-          <IconButton onClick={() => refetch()} aria-label="refresh">
-            {isFetching ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              <RefreshIcon />
-            )}
-          </IconButton>
+          <Tooltip title="Refresh list">
+            <IconButton onClick={() => refetch()} aria-label="refresh">
+              {isFetching ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                <RefreshIcon />
+              )}
+            </IconButton>
+          </Tooltip>
         </Stack>
 
         <Stack direction={"row"} spacing={5}>

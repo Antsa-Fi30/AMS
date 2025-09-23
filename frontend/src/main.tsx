@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
 // You can manage dark/light mode with state if needed
-const mode: "light" | "dark" = "dark";
+const mode: "light" | "dark" = "light";
 const theme = createAppTheme(mode);
 
 root.render(

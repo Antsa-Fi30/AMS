@@ -38,6 +38,17 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     #     else:
     #         return Appointment.objects.none()
 
+    def update(self, request, *args, **kwargs):
+        # admin sy doko ihany no afaka manova statut
+        if "status" in request.data:
+            if request.user.role not in ["admin", "doctor"]:
+                return Response(
+                    {"detail": "Non autorisé à changer le statut."},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+        return super().update(request, *args, **kwargs)
+
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])

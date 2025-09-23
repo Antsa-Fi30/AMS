@@ -1,5 +1,5 @@
 import { CircularProgress, Box, Typography } from "@mui/material";
-import { useGetAppointmentsQuery } from "../../redux/appointmentsApi";
+import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
 import Header from "../../components/doctor/tickets/Header";
 import TicketsTable from "../../components/doctor/tickets/TicketsTable";
 const Tickets = () => {
