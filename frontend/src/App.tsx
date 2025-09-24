@@ -26,7 +26,7 @@ const App = () => {
           <Route path="patient" element={<PatientLayout />}>
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<DashboardCli />} />
-            <Route path="tickets" element={<Tickets />} />
+            <Route path="appointments" element={<Tickets />} />
           </Route>
         </Route>
 
