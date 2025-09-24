@@ -37,6 +37,7 @@ export default function OptionsMenu() {
     } finally {
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
+      localStorage.removeItem("role");
       navigate("/");
     }
   };

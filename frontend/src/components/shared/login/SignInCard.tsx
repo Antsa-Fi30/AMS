@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import ForgotPassword from "./ForgotPassword";
-import { IconButton, InputAdornment } from "@mui/material";
+import { IconButton, InputAdornment, MenuItem, Select } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Person from "@mui/icons-material/Person";
@@ -92,10 +92,13 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
       const auth = async (answers: AuthData) => {
         try {
           const data = await authenticate(answers);
-          localStorage.setItem("access", data.access);
-          localStorage.setItem("refresh", data.refresh);
+          localStorage.setItem("access", data.tokens.access);
+          localStorage.setItem("refresh", data.tokens.refresh);
+          localStorage.setItem("role", data.role);
           if (localStorage.getItem("refresh")) {
-            navigate("/doctor");
+            if (localStorage.getItem("role") === "doctor") navigate("/doctor");
+            else if (localStorage.getItem("role") === "patient")
+              navigate("/patient");
           }
           alert("login successfull");
         } catch (err) {
@@ -114,13 +117,18 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
       const rawName = data.get("name");
       const rawPasswordConfirmation = data.get("confirmPassword");
       const rawEmail = data.get("email");
+      const role = data.get("role");
+
       const register = async (answers: RegisterData) => {
         try {
           const data = await signIn(answers);
           localStorage.setItem("access", data.tokens.access);
           localStorage.setItem("refresh", data.tokens.refresh);
+          localStorage.setItem("role", data.role);
           if (localStorage.getItem("refresh")) {
-            navigate("/doctor");
+            if (localStorage.getItem("role") === "doctor") navigate("/doctor");
+            else if (localStorage.getItem("role") === "patient")
+              navigate("/patient");
           }
           alert("regsiter successfull");
         } catch (err) {
@@ -137,6 +145,7 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
         name: typeof rawName === "string" ? rawName : null,
         email: typeof rawEmail === "string" ? rawEmail : null,
         phone_number: `+261${data.get("phone")}`,
+        role: typeof role === "string" ? role : null,
         password1: typeof rawPassword === "string" ? rawPassword : null,
         password2:
           typeof rawPasswordConfirmation === "string"
@@ -293,6 +302,15 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
             }}
           />
         </FormControl>
+        {register && (
+          <FormControl>
+            <FormLabel htmlFor="role">Role</FormLabel>
+            <Select id="role" name="role" label="role">
+              <MenuItem value={"patient"}>Patient</MenuItem>
+              <MenuItem value={"doctor"}>Doctor</MenuItem>
+            </Select>
+          </FormControl>
+        )}
         <FormControl>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <FormLabel htmlFor="password">Password</FormLabel>
