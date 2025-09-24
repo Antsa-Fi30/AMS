@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../redux/baseQuery";
-import axiosInstance from "./AxiosInstance";
+// import axiosInstance from "./AxiosInstance";
 
 export type AppointmentType = {
   id: number;
@@ -41,14 +41,5 @@ export const appointmentsApi = createApi({
   }),
 });
 
-export const { useGetAppointmentsQuery } = appointmentsApi;
-
-export const updateAppointment = async (id: number, data: AppointmentType) => {
-  try {
-    const response = await axiosInstance.put(`appointments/${id}/`, data);
-    return response.data;
-  } catch (error) {
-    console.error("Error updating appointment:", error);
-    throw error;
-  }
-};
+export const { useGetAppointmentsQuery, useUpdateAppointmentsMutation } =
+  appointmentsApi;

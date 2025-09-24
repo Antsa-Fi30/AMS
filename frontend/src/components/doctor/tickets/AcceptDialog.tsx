@@ -14,8 +14,8 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import {
-  updateAppointment,
   type AppointmentType,
+  useUpdateAppointmentsMutation,
 } from "../../../services/AppointmentServices";
 
 interface AcceptDialogProps {
@@ -31,6 +31,8 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({
 }) => {
   const [date, setDate] = React.useState<Date | null>(null);
   const [time, setTime] = React.useState<Date | null>(null);
+  const [updateAppointments, { isLoading, isSuccess, error }] =
+    useUpdateAppointmentsMutation();
 
   const handleConfirm = async (close: () => void) => {
     try {
@@ -45,7 +47,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({
 
       console.log("✅ Rendez-vous accepté pour :", finalDate.toISOString());
 
-      await updateAppointment(id, {
+      await updateAppointments({
         ...appointment,
         date: finalDate.toISOString().split("T")[0],
         time: finalDate.toISOString().split("T")[1],

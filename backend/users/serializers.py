@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 class CustomedUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomedUser
-        fields = ["name", "phone_number"]
+        fields = ["id", "name", "email", "phone_number", "role"]
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomedUser
-        fields = ["name", "email", "phone_number", "password1", "password2"]
+        fields = ["name", "email", "phone_number", "role", "password1", "password2"]
         extra_kwargs = {
             "password1": {"write_only": True},
             "password2": {"write_only": True},

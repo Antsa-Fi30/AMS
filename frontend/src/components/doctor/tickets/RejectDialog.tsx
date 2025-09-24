@@ -2,7 +2,6 @@ import React from "react";
 import GenericDialog from "../../common/GenericDialog";
 import { Button, DialogContentText, IconButton, Tooltip } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { updateAppointment } from "../../../services/AppointmentServices";
 
 interface RejectDialogProps {
   client: string;
@@ -12,7 +11,7 @@ interface RejectDialogProps {
 const RejectDialog: React.FC<RejectDialogProps> = ({ client, id }) => {
   const handleConfirm = async (close: () => void, id: number) => {
     try {
-      await updateAppointment(id, { status: "rejected" });
+      console.log("❌ Rendez-vous rejeté pour l'ID :", id);
     } catch (err) {
       console.error(err);
     } finally {

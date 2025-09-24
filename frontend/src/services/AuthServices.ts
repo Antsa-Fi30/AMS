@@ -9,6 +9,7 @@ export interface RegisterData {
   phone_number: string;
   name: string | null;
   email: string | null;
+  role: string | null;
   password1: string | null;
   password2: string | null;
 }
