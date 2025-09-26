@@ -5,7 +5,9 @@ import Register from "./pages/shared/Register";
 import DoctorLayout from "./layouts/DoctorLayout";
 import ProtectedRoute from "./routes/ProtectedRoutes";
 import Dashboard from "./pages/doctor/Dashboard";
+import DashboardCli from "./pages/client/DashboardCli";
 import Tickets from "./pages/doctor/Tickets";
+import PatientLayout from "./layouts/PatientLayout";
 
 const App = () => {
   return (
@@ -19,6 +21,11 @@ const App = () => {
           <Route path="doctor" element={<DoctorLayout />}>
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<Dashboard />} />
+            <Route path="tickets" element={<Tickets />} />
+          </Route>
+          <Route path="patient" element={<PatientLayout />}>
+            <Route index element={<Navigate to="home" replace />} />
+            <Route path="home" element={<DashboardCli />} />
             <Route path="tickets" element={<Tickets />} />
           </Route>
         </Route>

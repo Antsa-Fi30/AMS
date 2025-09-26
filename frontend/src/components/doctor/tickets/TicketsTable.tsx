@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { AppointmentType } from "../../../redux/appointmentsApi";
+import type { AppointmentType } from "../../../services/AppointmentServices";
 
 import {
   Table,
@@ -10,12 +10,13 @@ import {
   TableRow,
   Paper,
   Chip,
-  IconButton,
   Stack,
   TablePagination,
 } from "@mui/material";
 
-import { Close, Done, RemoveRedEye } from "@mui/icons-material";
+import DialogDescriptionComponent from "./DialogDescriptionComponent";
+import RejectDialog from "./RejectDialog";
+import AcceptDialog from "./AcceptDialog";
 
 interface Column {
   id:
@@ -87,7 +88,13 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    newPage: number
+  ) => {
+    if (event) {
+      event.preventDefault();
+    }
     setPage(newPage);
   };
 
@@ -98,7 +105,20 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
     setPage(0);
   };
 
-  // const hasPending = appointments.some((app) => app.status === "pending");
+  const hasPending = appointments.some((app) => app.status === "pending");
+
+  const getChipColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "warning";
+      case "rejected":
+        return "error";
+      case "confirmed":
+        return "success";
+      default:
+        return "default";
+    }
+  };
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -116,7 +136,7 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
                   {column.label}
                 </TableCell>
               ))}
-              <TableCell>Actions</TableCell>
+              {hasPending && <TableCell>Actions</TableCell>}
             </TableRow>
           </TableHead>
 
@@ -129,24 +149,33 @@ const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
                 <TableCell>{appointment.reason}</TableCell>
                 <TableCell>{appointment.requested_at}</TableCell>
                 <TableCell>
-                  <Chip label={appointment.status} color="warning" />
+                  <Chip
+                    label={appointment.status}
+                    color={getChipColor(appointment.status)}
+                  />
                 </TableCell>
                 <TableCell>{appointment.date ?? "—"}</TableCell>
                 <TableCell>{appointment.time ?? "—"}</TableCell>
 
                 <TableCell>
                   <Stack direction={"row"} spacing={2}>
-                    <IconButton aria-label="accept" size="small">
-                      <RemoveRedEye />
-                    </IconButton>
+                    <DialogDescriptionComponent
+                      description={
+                        appointment.descriptions || "No descriptions found"
+                      }
+                      client={appointment.patient_name}
+                    />
                     {appointment.status === "pending" && (
                       <>
-                        <IconButton aria-label="accept" size="small">
-                          <Done />
-                        </IconButton>
-                        <IconButton aria-label="decline" size="small">
-                          <Close />
-                        </IconButton>
+                        <AcceptDialog
+                          appointment={appointment}
+                          id={appointment.id}
+                          client={appointment.patient_name}
+                        />
+                        <RejectDialog
+                          id={appointment.id}
+                          client={appointment.patient_name}
+                        />
                       </>
                     )}
                   </Stack>
