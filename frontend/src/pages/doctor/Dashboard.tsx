@@ -1,10 +1,8 @@
 import { Box, Card, CardContent, Grid, Stack, Typography } from "@mui/material";
 import Stats from "../../components/doctor/home/Stats";
-// import { useState } from "react";
-import AppointmentTable from "../../components/doctor/home/AppointmentTable";
 import MiniCalendar from "../../components/doctor/home/MiniCalendar";
 import NextAppointment from "../../components/doctor/home/NextAppointment";
-import GraphicStats from "../../components/doctor/home/GraphicStats";
+// import GraphicStats from "../../components/doctor/home/GraphicStats";
 import Story from "../../components/doctor/home/Story";
 
 const Dashboard = () => {
@@ -17,36 +15,31 @@ const Dashboard = () => {
 
       <Box my={10}>
         <Grid container spacing={2} columns={16}>
-          <Grid size={10}>
+          <Grid size={8}>
             <Stack spacing={2}>
               <Card sx={{ background: "background.paper" }} elevation={2}>
-                <CardContent>
-                  <AppointmentTable />
-                </CardContent>
-              </Card>
-              <Card sx={{ background: "background.paper" }} elevation={2}>
-                <CardContent>
-                  <GraphicStats />
-                </CardContent>
-              </Card>
-            </Stack>
-          </Grid>
-          <Grid size={6}>
-            <Stack spacing={2}>
-              <Card elevation={2}>
-                <CardContent>
-                  <MiniCalendar />
-                </CardContent>
-              </Card>
-              <Card elevation={2}>
                 <CardContent>
                   <NextAppointment />
                 </CardContent>
               </Card>
             </Stack>
           </Grid>
+          <Grid size={8}>
+            <Stack spacing={2}>
+              <Card elevation={2}>
+                <CardContent>
+                  <MiniCalendar />
+                </CardContent>
+              </Card>
+              {/* <Card elevation={2}>
+                <CardContent>
+                  <GraphicStats />
+                </CardContent>
+              </Card> */}
+            </Stack>
+          </Grid>
         </Grid>
-        <Card elevation={2}>
+        <Card sx={{ marginY: 2 }} elevation={2}>
           <CardContent>
             <Story />
           </CardContent>
