@@ -93,7 +93,12 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            navigate("/patient/profile");
+            handleClose();
+          }}
+        >
           <Avatar /> My account
         </MenuItem>
         <Divider />

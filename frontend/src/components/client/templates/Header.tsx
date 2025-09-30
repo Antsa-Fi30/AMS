@@ -1,5 +1,4 @@
-import { Box, IconButton, Stack } from "@mui/material";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import { Box, Stack } from "@mui/material";
 import { OutlinedInput, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuAvatar from "./MenuAvatar";
@@ -33,9 +32,6 @@ const Header = () => {
       />
       {/* Bouton notification */}
       <Stack direction={"row"} spacing={2} alignItems="center">
-        <IconButton color="primary">
-          <NotificationsOutlinedIcon />
-        </IconButton>
         <MenuAvatar />
       </Stack>
     </Box>
