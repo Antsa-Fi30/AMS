@@ -1,38 +1,60 @@
-import { CircularProgress, Box, Typography } from "@mui/material";
-import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
-import Header from "../../components/doctor/tickets/Header";
-import TicketsTable from "../../components/doctor/tickets/TicketsTable";
-const Tickets = () => {
-  const { data, error, isLoading } = useGetAppointmentsQuery();
+import {
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Box,
+  Typography,
+  // Chip,
+} from "@mui/material";
+import {
+  PendingActions,
+  // CheckCircle,
+  // Cancel,
+  // Schedule,
+} from "@mui/icons-material";
+import { TicketsTable } from "../../components/tickets/TicketsTable";
+import { TicketStats } from "../../components/tickets/TicketStats";
+import { QuickTicketActions } from "../../components/tickets/QuickTicketActions";
 
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Typography color="error" sx={{ p: 2 }}>
-        Erreur lors du chargement des rendez-vous
-      </Typography>
-    );
-  }
-
-  console.log(data);
-
+const TicketDashboard = () => {
   return (
-    <Box sx={{ p: 2 }}>
-      <Box sx={{ my: 2 }}>
-        <Header />
+    <Container maxWidth="xl" sx={{ py: 4 }}>
+      {/* En-tête */}
+      <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
+        <PendingActions color="primary" sx={{ fontSize: 40, mr: 2 }} />
+        <Box>
+          <Typography variant="h4" fontWeight="bold">
+            Gestion des Tickets
+          </Typography>
+          <Typography variant="h6" color="text.secondary">
+            Gérez et confirmez les demandes de rendez-vous
+          </Typography>
+        </Box>
       </Box>
-      <Box>
-        <TicketsTable appointments={data ?? []} />
-      </Box>
-    </Box>
+
+      <Grid container spacing={3}>
+        {/* Statistiques */}
+        <Grid size={12}>
+          <TicketStats />
+        </Grid>
+
+        {/* Actions rapides */}
+        <Grid size={{ xs: 12, md: 4 }}>
+          <QuickTicketActions />
+        </Grid>
+
+        {/* Tableau principal */}
+        <Grid size={{ xs: 12, md: 8 }}>
+          <Card elevation={2} sx={{ borderRadius: 3 }}>
+            <CardContent sx={{ p: 3 }}>
+              <TicketsTable />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
-export default Tickets;
+export default TicketDashboard;

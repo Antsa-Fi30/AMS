@@ -3,17 +3,17 @@ import { NavLink } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PersonIcon from "@mui/icons-material/Person";
-import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import { MedicalServices } from "@mui/icons-material";
 
 const menu = [
   { icon: <HomeIcon />, label: "Home", path: "/patient/home" },
   {
     icon: <CalendarMonthIcon />,
-    label: "Appointments",
+    label: "Your appointments",
     path: "/patient/appointments",
   },
-  { icon: <MedicalServicesIcon />, label: "Doctors", path: "/patient/doctors" },
-  { icon: <PersonIcon />, label: "Profile", path: "/patient/profile" },
+  { icon: <PersonIcon />, label: "Your profile", path: "/patient/profile" },
+  // { icon: <MedicalServicesIcon />, label: "Doctors", path: "/patient/doctors" },
 ];
 
 const Sidebar = () => {
@@ -48,7 +48,7 @@ const Sidebar = () => {
           boxShadow: 2,
         }}
       >
-        B
+        <MedicalServices />
       </Box>
 
       {/* Menu icons */}
