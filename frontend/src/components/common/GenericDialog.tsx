@@ -6,12 +6,14 @@ import DialogActions from "@mui/material/DialogActions";
 import Slide from "@mui/material/Slide";
 import { type TransitionProps } from "@mui/material/transitions";
 import Button from "@mui/material/Button";
-
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+// ----------------------------------------------------------------------------//
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
   ref: React.Ref<unknown>
 ) {
-  return <Slide direction="left" ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 interface GenericDialogProps {
@@ -35,6 +37,8 @@ const GenericDialog: React.FC<GenericDialogProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const isControlled = typeof controlledOpen === "boolean";
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleOpen = () => {
     if (!isControlled) setOpen(true);
@@ -57,6 +61,7 @@ const GenericDialog: React.FC<GenericDialogProps> = ({
       <Dialog
         open={visible}
         onClose={handleClose}
+        fullScreen={fullScreen}
         slots={{ transition: Transition }}
         keepMounted
         aria-describedby="alert-dialog-slide-description"

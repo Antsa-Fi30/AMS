@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/shared/Login";
@@ -8,8 +9,18 @@ import Dashboard from "./pages/doctor/Dashboard";
 import DashboardCli from "./pages/client/DashboardCli";
 import Tickets from "./pages/doctor/Tickets";
 import PatientLayout from "./layouts/PatientLayout";
+import Appointments from "./pages/client/Appointments";
+import ProfileCli from "./pages/client/ProfileCli";
+import { useDispatch } from "react-redux";
+import { initializeAuth } from "./redux/AuthSlice";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initializeAuth());
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -26,7 +37,8 @@ const App = () => {
           <Route path="patient" element={<PatientLayout />}>
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<DashboardCli />} />
-            <Route path="tickets" element={<Tickets />} />
+            <Route path="appointments" element={<Appointments />} />
+            <Route path="profile" element={<ProfileCli />} />
           </Route>
         </Route>
 

@@ -1,5 +1,4 @@
-import { Box, IconButton, Stack } from "@mui/material";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import { Box, Stack } from "@mui/material";
 import { OutlinedInput, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuAvatar from "./MenuAvatar";
@@ -12,9 +11,11 @@ const Header = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        boxShadow: 1,
         px: 5,
         py: 1.3,
+        borderBottom: "1px solid",
+        borderColor: "divider",
+        bgcolor: "background.paper",
       }}
     >
       {/* Champ de recherche */}
@@ -33,9 +34,6 @@ const Header = () => {
       />
       {/* Bouton notification */}
       <Stack direction={"row"} spacing={2} alignItems="center">
-        <IconButton color="primary">
-          <NotificationsOutlinedIcon />
-        </IconButton>
         <MenuAvatar />
       </Stack>
     </Box>

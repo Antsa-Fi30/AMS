@@ -1,7 +1,13 @@
-import React from "react";
+import Header from "../../components/client/tickets/Header";
+import TicketsTable from "../../components/client/tickets/TicketsTable";
 
 const Appointments = () => {
-  return <div>Appointments</div>;
+  return (
+    <div>
+      <Header />
+      <TicketsTable />
+    </div>
+  );
 };
 
 export default Appointments;

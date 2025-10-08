@@ -11,6 +11,8 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../../services/AuthServices";
+import { reinit } from "../../../redux/AuthSlice";
+import { useDispatch } from "react-redux";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -23,6 +25,7 @@ export default function AccountMenu() {
   };
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogOut = async () => {
     handleClose();
@@ -32,9 +35,10 @@ export default function AccountMenu() {
     } catch (err) {
       console.error("logout failed", err);
     } finally {
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      localStorage.removeItem("role");
+      // localStorage.removeItem("access");
+      // localStorage.removeItem("refresh");
+      // localStorage.removeItem("role");
+      dispatch(reinit());
       navigate("/");
     }
   };
@@ -93,7 +97,12 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            navigate("/patient/profile");
+            handleClose();
+          }}
+        >
           <Avatar /> My account
         </MenuItem>
         <Divider />

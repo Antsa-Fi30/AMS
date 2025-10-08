@@ -14,6 +14,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Person from "@mui/icons-material/Person";
 import PhoneIcon from "@mui/icons-material/Phone";
+import { authSuccess } from "../../../redux/AuthSlice";
 import {
   authenticate,
   signIn,
@@ -48,6 +49,7 @@ interface SignInCardProps {
 }
 
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
   const [phoneError, setPhoneError] = useState(false);
@@ -58,6 +60,8 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
   const [typePassword, setTypePassword] = useState<boolean>(false);
   const [phone, setPhone] = useState("");
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (localStorage.getItem("refresh")) {
@@ -92,15 +96,35 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
       const auth = async (answers: AuthData) => {
         try {
           const data = await authenticate(answers);
-          localStorage.setItem("access", data.tokens.access);
-          localStorage.setItem("refresh", data.tokens.refresh);
-          localStorage.setItem("role", data.role);
-          if (localStorage.getItem("refresh")) {
-            if (localStorage.getItem("role") === "doctor") navigate("/doctor");
-            else if (localStorage.getItem("role") === "patient")
-              navigate("/patient");
+          // localStorage.setItem("access", data.tokens.access);
+          // localStorage.setItem("refresh", data.tokens.refresh);
+          // localStorage.setItem("role", data.role);
+          dispatch(
+            authSuccess({
+              user: {
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                phone_number: data.phone_number,
+                role: data.role,
+              },
+              access: data.tokens.access,
+              refresh: data.tokens.refresh,
+            })
+          );
+
+          const user = sessionStorage.getItem("user");
+          if (user) {
+            const parsedUser = JSON.parse(user);
+
+            if (localStorage.getItem("refresh")) {
+              if (parsedUser.role === "doctor") navigate("/doctor");
+              else if (parsedUser.role === "patient") navigate("/patient");
+            }
+            alert("login successfull");
+            alert(localStorage.getItem("refresh"));
+            alert(parsedUser.role);
           }
-          alert("login successfull");
         } catch (err) {
           if (err instanceof Error) {
             console.error(err.message);
@@ -122,12 +146,26 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
       const register = async (answers: RegisterData) => {
         try {
           const data = await signIn(answers);
-          localStorage.setItem("access", data.tokens.access);
-          localStorage.setItem("refresh", data.tokens.refresh);
-          localStorage.setItem("role", data.role);
+          // localStorage.setItem("access", data.tokens.access);
+          // localStorage.setItem("refresh", data.tokens.refresh);
+          // localStorage.setItem("role", data.role);
+          dispatch(
+            authSuccess({
+              user: {
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                phone_number: data.phone_number,
+                role: data.role,
+              },
+              access: data.tokens.access,
+              refresh: data.tokens.refresh,
+            })
+          );
           if (localStorage.getItem("refresh")) {
-            if (localStorage.getItem("role") === "doctor") navigate("/doctor");
-            else if (localStorage.getItem("role") === "patient")
+            if (sessionStorage.getItem("role") === "doctor")
+              navigate("/doctor");
+            else if (sessionStorage.getItem("role") === "patient")
               navigate("/patient");
           }
           alert("regsiter successfull");
