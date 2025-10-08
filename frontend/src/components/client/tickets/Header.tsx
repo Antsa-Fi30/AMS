@@ -3,12 +3,11 @@ import {
   Box,
   Typography,
   Stack,
-  Button,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import AppointmentCreator from "./AppointmentCreator";
 
 const Header = () => {
   const [filter, setFilter] = React.useState("all");
@@ -53,9 +52,7 @@ const Header = () => {
         </ToggleButtonGroup>
 
         {/* Action */}
-        <Button variant="contained" startIcon={<AddIcon />}>
-          Prendre rendez-vous
-        </Button>
+        <AppointmentCreator />
       </Stack>
     </Box>
   );

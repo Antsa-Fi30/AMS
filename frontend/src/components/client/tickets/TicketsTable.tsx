@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  Typography,
   Table,
   TableBody,
   TableCell,
@@ -14,7 +13,18 @@ import {
 import { Cancel, RemoveRedEye } from "@mui/icons-material";
 
 const TicketsTable = () => {
-  const rows = [
+  type TicketStatus = "confirmed" | "pending" | "rejected";
+
+  type TicketRow = {
+    id: number;
+    doctor: string;
+    reason: string;
+    date: string;
+    time: string;
+    status: TicketStatus;
+  };
+
+  const rows: TicketRow[] = [
     {
       id: 1,
       doctor: "Dr. Rakoto",
@@ -41,7 +51,7 @@ const TicketsTable = () => {
     },
   ];
 
-  const statusColor = {
+  const statusColor: Record<TicketStatus, "success" | "warning" | "error"> = {
     confirmed: "success",
     pending: "warning",
     rejected: "error",

@@ -27,6 +27,16 @@ export const appointmentsApi = createApi({
       query: () => "appointments/",
       providesTags: ["Appointments"],
     }),
+    addAppointment: builder.mutation<AppointmentType, Partial<AppointmentType>>(
+      {
+        query: (data) => ({
+          url: "appointments/",
+          method: "POST",
+          body: data,
+        }),
+        invalidatesTags: ["Appointments"],
+      }
+    ),
     updateAppointments: builder.mutation<
       AppointmentType,
       Partial<AppointmentType> & { id: number }
@@ -41,5 +51,8 @@ export const appointmentsApi = createApi({
   }),
 });
 
-export const { useGetAppointmentsQuery, useUpdateAppointmentsMutation } =
-  appointmentsApi;
+export const {
+  useGetAppointmentsQuery,
+  useAddAppointmentMutation,
+  useUpdateAppointmentsMutation,
+} = appointmentsApi;

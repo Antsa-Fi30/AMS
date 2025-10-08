@@ -49,7 +49,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     #         return Appointment.objects.none()
 
     def update(self, request, *args, **kwargs):
-        # admin sy doko ihany no afaka manova statut
         if "status" in request.data:
             if request.user.role not in ["admin", "doctor"]:
                 return Response(

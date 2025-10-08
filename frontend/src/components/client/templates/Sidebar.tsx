@@ -28,13 +28,13 @@ const Sidebar = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        py: 3,
+        py: 1.3,
       }}
     >
       {/* Logo */}
       <Box
         sx={{
-          mb: 5,
+          mb: 6,
           width: 40,
           height: 40,
           bgcolor: "primary.main",

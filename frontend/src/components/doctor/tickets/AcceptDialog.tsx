@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import GenericDialog from "../../common/GenericDialog";
 import {
@@ -15,7 +16,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import {
   type AppointmentType,
-  useUpdateAppointmentsMutation,
+  // useUpdateAppointmentsMutation,
 } from "../../../services/AppointmentServices";
 
 interface AcceptDialogProps {
@@ -24,15 +25,12 @@ interface AcceptDialogProps {
   id: number;
 }
 
-const AcceptDialog: React.FC<AcceptDialogProps> = ({
-  client,
-  id,
-  appointment,
-}) => {
+const AcceptDialog: React.FC<AcceptDialogProps> = ({ client, appointment }) => {
   const [date, setDate] = React.useState<Date | null>(null);
   const [time, setTime] = React.useState<Date | null>(null);
-  const [updateAppointments, { isLoading, isSuccess, error }] =
-    useUpdateAppointmentsMutation();
+
+  // const [updateAppointments, { isLoading, isSuccess, error }] =
+  //   useUpdateAppointmentsMutation();
 
   const handleConfirm = async (close: () => void) => {
     try {
@@ -47,12 +45,12 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({
 
       console.log("✅ Rendez-vous accepté pour :", finalDate.toISOString());
 
-      await updateAppointments({
-        ...appointment,
-        date: finalDate.toISOString().split("T")[0],
-        time: finalDate.toISOString().split("T")[1],
-        status: "confirmed",
-      });
+      // await updateAppointments({
+      //   ...appointment,
+      //   date: finalDate.toISOString().split("T")[0],
+      //   time: finalDate.toISOString().split("T")[1],
+      //   status: "confirmed",
+      // });
     } catch (err) {
       console.error(err);
     } finally {

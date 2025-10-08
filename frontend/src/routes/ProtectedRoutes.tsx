@@ -2,7 +2,8 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 const ProtectedRoute = () => {
   const access = localStorage.getItem("access");
-  const role = localStorage.getItem("role");
+  const user = sessionStorage.getItem("user");
+  const role = user ? JSON.parse(user).role : null;
   const location = useLocation();
 
   if (!access || !role) {

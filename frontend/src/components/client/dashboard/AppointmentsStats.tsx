@@ -46,14 +46,10 @@ export const AppointmentsStats = () => {
             >
               <Box sx={{ mr: 2 }}>{stat.icon}</Box>
               <Box>
-                <Typography
-                  variant="h4"
-                  fontWeight="bold"
-                  color={`${stat.color}.dark`}
-                >
+                <Typography variant="h4" fontWeight="bold">
                   {stat.value}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.primary ">
                   {stat.label}
                 </Typography>
               </Box>

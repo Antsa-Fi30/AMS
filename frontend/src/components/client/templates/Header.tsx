@@ -11,9 +11,11 @@ const Header = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        boxShadow: 1,
         px: 5,
         py: 1.3,
+        borderBottom: "1px solid",
+        borderColor: "divider",
+        bgcolor: "background.paper",
       }}
     >
       {/* Champ de recherche */}

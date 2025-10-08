@@ -31,7 +31,6 @@ class Appointment(models.Model):
         choices=STATUS_CHOICES,
         default="pending",
     )
-    notes = models.TextField(blank=True, null=True)
 
     date = models.DateField(null=True, blank=True)
     time = models.TimeField(null=True, blank=True)
