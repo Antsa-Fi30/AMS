@@ -1,58 +1,77 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import AutoFixHighRoundedIcon from "@mui/icons-material/AutoFixHighRounded";
-import ConstructionRoundedIcon from "@mui/icons-material/ConstructionRounded";
-import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
-import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
 
-const items = [
+import ScheduleRoundedIcon from "@mui/icons-material/ScheduleRounded"; 
+import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
+import LockOpenRoundedIcon from "@mui/icons-material/LockOpenRounded"; 
+import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
+
+
+const appointmentFeatures = [
   {
-    icon: <SettingsSuggestRoundedIcon sx={{ color: "text.secondary" }} />,
-    title: "Adaptable performance",
+    icon: <EventAvailableRoundedIcon color="primary" />,
+    title: "24/7 Booking Availability",
     description:
-      "Our product effortlessly adjusts to your needs, boosting efficiency and simplifying your tasks.",
+      "Allow patients to book, modify, or cancel appointments anytime, day or night, reducing administrative load.",
   },
   {
-    icon: <ConstructionRoundedIcon sx={{ color: "text.secondary" }} />,
-    title: "Built to last",
+    icon: <ScheduleRoundedIcon color="primary" />,
+    title: "Real-Time Schedule Management",
     description:
-      "Experience unmatched durability that goes above and beyond with lasting investment.",
+      "Easily visualize and adjust doctors' schedules. Block out slots for emergencies, meetings, or time off instantly.",
   },
   {
-    icon: <ThumbUpAltRoundedIcon sx={{ color: "text.secondary" }} />,
-    title: "Great user experience",
+    icon: <NotificationsActiveRoundedIcon color="primary" />,
+    title: "Automated Reminders",
     description:
-      "Integrate our product into your routine with an intuitive and easy-to-use interface.",
+      "Drastically reduce 'no-shows' with automated SMS reminders sent to patients 24 hours prior to their visit.",
   },
   {
-    icon: <AutoFixHighRoundedIcon sx={{ color: "text.secondary" }} />,
-    title: "Innovative functionality",
+    icon: <LockOpenRoundedIcon color="primary" />,
+    title: "Secure Patient Access",
     description:
-      "Stay ahead with features that set new standards, addressing your evolving needs better than the rest.",
+      "Patients can securely access their appointment history and manage personal details through a dedicated portal.",
   },
 ];
 
-export default function Content() {
+export default function AppointmentSystemFeaturesCompact() {
   return (
     <Stack
       sx={{
         flexDirection: "column",
         alignSelf: "center",
-        gap: 4,
-        maxWidth: 450,
+        gap: 4, 
+        maxWidth: 450, 
+        p: { xs: 2, sm: 4 },
+
       }}
     >
-      <Box sx={{ display: { xs: "none", md: "flex" } }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Welcome to M-app-andamina
+      <Box sx={{ textAlign: "left" }}> 
+        <Typography variant="h4" component="h1" gutterBottom color="primary">
+          Welcome to MediPlan
+        </Typography>
+        <Typography variant="body1" component="p" color="text.secondary">
+          Streamlining Your Medical Practice Scheduling
         </Typography>
       </Box>
-      {items.map((item, index) => (
-        <Stack key={index} direction="row" sx={{ gap: 2 }}>
-          {item.icon}
+      
+      {/* Affichage des fonctionnalités - Revert au style Stack simple */}
+      {appointmentFeatures.map((item, index) => (
+        <Stack
+          key={index}
+          direction="row"
+          sx={{ 
+            gap: 2,
+  
+          }}
+        >
+          <Box sx={{ pt: 0.5 }}>{item.icon}</Box>
           <div>
-            <Typography gutterBottom sx={{ fontWeight: "medium" }}>
+            <Typography
+              gutterBottom
+              sx={{ fontWeight: "bold", color: "text.primary" }}
+            >
               {item.title}
             </Typography>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
