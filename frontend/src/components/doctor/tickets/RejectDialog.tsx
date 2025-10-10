@@ -1,7 +1,15 @@
 import React from "react";
 import GenericDialog from "../../common/GenericDialog";
-import { Button, DialogContentText, IconButton, Tooltip } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  DialogContentText,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import { Close } from "@mui/icons-material";
+import { useUpdateAppointmentsMutation } from "../../../services/AppointmentServices";
+import { useSnackbar } from "../../../contexts/SnackbarContext";
 
 interface RejectDialogProps {
   client: string;
@@ -9,11 +17,18 @@ interface RejectDialogProps {
 }
 
 const RejectDialog: React.FC<RejectDialogProps> = ({ client, id }) => {
+  const { showSnackbar } = useSnackbar();
+  const [updateAppointments, { isLoading, error }] =
+    useUpdateAppointmentsMutation();
+
   const handleConfirm = async (close: () => void, id: number) => {
     try {
-      console.log("❌ Rendez-vous rejeté pour l'ID :", id);
+      await updateAppointments({ id, status: "rejected" }).unwrap();
+
+      showSnackbar("Appointment updated successfully!", "success");
     } catch (err) {
       console.error(err);
+      showSnackbar(error?.data.detail, "error");
     } finally {
       close();
     }
@@ -33,11 +48,17 @@ const RejectDialog: React.FC<RejectDialogProps> = ({ client, id }) => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => {
-              handleConfirm(close, id);
-            }}
+            onClick={() => handleConfirm(close, id)}
+            disabled={isLoading}
           >
-            Reject
+            {isLoading ? (
+              <>
+                <CircularProgress size={18} sx={{ mr: 1 }} />
+                Rejecting...
+              </>
+            ) : (
+              "Reject"
+            )}
           </Button>
         )}
       >

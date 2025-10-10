@@ -10,6 +10,7 @@ class Appointment(models.Model):
         ("canceled", "Canceled"),
     ]
     descriptions = models.TextField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
     reason = models.CharField(max_length=150, null=True, blank=True)
     patient = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # It's a place for a model, but here ...an exception

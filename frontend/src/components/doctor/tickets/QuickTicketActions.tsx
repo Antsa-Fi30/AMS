@@ -7,8 +7,10 @@ import {
   Chip,
 } from "@mui/material";
 import { FilterList, Download, Refresh } from "@mui/icons-material";
+import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 
-export const QuickTicketActions = () => {
+const QuickTicketActions = () => {
+  const { refetch } = useGetAppointmentsQuery();
   const filters = [
     { label: "Tous les tickets", count: 35 },
     { label: "En attente", count: 8 },
@@ -23,7 +25,7 @@ export const QuickTicketActions = () => {
           Filtres rapides
         </Typography>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 3 }}>
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 1, mb: 3 }}>
           {filters.map((filter, index) => (
             <Button
               key={index}
@@ -63,6 +65,7 @@ export const QuickTicketActions = () => {
             startIcon={<Refresh />}
             fullWidth
             sx={{ borderRadius: 2 }}
+            onClick={() => refetch()}
           >
             Actualiser
           </Button>
@@ -71,3 +74,5 @@ export const QuickTicketActions = () => {
     </Card>
   );
 };
+
+export default QuickTicketActions;

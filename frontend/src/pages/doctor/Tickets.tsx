@@ -5,6 +5,7 @@ import {
   CardContent,
   Box,
   Typography,
+  Stack,
   // Chip,
 } from "@mui/material";
 import {
@@ -13,9 +14,9 @@ import {
   // Cancel,
   // Schedule,
 } from "@mui/icons-material";
-import { TicketsTable } from "../../components/tickets/TicketsTable";
-import { TicketStats } from "../../components/tickets/TicketStats";
-import { QuickTicketActions } from "../../components/tickets/QuickTicketActions";
+import TicketsTable from "../../components/doctor/tickets/TicketsTable";
+import QuickTicketActions from "../../components/doctor/tickets/QuickTicketActions";
+import { TicketStats } from "../../components/doctor/tickets/TicketStats";
 
 const TicketDashboard = () => {
   return (
@@ -40,15 +41,16 @@ const TicketDashboard = () => {
         </Grid>
 
         {/* Actions rapides */}
-        <Grid size={{ xs: 12, md: 4 }}>
-          <QuickTicketActions />
-        </Grid>
+        <Grid size={{ xs: 12, md: 4 }}></Grid>
 
         {/* Tableau principal */}
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Card elevation={2} sx={{ borderRadius: 3 }}>
             <CardContent sx={{ p: 3 }}>
-              <TicketsTable />
+              <Stack spacing={3}>
+                <QuickTicketActions />
+                <TicketsTable />
+              </Stack>
             </CardContent>
           </Card>
         </Grid>

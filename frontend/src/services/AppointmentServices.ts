@@ -9,6 +9,7 @@ export type AppointmentType = {
   patient_name: string;
   patient_phone: string;
   doctor: number | null;
+  doctor_name: string | null;
   status: string;
   descriptions: string | null;
   date: string | null;
@@ -20,6 +21,8 @@ export type AppointmentType = {
 
 export const appointmentsApi = createApi({
   reducerPath: "appointmentsApi",
+  refetchOnFocus: true, // quand l'utilisateur revient sur l'onglet
+  refetchOnReconnect: true, // quand la connexion revient
   baseQuery: baseQueryWithReauth,
   tagTypes: ["Appointments"],
   endpoints: (builder) => ({

@@ -1,200 +1,166 @@
-import React, { useState } from "react";
-import type { AppointmentType } from "../../../services/AppointmentServices";
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
+  Box,
+  Typography,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Chip,
-  Stack,
-  TablePagination,
+  // Avatar,
+  CircularProgress,
 } from "@mui/material";
 
-import DialogDescriptionComponent from "./DialogDescriptionComponent";
-import RejectDialog from "./RejectDialog";
+import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 import AcceptDialog from "./AcceptDialog";
+import RejectDialog from "./RejectDialog";
+import DetailsDialog from "./DetailsDialog";
 
-interface Column {
-  id:
-    | "id"
-    | "Patient"
-    | "Phone"
-    | "Reason"
-    | "Created"
-    | "Status"
-    | "Date"
-    | "Time";
-  label: string;
-  minWidth?: number;
-  align?: "right";
-  format?: (value: number) => string;
-}
+const TicketsTable = () => {
+  const { data, isLoading, refetch } = useGetAppointmentsQuery(undefined, {
+    pollingInterval: 5000, // Rafraîchir les données toutes les 3 secondes
+  });
 
-const columns: readonly Column[] = [
-  { id: "Patient", label: "Patient", minWidth: 100 },
-  {
-    id: "Phone",
-    label: "Phone",
-    minWidth: 170,
-    // align: "right",
-    // format: (value: number) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "Reason",
-    label: "Reason",
-    minWidth: 170,
-    // align: "right",
-    // format: (value: number) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "Created",
-    label: "Created_at",
-    minWidth: 170,
-    // align: "right",
-    // format: (value: number) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "Status",
-    label: "Status",
-    minWidth: 170,
-    // align: "right",
-    // format: (value: number) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "Date",
-    label: "Date",
-    minWidth: 170,
-    // align: "right",
-    // format: (value: number) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "Time",
-    label: "Time",
-    minWidth: 170,
-    // align: "right",
-    // format: (value: number) => value.toFixed(2),
-  },
-];
-
-interface TicketsTableProps {
-  appointments: AppointmentType[];
-}
-
-const TicketsTable: React.FC<TicketsTableProps> = ({ appointments }) => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
-    newPage: number
-  ) => {
-    if (event) {
-      event.preventDefault();
-    }
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const hasPending = appointments.some((app) => app.status === "pending");
-
-  const getChipColor = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
         return "warning";
-      case "rejected":
-        return "error";
       case "confirmed":
         return "success";
+      case "rejected":
+        return "error";
       default:
         return "default";
     }
   };
 
+  if (isLoading) {
+    return <CircularProgress size={24} />;
+  }
+
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          {/* Header */}
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
+    <div>
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 3,
+          }}
+        >
+          <Typography variant="h6" fontWeight="bold">
+            Liste des tickets
+          </Typography>
+          <Chip
+            label={`${
+              data?.filter((t) => t.status === "pending").length
+            } en attente`}
+            color="warning"
+            variant="outlined"
+          />
+        </Box>
+
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Patient</TableCell>
+                <TableCell>Reason</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Time</TableCell>
+                <TableCell>Statut</TableCell>
+                <TableCell align="center">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data?.map((ticket) => (
+                <TableRow
+                  key={ticket.id}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    backgroundColor:
+                      ticket.status === "pending"
+                        ? "action.hover"
+                        : "transparent",
+                  }}
                 >
-                  {column.label}
-                </TableCell>
-              ))}
-              {hasPending && <TableCell>Actions</TableCell>}
-            </TableRow>
-          </TableHead>
-
-          {/* Body */}
-          <TableBody>
-            {appointments.map((appointment) => (
-              <TableRow key={appointment.id}>
-                <TableCell>{appointment.patient_name}</TableCell>
-                <TableCell>{appointment.patient_phone}</TableCell>
-                <TableCell>{appointment.reason}</TableCell>
-                <TableCell>{appointment.requested_at}</TableCell>
-                <TableCell>
-                  <Chip
-                    label={appointment.status}
-                    color={getChipColor(appointment.status)}
-                  />
-                </TableCell>
-                <TableCell>{appointment.date ?? "—"}</TableCell>
-                <TableCell>{appointment.time ?? "—"}</TableCell>
-
-                <TableCell>
-                  <Stack direction={"row"} spacing={2}>
-                    <DialogDescriptionComponent
-                      description={
-                        appointment.descriptions || "No descriptions found"
+                  <TableCell>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      {/* <Avatar sx={{ mr: 2, width: 32, height: 32 }}>
+                        {ticket.avatar}
+                      </Avatar> */}
+                      <Box>
+                        <Typography variant="subtitle2" fontWeight="medium">
+                          {ticket.patient_name}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {ticket.patient_phone}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">{ticket.reason}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Box>
+                      <Typography variant="body2" fontWeight="medium">
+                        {ticket.date ? ticket.date : "N/A"}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        {ticket.time ? ticket.time : "N/A"}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={
+                        ticket.status === "pending"
+                          ? "En attente"
+                          : ticket.status === "confirmed"
+                          ? "Confirmé"
+                          : "Refusé"
                       }
-                      client={appointment.patient_name}
+                      color={getStatusColor(ticket.status)}
+                      size="small"
                     />
-                    {appointment.status === "pending" && (
-                      <>
+                  </TableCell>
+                  <TableCell align="center">
+                    {ticket.status === "pending" && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          justifyContent: "center",
+                        }}
+                      >
                         <AcceptDialog
-                          appointment={appointment}
-                          id={appointment.id}
-                          client={appointment.patient_name}
+                          id={ticket.id}
+                          client={ticket.patient_name}
+                          appointment={ticket}
                         />
                         <RejectDialog
-                          id={appointment.id}
-                          client={appointment.patient_name}
+                          id={ticket.id}
+                          client={ticket.patient_name}
                         />
-                      </>
+                      </Box>
                     )}
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={appointments.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+                    <DetailsDialog target={ticket} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    </div>
   );
 };
 

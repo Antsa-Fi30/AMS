@@ -33,7 +33,12 @@ const AppointmentCreator = () => {
     const patient = user ? JSON.parse(user).id : null;
 
     try {
-      await addAppointment({ reason, descriptions, patient }).unwrap();
+      await addAppointment({
+        reason,
+        descriptions,
+        patient,
+        doctor: 7,
+      }).unwrap();
       setOpenSuccess(true);
       setOpenDialog(false);
       form.reset(); // ✅ réinitialise les champs

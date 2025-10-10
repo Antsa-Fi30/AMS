@@ -27,7 +27,7 @@ User = get_user_model()
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         many = isinstance(request.data, list)
@@ -39,14 +39,14 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     if user.role == "doctor":
-    #         return Appointment.objects.filter(doctor=user)
-    #     elif user.role == "patient":
-    #         return Appointment.objects.filter(patient=user)
-    #     else:
-    #         return Appointment.objects.none()
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == "doctor":
+            return Appointment.objects.filter(doctor=user.id)
+        elif user.role == "patient":
+            return Appointment.objects.filter(patient=user.id)
+        else:
+            return Appointment.objects.none()
 
     def update(self, request, *args, **kwargs):
         if "status" in request.data:
