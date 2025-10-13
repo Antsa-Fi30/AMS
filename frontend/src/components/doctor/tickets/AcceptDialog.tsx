@@ -27,11 +27,9 @@ import {
 
 interface AcceptDialogProps {
   appointment: AppointmentType;
-  client: string;
-  id: number;
 }
 
-const AcceptDialog: React.FC<AcceptDialogProps> = ({ client, appointment }) => {
+const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
   const [date, setDate] = React.useState<Date | null>(null);
   const [expireDate, setExpireDate] = React.useState<Date | null>(null);
   const [time, setTime] = React.useState<Date | null>(null);
@@ -73,7 +71,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ client, appointment }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <GenericDialog
-        title={`${client} 's appointment ticket`}
+        title={`${appointment.patient_name} 's appointment ticket`}
         renderTrigger={(open) => (
           <Tooltip title="Accept appointment">
             <IconButton aria-label="decline" size="small" onClick={open}>
@@ -107,6 +105,8 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ client, appointment }) => {
               label="Choisir la date"
               value={date}
               onChange={(newValue) => setDate(newValue)}
+              disablePast
+              format="dd/MM/yyyy"
             />
             <TimePicker
               label="Choisir l'heure"
@@ -120,6 +120,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ client, appointment }) => {
               label="Choisir l'expiration du ticket"
               value={expireDate}
               onChange={(newValue) => setExpireDate(newValue)}
+              format="dd/MM/yyyy"
             />
           </Stack>
         </Stack>

@@ -10,6 +10,7 @@ export type AppointmentType = {
   patient_phone: string;
   doctor: number | null;
   doctor_name: string | null;
+  notes: string | null;
   status: string;
   descriptions: string | null;
   date: string | null;

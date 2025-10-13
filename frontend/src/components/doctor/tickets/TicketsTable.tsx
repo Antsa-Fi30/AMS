@@ -141,15 +141,8 @@ const TicketsTable = () => {
                           justifyContent: "center",
                         }}
                       >
-                        <AcceptDialog
-                          id={ticket.id}
-                          client={ticket.patient_name}
-                          appointment={ticket}
-                        />
-                        <RejectDialog
-                          id={ticket.id}
-                          client={ticket.patient_name}
-                        />
+                        <AcceptDialog appointment={ticket} />
+                        <RejectDialog appointment={ticket} />
                       </Box>
                     )}
                     <DetailsDialog target={ticket} />

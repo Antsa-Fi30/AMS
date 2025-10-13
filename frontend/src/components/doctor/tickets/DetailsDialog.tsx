@@ -38,9 +38,7 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
           }
           sx={{ width: "fit-content" }}
         />
-
         <Divider />
-
         {/* Infos principales */}
         <Stack spacing={1}>
           <Typography variant="h3">Patient:</Typography>
@@ -50,13 +48,11 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
           </Typography>
         </Stack>
         <Divider />
-
         <Stack spacing={1}>
           <Typography variant="h3">Motif</Typography>
           <Typography variant="body1">{target.reason}</Typography>
         </Stack>
         <Divider />
-
         <Stack spacing={1}>
           <Typography variant="h3">Descriptions </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -64,7 +60,17 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
           </Typography>
         </Stack>
         <Divider />
-
+        {target.status === "rejected" && (
+          <>
+            <Stack spacing={1}>
+              <Typography variant="h3">Notes </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {target.notes || "N/A"}
+              </Typography>
+            </Stack>
+            <Divider />
+          </>
+        )}
         <Stack spacing={1} direction={{ xs: "column", sm: "row" }} gap={2}>
           <Stack>
             <Typography variant="h3">Date</Typography>
@@ -76,7 +82,6 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
           </Stack>
         </Stack>
         <Divider />
-
         <Stack spacing={1}>
           <Typography variant="h3">Docteur</Typography>
           <Typography variant="body1">
@@ -84,13 +89,11 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
           </Typography>
         </Stack>
         <Divider />
-
         <Stack spacing={1}>
           <Typography variant="h3">Expiration du ticket</Typography>
           <Typography variant="body1">{target.expire || "N/A"}</Typography>
         </Stack>
         <Divider />
-
         <Stack spacing={1}>
           <Typography variant="h3">Date de création</Typography>
           <Typography variant="body2" color="text.secondary">
@@ -98,7 +101,6 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
           </Typography>
         </Stack>
         <Divider />
-
         <Stack direction={"row"} alignItems={"center"} spacing={3}>
           <Typography variant="h3">Dernière mise à jour</Typography>
           <Typography variant="body2" color="text.secondary">

@@ -4,26 +4,36 @@ import {
   Button,
   CircularProgress,
   DialogContentText,
+  FormControl,
+  FormLabel,
   IconButton,
+  TextField,
   Tooltip,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { useUpdateAppointmentsMutation } from "../../../services/AppointmentServices";
+import {
+  useUpdateAppointmentsMutation,
+  type AppointmentType,
+} from "../../../services/AppointmentServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 
 interface RejectDialogProps {
-  client: string;
-  id: number;
+  appointment: AppointmentType;
 }
 
-const RejectDialog: React.FC<RejectDialogProps> = ({ client, id }) => {
+const RejectDialog: React.FC<RejectDialogProps> = ({ appointment }) => {
+  const [notes, setNotes] = React.useState<string>("");
   const { showSnackbar } = useSnackbar();
   const [updateAppointments, { isLoading, error }] =
     useUpdateAppointmentsMutation();
 
   const handleConfirm = async (close: () => void, id: number) => {
     try {
-      await updateAppointments({ id, status: "rejected" }).unwrap();
+      await updateAppointments({
+        id,
+        status: "rejected",
+        notes,
+      }).unwrap();
 
       showSnackbar("Appointment updated successfully!", "success");
     } catch (err) {
@@ -36,7 +46,7 @@ const RejectDialog: React.FC<RejectDialogProps> = ({ client, id }) => {
   return (
     <>
       <GenericDialog
-        title={`${client} 's appointment ticket`}
+        title={`${appointment.patient_name} 's appointment ticket`}
         renderTrigger={(open) => (
           <Tooltip title="Reject appointment">
             <IconButton aria-label="decline" size="small" onClick={open}>
@@ -48,7 +58,7 @@ const RejectDialog: React.FC<RejectDialogProps> = ({ client, id }) => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => handleConfirm(close, id)}
+            onClick={() => handleConfirm(close, appointment.id)}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -66,8 +76,29 @@ const RejectDialog: React.FC<RejectDialogProps> = ({ client, id }) => {
           You really want to reject this appointment?
         </DialogContentText>
         <DialogContentText id="alert-dialog-slide-description">
-          {`${client}`} will be notified about the rejection by SMS
+          {`${appointment.patient_name}`} will be notified about the rejection
+          by SMS
         </DialogContentText>
+        <FormControl fullWidth>
+          <FormLabel htmlFor="notes">
+            Do you want to notice this reject?
+          </FormLabel>
+          <TextField
+            id="notes"
+            name="notes"
+            type="text"
+            multiline
+            required
+            placeholder="Type here..."
+            fullWidth
+            color="primary"
+            variant="standard"
+            value={notes}
+            onChange={(
+              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ) => setNotes(e.target.value)}
+          />
+        </FormControl>
       </GenericDialog>
     </>
   );
