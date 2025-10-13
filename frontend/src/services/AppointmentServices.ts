@@ -14,7 +14,7 @@ export type AppointmentType = {
   descriptions: string | null;
   date: string | null;
   time: string | null;
-  expire: string;
+  expire: string | null;
   requested_at: string;
   updated_at: string;
 };

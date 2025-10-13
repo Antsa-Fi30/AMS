@@ -19,6 +19,11 @@ import {
   useUpdateAppointmentsMutation,
 } from "../../../services/AppointmentServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
+import {
+  combineDateAndTime,
+  formatDateToLocalString,
+  formatTimeToLocalString,
+} from "../../../utils/Formats";
 
 interface AcceptDialogProps {
   appointment: AppointmentType;
@@ -42,22 +47,17 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ client, appointment }) => {
         return;
       }
 
-      console.log({
-        date,time,expireDate
-      })
+      const finalDate = combineDateAndTime(date, time);
 
-      const expire = expireDate ? new Date(expireDate) : null;
-      const finalDate = new Date(date);
-      finalDate.setHours(time.getHours());
-      finalDate.setMinutes(time.getMinutes());
-
-      await updateAppointments({
+      const updatedData = {
         ...appointment,
-        date: finalDate.toISOString().split("T")[0],
-        time: finalDate.toISOString().split("T")[1],
-        expire: expire?.toISOString().split("T")[0],
+        date: formatDateToLocalString(finalDate),
+        time: formatTimeToLocalString(finalDate),
+        expire: expireDate ? formatDateToLocalString(expireDate) : null,
         status: "confirmed",
-      }).unwrap();
+      };
+
+      await updateAppointments(updatedData).unwrap();
 
       showSnackbar("Appointment updated successfully!", "success");
     } catch (err) {
@@ -111,7 +111,9 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ client, appointment }) => {
             <TimePicker
               label="Choisir l'heure"
               value={time}
+              format="HH:mm"
               onChange={(newValue) => setTime(newValue)}
+              ampm={false}
             />
 
             <DatePicker
