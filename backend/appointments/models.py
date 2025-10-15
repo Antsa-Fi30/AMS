@@ -36,6 +36,7 @@ class Appointment(models.Model):
     date = models.DateField(null=True, blank=True)
     time = models.TimeField(null=True, blank=True)
     expire = models.DateField(null=True, blank=True)
+    finished = models.BooleanField(default=False)
 
     requested_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,43 +1,67 @@
-import { Grid, Card, CardContent, Box, Typography } from "@mui/material";
+import { useMemo } from "react";
+import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 import {
-  PendingActions,
-  CheckCircle,
   Cancel,
-  Schedule,
+  CheckCircle,
+  PendingActions,
+  // Schedule,
 } from "@mui/icons-material";
+import {
+  Box,
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  Typography,
+} from "@mui/material";
 
 export const TicketStats = () => {
-  const stats = [
-    {
-      icon: <PendingActions color="warning" sx={{ fontSize: 40 }} />,
-      label: "En attente",
-      value: "8",
-      color: "warning",
-    },
-    {
-      icon: <CheckCircle color="success" sx={{ fontSize: 40 }} />,
-      label: "Confirmés",
-      value: "24",
-      color: "success",
-    },
-    {
-      icon: <Cancel color="error" sx={{ fontSize: 40 }} />,
-      label: "Refusés",
-      value: "3",
-      color: "error",
-    },
-    {
-      icon: <Schedule color="info" sx={{ fontSize: 40 }} />,
-      label: "Aujourd'hui",
-      value: "5",
-      color: "info",
-    },
-  ];
+  const { data = [], isLoading } = useGetAppointmentsQuery();
+
+  const stats = useMemo(() => {
+    const pending = data.filter((a) => a.status === "pending").length;
+    const confirmed = data.filter((a) => a.status === "confirmed").length;
+    const refused = data.filter((a) => a.status === "rejected").length;
+    // const today = data.filter((a) => {
+    //   const date = new Date(a.date);
+    //   const today = new Date();
+    //   return date.toDateString() === today.toDateString();
+    // }).length;
+
+    return [
+      {
+        icon: <PendingActions color="warning" sx={{ fontSize: 40 }} />,
+        label: "En attente",
+        value: pending,
+        color: "warning",
+      },
+      {
+        icon: <CheckCircle color="success" sx={{ fontSize: 40 }} />,
+        label: "Confirmés",
+        value: confirmed,
+        color: "success",
+      },
+      {
+        icon: <Cancel color="error" sx={{ fontSize: 40 }} />,
+        label: "Refusés",
+        value: refused,
+        color: "error",
+      },
+      // {
+      //   icon: <Schedule color="info" sx={{ fontSize: 40 }} />,
+      //   label: "Aujourd'hui",
+      //   value: today,
+      //   color: "info",
+      // },
+    ];
+  }, [data]);
+
+  if (isLoading) return <CircularProgress />;
 
   return (
-    <Grid container spacing={3}>
+    <Grid container justifyContent={"center"} spacing={3}>
       {stats.map((stat, index) => (
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={index}>
+        <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
           <Card sx={{ borderRadius: 3, height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: "flex", alignItems: "center" }}>

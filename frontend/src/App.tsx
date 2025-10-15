@@ -13,6 +13,7 @@ import Appointments from "./pages/client/Appointments";
 import ProfileCli from "./pages/client/ProfileCli";
 import { useDispatch } from "react-redux";
 import { initializeAuth } from "./redux/AuthSlice";
+import Calendar from "./pages/doctor/Calendar";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const App = () => {
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<Dashboard />} />
             <Route path="tickets" element={<Tickets />} />
+            <Route path="calendar" element={<Calendar />} />
           </Route>
           <Route path="patient" element={<PatientLayout />}>
             <Route index element={<Navigate to="home" replace />} />

@@ -15,8 +15,6 @@ const Header = () => {
         py: 1.3,
       }}
     >
-      {/* Champ de recherche */}
-      <Searchbar />
       {/* Bouton notification */}
       <IconButton color="primary">
         <NotificationsOutlinedIcon />

@@ -63,6 +63,17 @@ const GenericDialog: React.FC<GenericDialogProps> = ({
         onClose={handleClose}
         fullScreen={fullScreen}
         slots={{ transition: Transition }}
+        maxWidth="md"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: {
+              width: "100%",
+              maxWidth: 800,
+              borderRadius: 3,
+            },
+          },
+        }}
         keepMounted
         aria-describedby="alert-dialog-slide-description"
         {...dialogProps}

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
   Typography,
@@ -19,8 +18,8 @@ import RejectDialog from "./RejectDialog";
 import DetailsDialog from "./DetailsDialog";
 
 const TicketsTable = () => {
-  const { data, isLoading, refetch } = useGetAppointmentsQuery(undefined, {
-    pollingInterval: 5000, // Rafraîchir les données toutes les 3 secondes
+  const { data, isLoading } = useGetAppointmentsQuery(undefined, {
+    pollingInterval: 10000,
   });
 
   const getStatusColor = (status: string) => {

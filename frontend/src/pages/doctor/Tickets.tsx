@@ -48,7 +48,7 @@ const TicketDashboard = () => {
           <Card elevation={2} sx={{ borderRadius: 3 }}>
             <CardContent sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <QuickTicketActions />
+                {/* <QuickTicketActions /> */}
                 <TicketsTable />
               </Stack>
             </CardContent>

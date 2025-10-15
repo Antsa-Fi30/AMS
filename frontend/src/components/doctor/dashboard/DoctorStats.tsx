@@ -1,50 +1,45 @@
 import { Grid, Card, CardContent, Box, Typography } from "@mui/material";
-import { Groups, Schedule, CheckCircle, Emergency } from "@mui/icons-material";
+import { Groups, Schedule, CheckCircle } from "@mui/icons-material";
 
 export const DoctorStats = () => {
   const stats = [
-    { 
-      icon: <Groups color="primary" sx={{ fontSize: 40 }} />, 
-      label: "Patients aujourd'hui", 
-      value: "12", 
-      change: "+2 vs hier",
-      color: "primary" 
+    {
+      icon: <Groups color="primary" sx={{ fontSize: 40 }} />,
+      label: "Patients aujourd'hui",
+      value: "12",
+
+      color: "primary",
     },
-    { 
-      icon: <Schedule color="secondary" sx={{ fontSize: 40 }} />, 
-      label: "RDV programmés", 
-      value: "8", 
-      change: "Prochain: 14:30",
-      color: "secondary" 
+    {
+      icon: <Schedule color="secondary" sx={{ fontSize: 40 }} />,
+      label: "RDV programmés",
+      value: "8",
+
+      color: "secondary",
     },
-    { 
-      icon: <CheckCircle color="success" sx={{ fontSize: 40 }} />, 
-      label: "Consultations terminées", 
-      value: "4", 
-      change: "Dernière: 12:15",
-      color: "success" 
-    },
-    { 
-      icon: <Emergency color="error" sx={{ fontSize: 40 }} />, 
-      label: "Urgences", 
-      value: "1", 
-      change: "En attente",
-      color: "error" 
+    {
+      icon: <CheckCircle color="success" sx={{ fontSize: 40 }} />,
+      label: "Consultations terminées",
+      value: "4",
+
+      color: "success",
     },
   ];
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3} justifyContent={"center"}>
       {stats.map((stat, index) => (
         <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={index}>
-          <Card sx={{ borderRadius: 3, height: '100%' }}>
+          <Card sx={{ borderRadius: 3, height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Box sx={{ mr: 2 }}>
-                  {stat.icon}
-                </Box>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Box sx={{ mr: 2 }}>{stat.icon}</Box>
                 <Box>
-                  <Typography variant="h4" fontWeight="bold" color={`${stat.color}.main`}>
+                  <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                    color={`${stat.color}.main`}
+                  >
                     {stat.value}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -52,9 +47,6 @@ export const DoctorStats = () => {
                   </Typography>
                 </Box>
               </Box>
-              <Typography variant="caption" color="text.secondary">
-                {stat.change}
-              </Typography>
             </CardContent>
           </Card>
         </Grid>

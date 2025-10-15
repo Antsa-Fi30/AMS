@@ -10,6 +10,14 @@ from django.contrib.auth import get_user_model
 from .models import Appointment
 from .serializers import AppointmentSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+
+from django.utils import timezone
+from datetime import date, time, timedelta
+from django.db.models import Count
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Appointment
 
 # from django.conf import settings
 # from asgiref.sync import async_to_sync
@@ -70,6 +78,96 @@ def accepted_appointment(request):
     appointments = Appointment.objects.filter(status="accepted")
     serializer = AppointmentSerializer(appointments, many=True)
     return Response(serializer.data)
+
+
+@api_view(["GET"])
+def appointment_stats(request):
+    today = date.today()
+
+    patients_today = (
+        Appointment.objects.filter(date=today).values("patient").distinct().count()
+    )
+
+    scheduled = Appointment.objects.filter(date=today, status__in=["confirmed"]).count()
+
+    finished = Appointment.objects.filter(date=today, status="rejected").count()
+
+    emergencies = Appointment.objects.filter(
+        date=today, reason__icontains="urgence"
+    ).count()
+
+    next_appointment = (
+        Appointment.objects.filter(
+            date=today, status="confirmed", time__gte=time.today()
+        )
+        .order_by("time")
+        .first()
+    )
+
+    last_finished = (
+        Appointment.objects.filter(date=today, status="rejected")
+        .order_by("-time")
+        .first()
+    )
+
+    return Response(
+        {
+            "patients_today": patients_today,
+            "scheduled": scheduled,
+            "finished": finished,
+            "emergencies": emergencies,
+            "next_time": next_appointment.time if next_appointment else None,
+            "last_finished": last_finished.time if last_finished else None,
+        }
+    )
+
+
+@api_view(["GET"])
+def futur_plan(request):
+    if not request.user.is_authenticated:
+        return Response({"error": "Authentication required"}, status=401)
+
+    today = timezone.now().date()
+
+    upcoming_appointments = Appointment.objects.filter(
+        doctor=request.user,
+        status="confirmed",
+        date__gte=today,
+        date__lte=today + timedelta(days=7),
+    ).order_by("date", "time")
+
+    from collections import defaultdict
+
+    daily_stats = defaultdict(list)
+
+    for appointment in upcoming_appointments:
+        daily_stats[appointment.date].append(appointment)
+
+    planning_data = []
+    for date, appointments in sorted(daily_stats.items())[:3]:
+        rdv_count = len(appointments)
+        day_type = "Demi-journée" if rdv_count <= 4 else "Journée complète"
+
+        planning_data.append(
+            {
+                "day_number": date.day,
+                "date_display": date.strftime("%A %d %b"),
+                "rdv_count": rdv_count,
+                "day_type": day_type,
+                "appointments": [
+                    {
+                        "time": apt.time.strftime("%H:%M") if apt.time else "",
+                        "patient": apt.patient.get_full_name() or apt.patient.username,
+                        "reason": apt.reason or "Consultation",
+                    }
+                    for apt in appointments
+                ],
+            }
+        )
+
+    return Response(
+        {"upcoming_planning": planning_data, "total_days": len(planning_data)}
+    )
 
 
 # @api_view(["POST"])

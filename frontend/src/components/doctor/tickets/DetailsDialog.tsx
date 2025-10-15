@@ -11,7 +11,6 @@ interface DetailsDialogProps {
 const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
   return (
     <GenericDialog
-      dialogProps={{ maxWidth: 250 }}
       title={`${target.patient_name} - Détails du rendez-vous`}
       renderTrigger={(open) => (
         <IconButton aria-label="Voir détails" size="small" onClick={open}>
@@ -55,7 +54,14 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
         <Divider />
         <Stack spacing={1}>
           <Typography variant="h3">Descriptions </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              wordBreak: "break-word",
+              whiteSpace: "pre-wrap",
+            }}
+          >
             {target.descriptions || "N/A"}
           </Typography>
         </Stack>

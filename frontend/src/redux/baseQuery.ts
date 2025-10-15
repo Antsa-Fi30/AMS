@@ -28,7 +28,6 @@ export const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  // Premier essai de la requête
   let result = await baseQuery(args, api, extraOptions);
 
   console.log("Initial request result:", {
@@ -36,7 +35,6 @@ export const baseQueryWithReauth: BaseQueryFn<
     error: result.error,
   });
 
-  // Si pas d'erreur 401, retourner le résultat normalement
   if (!result.error || result.error.status !== 401) {
     return result;
   }

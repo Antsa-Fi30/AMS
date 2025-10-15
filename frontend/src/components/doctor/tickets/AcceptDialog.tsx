@@ -1,6 +1,7 @@
 import React from "react";
 import GenericDialog from "../../common/GenericDialog";
 import {
+  Box,
   Button,
   CircularProgress,
   DialogContentText,
@@ -96,34 +97,41 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
           </Button>
         )}
       >
-        <DialogContentText>
-          Define the date and the time for the meetings down below
-        </DialogContentText>
-        <Stack spacing={2}>
-          <Stack spacing={3} sx={{ pt: 2 }}>
-            <DatePicker
-              label="Choisir la date"
-              value={date}
-              onChange={(newValue) => setDate(newValue)}
-              disablePast
-              format="dd/MM/yyyy"
-            />
-            <TimePicker
-              label="Choisir l'heure"
-              value={time}
-              format="HH:mm"
-              onChange={(newValue) => setTime(newValue)}
-              ampm={false}
-            />
+        <Box textAlign={"center"} p={1}>
+          <DialogContentText>
+            Define the date and the time for the meetings down below
+          </DialogContentText>
+          <Stack
+            spacing={2}
+            justifyContent={"center"}
+            alignItems="center"
+            margin={"auto"}
+          >
+            <Stack spacing={3} sx={{ pt: 2 }}>
+              <DatePicker
+                label="Choisir la date"
+                value={date}
+                onChange={(newValue) => setDate(newValue)}
+                disablePast
+                format="dd/MM/yyyy"
+              />
+              <TimePicker
+                label="Choisir l'heure"
+                value={time}
+                format="HH:mm"
+                onChange={(newValue) => setTime(newValue)}
+                ampm={false}
+              />
 
-            <DatePicker
-              label="Choisir l'expiration du ticket"
-              value={expireDate}
-              onChange={(newValue) => setExpireDate(newValue)}
-              format="dd/MM/yyyy"
-            />
+              <DatePicker
+                label="Choisir l'expiration du ticket"
+                value={expireDate}
+                onChange={(newValue) => setExpireDate(newValue)}
+                format="dd/MM/yyyy"
+              />
+            </Stack>
           </Stack>
-        </Stack>
+        </Box>
       </GenericDialog>
     </LocalizationProvider>
   );

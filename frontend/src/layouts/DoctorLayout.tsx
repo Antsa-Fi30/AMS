@@ -24,10 +24,7 @@ const DoctorLayout = () => {
             overflow: "auto",
           })}
         >
-          <Box sx={{ mb: 3 }}>
-            <Header />
-          </Box>
-          <Stack spacing={5} sx={{ p: 2 }}>
+          <Stack spacing={5} sx={{ px: 2, py: 1 }}>
             <Outlet />
           </Stack>
         </Box>

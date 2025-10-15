@@ -11,9 +11,9 @@ import { WelcomeHeaderDoctor } from "../../components/doctor/dashboard/WelcomeHe
 import { DoctorStats } from "../../components/doctor/dashboard/DoctorStats";
 import { TodayAppointments } from "../../components/doctor/dashboard/TodayAppointments";
 import { UpcomingSchedule } from "../../components/doctor/dashboard/UpcomingSchedule";
-import { PatientQueue } from "../../components/doctor/dashboard/PatientQueue";
 import { QuickActionsDoctor } from "../../components/doctor/dashboard/QuickActionsDoctor";
-import { MedicalInsights } from "../../components/doctor/dashboard/MedicalInsights";
+// import { PatientQueue } from "../../components/doctor/dashboard/PatientQueue";
+// import { MedicalInsights } from "../../components/doctor/dashboard/MedicalInsights";
 
 const Dashboard = () => {
   return (
@@ -26,7 +26,7 @@ const Dashboard = () => {
         <DoctorStats />
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         {/* Colonne gauche - Agenda et file d'attente */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <Stack spacing={3}>
@@ -36,19 +36,18 @@ const Dashboard = () => {
                 <TodayAppointments />
               </CardContent>
             </Card>
-
-            {/* File d'attente */}
+            {/* File d'attente
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent sx={{ p: 3 }}>
                 <PatientQueue />
               </CardContent>
-            </Card>
+            </Card> */}
           </Stack>
         </Grid>
 
         {/* Colonne droite - Actions rapides et insights */}
         <Grid size={{ xs: 12, lg: 4 }}>
-          <Stack spacing={3}>
+          <Stack spacing={2}>
             {/* Calendrier et planning */}
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent sx={{ p: 3 }}>
@@ -64,11 +63,11 @@ const Dashboard = () => {
             </Card>
 
             {/* Insights médicaux */}
-            <Card elevation={2} sx={{ borderRadius: 3 }}>
+            {/* <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent sx={{ p: 3 }}>
                 <MedicalInsights />
               </CardContent>
-            </Card>
+            </Card> */}
           </Stack>
         </Grid>
       </Grid>
