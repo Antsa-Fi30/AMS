@@ -22,6 +22,12 @@ export type AppointmentType = {
   updated_at: string;
 };
 
+export type DoctorStatsType = {
+  patients: number;
+  scheduled: number;
+  finished: number;
+};
+
 export const appointmentsApi = createApi({
   reducerPath: "appointmentsApi",
   refetchOnFocus: true, // quand l'utilisateur revient sur l'onglet
@@ -31,6 +37,10 @@ export const appointmentsApi = createApi({
   endpoints: (builder) => ({
     getAppointments: builder.query<AppointmentType[], void>({
       query: () => "appointments/",
+      providesTags: ["Appointments"],
+    }),
+    getDoctorStats: builder.query<DoctorStatsType, void>({
+      query: () => "doctor/stats/",
       providesTags: ["Appointments"],
     }),
     addAppointment: builder.mutation<AppointmentType, Partial<AppointmentType>>(
@@ -59,6 +69,7 @@ export const appointmentsApi = createApi({
 
 export const {
   useGetAppointmentsQuery,
+  useGetDoctorStatsQuery,
   useAddAppointmentMutation,
   useUpdateAppointmentsMutation,
 } = appointmentsApi;

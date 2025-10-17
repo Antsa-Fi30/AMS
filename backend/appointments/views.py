@@ -170,6 +170,43 @@ def futur_plan(request):
     return Response(planning_data)
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_doctor_stats(request):
+    doctor = request.user
+    today = timezone.now().date()
+
+    today_patients = (
+        Appointment.objects.filter(doctor=doctor, date=today, status="confirmed")
+        .values("patient")
+        .distinct()
+        .count()
+    )
+
+    upcoming_appointments = Appointment.objects.filter(
+        doctor=doctor,
+        date__gte=today,
+        date__lte=today + timedelta(days=7),
+        status="confirmed",
+        finished=False,
+    ).count()
+
+    finished_consultations = Appointment.objects.filter(
+        doctor=doctor,
+        date__gte=today,
+        date__lte=today + timedelta(days=7),
+        finished=True,
+    ).count()
+
+    return Response(
+        {
+            "patients": today_patients,
+            "scheduled": upcoming_appointments,
+            "finished": finished_consultations,
+        }
+    )
+
+
 # @api_view(["POST"])
 # @permission_classes([IsAuthenticated])
 # def create_checkout_session(request):
