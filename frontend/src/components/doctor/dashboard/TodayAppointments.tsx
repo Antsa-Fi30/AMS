@@ -5,16 +5,25 @@ import {
   ListItem,
   Chip,
   Avatar,
-  IconButton,
   CircularProgress,
 } from "@mui/material";
-import { AccessTime, Cancel } from "@mui/icons-material";
+import { AccessTime } from "@mui/icons-material";
 import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
+import ConfirmFinishedDialog from "./ConfirmFinishedDialog";
+import { formatDateToLocalString } from "../../../utils/Formats";
+import DetailsDialog from "../tickets/DetailsDialog";
+import EmptyData from "../../common/EmptyData";
 
 export const TodayAppointments = () => {
   const { data, isLoading } = useGetAppointmentsQuery();
+  const today = new Date();
   const appointments =
-    data?.filter((ticket) => ticket.status === "confirmed") ?? [];
+    data?.filter(
+      (ticket) =>
+        ticket.status === "confirmed" &&
+        !ticket.finished &&
+        ticket.date === formatDateToLocalString(today)
+    ) ?? [];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -44,11 +53,29 @@ export const TodayAppointments = () => {
         <List
           sx={{
             p: 0,
-            height: 500,
-            maxHeight: 500,
+            height: 494,
+            maxHeight: 494,
             overflowY: "auto",
             scrollPadding: 0,
             scrollbarGutter: "stable",
+
+            "&::-webkit-scrollbar": {
+              width: "6px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f8fafc",
+              borderRadius: "3px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#cbd5e1",
+              borderRadius: "3px",
+              "&:hover": {
+                background: "#94a3b8",
+              },
+            },
+
+            scrollbarWidth: "thin",
+            scrollbarColor: "#cbd5e1 #f8fafc",
           }}
         >
           {appointments.length > 0 ? (
@@ -59,7 +86,7 @@ export const TodayAppointments = () => {
                   display: "flex",
                   alignItems: "center",
                   py: 2,
-                  px: 0,
+                  px: 2,
                   borderBottom: "1px solid",
                   borderColor: "divider",
                   "&:last-child": { borderBottom: "none" },
@@ -90,34 +117,24 @@ export const TodayAppointments = () => {
                     sx={{ mt: 1 }}
                   />
                 </Box>
-
-                <IconButton size="small">
-                  <Cancel color="error" />
-                </IconButton>
+                <DetailsDialog target={appointment} />
+                <ConfirmFinishedDialog appointment={appointment} />
               </ListItem>
             ))
           ) : (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 485,
-                  color: "text.secondary",
-                  py: 3,
-                }}
-              >
-                <AccessTime sx={{ fontSize: 60, color: "grey.400", mb: 1 }} />
-                <Typography variant="subtitle1" fontWeight="medium">
-                  Aucun rendez-vous aujourd’hui
-                </Typography>
-                <Typography variant="body2">
-                  Les rendez-vous confirmés s’afficheront ici.
-                </Typography>
-              </Box>
-            </>
+            <Box
+              sx={{
+                height: 494,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <EmptyData
+                title="Aucun rendez-vous pour aujourd'hui"
+                hint="Les rendez-vous confirmés qui ne sont pas terminés sont affichés ici"
+              />
+            </Box>
           )}
         </List>
       )}

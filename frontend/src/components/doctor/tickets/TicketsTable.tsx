@@ -16,6 +16,7 @@ import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 import AcceptDialog from "./AcceptDialog";
 import RejectDialog from "./RejectDialog";
 import DetailsDialog from "./DetailsDialog";
+import { Cancel, Check } from "@mui/icons-material";
 
 const TicketsTable = () => {
   const { data, isLoading } = useGetAppointmentsQuery(undefined, {
@@ -71,6 +72,7 @@ const TicketsTable = () => {
                 <TableCell>Date</TableCell>
                 <TableCell>Time</TableCell>
                 <TableCell>Statut</TableCell>
+                <TableCell>Finished</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -118,6 +120,7 @@ const TicketsTable = () => {
                       </Typography>
                     </Box>
                   </TableCell>
+
                   <TableCell>
                     <Chip
                       label={
@@ -131,6 +134,14 @@ const TicketsTable = () => {
                       size="small"
                     />
                   </TableCell>
+                  <TableCell>
+                    {ticket.finished ? (
+                      <Check color="success" />
+                    ) : (
+                      <Cancel color="error" />
+                    )}
+                  </TableCell>
+
                   <TableCell align="center">
                     {ticket.status === "pending" && (
                       <Box

@@ -12,10 +12,36 @@ import { DoctorStats } from "../../components/doctor/dashboard/DoctorStats";
 import { TodayAppointments } from "../../components/doctor/dashboard/TodayAppointments";
 import { UpcomingSchedule } from "../../components/doctor/dashboard/UpcomingSchedule";
 import { QuickActionsDoctor } from "../../components/doctor/dashboard/QuickActionsDoctor";
+import { useEffect, useState } from "react";
 // import { PatientQueue } from "../../components/doctor/dashboard/PatientQueue";
 // import { MedicalInsights } from "../../components/doctor/dashboard/MedicalInsights";
+import { futurAppointment } from "../../services/AppointmentServices";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+
+export type Schedule = {
+  date_display: string;
+  day_number: number;
+  day_type: string;
+  rdv_count: number;
+};
 
 const Dashboard = () => {
+  const [futurData, setFuturData] = useState<Schedule[]>([]);
+  const { showSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    const fetchFutur = async () => {
+      try {
+        const data = await futurAppointment();
+        setFuturData(data);
+      } catch (err) {
+        showSnackbar(err.message, "error");
+      }
+    };
+
+    fetchFutur();
+  }, []);
+
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* En-tête personnalisée pour docteur */}
@@ -51,7 +77,7 @@ const Dashboard = () => {
             {/* Calendrier et planning */}
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent sx={{ p: 3 }}>
-                <UpcomingSchedule />
+                <UpcomingSchedule schedule={futurData} />
               </CardContent>
             </Card>
 

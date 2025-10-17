@@ -132,7 +132,8 @@ def futur_plan(request):
     upcoming_appointments = Appointment.objects.filter(
         doctor=request.user,
         status="confirmed",
-        date__gte=today,
+        finished=False,
+        date__gt=today,
         date__lte=today + timedelta(days=7),
     ).order_by("date", "time")
 
@@ -154,20 +155,19 @@ def futur_plan(request):
                 "date_display": date.strftime("%A %d %b"),
                 "rdv_count": rdv_count,
                 "day_type": day_type,
-                "appointments": [
-                    {
-                        "time": apt.time.strftime("%H:%M") if apt.time else "",
-                        "patient": apt.patient.get_full_name() or apt.patient.username,
-                        "reason": apt.reason or "Consultation",
-                    }
-                    for apt in appointments
-                ],
+                # "appointments": [
+                #     {
+                #         "date": apt.date,
+                #         "time": apt.time.strftime("%H:%M") if apt.time else "",
+                #         "patient": apt.patient.get_full_name() or apt.patient.username,
+                #         "reason": apt.reason or "Consultation",
+                #     }
+                #     for apt in appointments
+                # ],
             }
         )
 
-    return Response(
-        {"upcoming_planning": planning_data, "total_days": len(planning_data)}
-    )
+    return Response(planning_data)
 
 
 # @api_view(["POST"])

@@ -18,6 +18,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             "patient_phone",
             "doctor",
             "doctor_name",
+            "finished",
             "status",
             "descriptions",
             "date",

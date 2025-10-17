@@ -1,6 +1,5 @@
 import { Box, Button, Grid } from "@mui/material";
 import {
-  Add,
   MedicalServices,
   Description,
   Analytics,

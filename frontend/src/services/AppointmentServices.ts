@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../redux/baseQuery";
+import axiosInstance from "./AxiosInstance";
 // import axiosInstance from "./AxiosInstance";
 
 export type AppointmentType = {
@@ -12,6 +13,7 @@ export type AppointmentType = {
   doctor_name: string | null;
   notes: string | null;
   status: string;
+  finished: boolean;
   descriptions: string | null;
   date: string | null;
   time: string | null;
@@ -60,3 +62,12 @@ export const {
   useAddAppointmentMutation,
   useUpdateAppointmentsMutation,
 } = appointmentsApi;
+
+export const futurAppointment = async () => {
+  try {
+    const response = await axiosInstance.get("/doctor/futur");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching future appointments:", error);
+  }
+};
