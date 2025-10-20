@@ -18,7 +18,7 @@ class Appointment(models.Model):
         related_name="appointments_as_patient",
     )
 
-    #### Doctor field (optional ,especially for multi-doctor feature)
+    #### Doctor field (optional ,especially for multi-doctor feature but not for now)
     doctor = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # It's a place for a model, but here ...an exception
         on_delete=models.CASCADE,

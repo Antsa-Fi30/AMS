@@ -10,6 +10,9 @@ export const WelcomeHeaderDoctor = () => {
       ? "Bon après-midi Docteur"
       : "Bonsoir Docteur";
 
+  const user = sessionStorage.getItem("user");
+  const name = user ? JSON.parse(user).name : "";
+
   return (
     <Box
       sx={{
@@ -21,26 +24,13 @@ export const WelcomeHeaderDoctor = () => {
     >
       <Box>
         <Typography variant="h4" fontWeight="bold" gutterBottom>
-          {greeting}, Dr. Rakoto{" "}
+          {greeting}, Dr {name}
           <MedicalServices sx={{ color: "primary.main", ml: 1 }} />
         </Typography>
         <Typography variant="h6" color="text.secondary">
-          Cabinet Dentaire - Votre journée de consultation
+          Votre journée de consultation
         </Typography>
       </Box>
-      {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Chip 
-          label="5 patients en attente" 
-          color="warning" 
-          variant="outlined"
-        />
-        <Button variant="outlined" startIcon={<Notifications />}>
-          Alertes
-        </Button>
-        <Avatar sx={{ bgcolor: 'primary.main' }}>
-          DR
-        </Avatar>
-      </Box> */}
     </Box>
   );
 };

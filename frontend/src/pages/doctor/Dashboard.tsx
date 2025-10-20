@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -11,10 +12,9 @@ import { WelcomeHeaderDoctor } from "../../components/doctor/dashboard/WelcomeHe
 import { DoctorStats } from "../../components/doctor/dashboard/DoctorStats";
 import { TodayAppointments } from "../../components/doctor/dashboard/TodayAppointments";
 import { UpcomingSchedule } from "../../components/doctor/dashboard/UpcomingSchedule";
-import { QuickActionsDoctor } from "../../components/doctor/dashboard/QuickActionsDoctor";
-import { useEffect, useState } from "react";
 import { futurAppointment } from "../../services/AppointmentServices";
 import { useSnackbar } from "../../contexts/SnackbarContext";
+import NotificationsContainer from "../../components/doctor/dashboard/NotificationsContainer";
 
 export type Schedule = {
   date_display: string;
@@ -67,11 +67,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
-            <Card elevation={2} sx={{ borderRadius: 3 }}>
-              <CardContent sx={{ p: 3 }}>
-                <QuickActionsDoctor />
-              </CardContent>
-            </Card>
+            <NotificationsContainer />
           </Stack>
         </Grid>
       </Grid>

@@ -1,6 +1,5 @@
 import { Box, IconButton } from "@mui/material";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import Searchbar from "./Searchbar";
 
 const Header = () => {
   return (

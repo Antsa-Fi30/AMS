@@ -22,8 +22,8 @@ export const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({
       <List
         sx={{
           p: 0,
-          height: 255,
-          maxHeight: 255,
+          height: 258,
+          maxHeight: 258,
           overflowY: "auto",
           scrollPadding: 0,
           scrollbarGutter: "stable",
@@ -43,9 +43,7 @@ export const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({
                 borderColor: "divider",
               }}
             >
-              <Avatar
-                sx={{ mr: 2, bgcolor: "primary.light", color: "primary.main" }}
-              >
+              <Avatar sx={{ mr: 2, bgcolor: "primary.light" }}>
                 {day.date_display.split(" ")[1]}
               </Avatar>
 
