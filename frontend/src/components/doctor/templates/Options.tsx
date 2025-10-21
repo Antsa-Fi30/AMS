@@ -71,9 +71,23 @@ export default function OptionsMenu() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate("/doctor/profil");
+          }}
+        >
+          Profile
+        </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>Settings</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate("/doctor/settings");
+          }}
+        >
+          Settings
+        </MenuItem>
         <Divider />
         <MenuItem
           onClick={handleLogOut}

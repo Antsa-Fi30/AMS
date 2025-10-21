@@ -63,7 +63,7 @@ export const TicketStats = () => {
       {stats.map((stat, index) => (
         <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
           <Card sx={{ borderRadius: 3, height: "100%" }}>
-            <CardContent sx={{ p: 3 }}>
+            <CardContent sx={{ p: 1 }}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Box sx={{ mr: 2 }}>{stat.icon}</Box>
                 <Box>

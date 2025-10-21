@@ -15,7 +15,6 @@ import {
   // Schedule,
 } from "@mui/icons-material";
 import TicketsTable from "../../components/doctor/tickets/TicketsTable";
-import QuickTicketActions from "../../components/doctor/tickets/QuickTicketActions";
 import { TicketStats } from "../../components/doctor/tickets/TicketStats";
 
 const TicketDashboard = () => {
@@ -34,7 +33,7 @@ const TicketDashboard = () => {
         </Box>
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         {/* Statistiques */}
         <Grid size={12}>
           <TicketStats />

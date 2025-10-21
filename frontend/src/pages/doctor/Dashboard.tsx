@@ -15,6 +15,7 @@ import { UpcomingSchedule } from "../../components/doctor/dashboard/UpcomingSche
 import { futurAppointment } from "../../services/AppointmentServices";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import NotificationsContainer from "../../components/doctor/dashboard/NotificationsContainer";
+// import Conseils from "../../components/doctor/dashboard/Conseils";
 
 export type Schedule = {
   date_display: string;
@@ -33,7 +34,8 @@ const Dashboard = () => {
         const data = await futurAppointment();
         setFuturData(data);
       } catch (err) {
-        showSnackbar(err.message, "error");
+        const message = err instanceof Error ? err.message : String(err);
+        showSnackbar(message, "error");
       }
     };
 
@@ -71,6 +73,11 @@ const Dashboard = () => {
           </Stack>
         </Grid>
       </Grid>
+      {/* <Card elevation={2} sx={{ borderRadius: 3, my: 2 }}>
+        <CardContent sx={{ p: 3 }}>
+          <Conseils />
+        </CardContent>
+      </Card> */}
 
       <Typography textAlign="center" color="text.secondary" sx={{ mt: 4 }}>
         © 2024 Befiana - Solution Médicale

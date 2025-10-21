@@ -5,7 +5,7 @@ import AppNavbar from "../components/doctor/templates/AppNavbar";
 
 import Sidebar from "../components/doctor/templates/Sidebar";
 import { Outlet } from "react-router-dom";
-import Header from "../components/doctor/templates/Header";
+// import Header from "../components/doctor/templates/Header";
 
 const DoctorLayout = () => {
   return (

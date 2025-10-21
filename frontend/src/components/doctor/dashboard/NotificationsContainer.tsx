@@ -17,6 +17,7 @@ import {
   Notifications,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
+import EmptyData from "../../common/EmptyData";
 
 type AlertType = "info" | "warning" | "error" | "success";
 
@@ -27,21 +28,21 @@ interface AlertItem {
 }
 
 const mockAlerts: AlertItem[] = [
-  {
-    type: "info",
-    title: "Confirmation manquante",
-    message: "2 patients n’ont pas encore confirmé leur présence.",
-  },
-  {
-    type: "warning",
-    title: "Annulation récente",
-    message: "1 patient a annulé son rendez-vous ce matin.",
-  },
-  {
-    type: "error",
-    title: "Rendez-vous expiré",
-    message: "1 rendez-vous a expiré sans mise à jour du statut.",
-  },
+  // {
+  //   type: "info",
+  //   title: "Confirmation manquante",
+  //   message: "2 patients n’ont pas encore confirmé leur présence.",
+  // },
+  // {
+  //   type: "warning",
+  //   title: "Annulation récente",
+  //   message: "1 patient a annulé son rendez-vous ce matin.",
+  // },
+  // {
+  //   type: "error",
+  //   title: "Rendez-vous expiré",
+  //   message: "1 rendez-vous a expiré sans mise à jour du statut.",
+  // },
 ];
 
 const iconForType: Record<AlertType, JSX.Element> = {
@@ -87,9 +88,10 @@ const NotificationsContainer = () => {
       </Box>
       <CardContent sx={{ p: 1 }}>
         {mockAlerts.length === 0 ? (
-          <Typography color="text.secondary">
-            Aucune alerte pour le moment 🎉
-          </Typography>
+          <EmptyData
+            title="No notification for now"
+            hint="Notifications will appear here when a patient send a ticket demands"
+          />
         ) : (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {mockAlerts.map((alert, index) => (
