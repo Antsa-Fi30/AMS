@@ -12,6 +12,8 @@ import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import MenuButton from "./MenuButton";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../../services/AuthServices";
+import { appointmentsApi } from "../../../services/AppointmentServices";
+import { useDispatch } from "react-redux";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",
@@ -27,11 +29,14 @@ export default function OptionsMenu() {
     setAnchorEl(null);
   };
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleLogOut = async () => {
     handleClose();
     const refresh = localStorage.getItem("refresh");
     try {
       if (refresh) await logout(refresh);
+      dispatch(appointmentsApi.util.resetApiState());
     } catch (err) {
       console.error("logout failed", err);
     } finally {

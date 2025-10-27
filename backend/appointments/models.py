@@ -9,7 +9,7 @@ class Appointment(models.Model):
         ("rejected", "Rejected"),
         ("canceled", "Canceled"),
     ]
-    descriptions = models.TextField(null=True, blank=True)
+    descriptions = models.JSONField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
     reason = models.CharField(max_length=150, null=True, blank=True)
     patient = models.ForeignKey(

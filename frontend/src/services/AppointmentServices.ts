@@ -1,7 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../redux/baseQuery";
 import axiosInstance from "./AxiosInstance";
-// import axiosInstance from "./AxiosInstance";
+
+export type DescriptionType = {
+  symptoms?: string[];
+  severity?: string | null;
+  duration?: string;
+  detectedBy?: string;
+};
 
 export type AppointmentType = {
   id: number;
@@ -11,10 +17,11 @@ export type AppointmentType = {
   patient_phone: string;
   doctor: number | null;
   doctor_name: string | null;
+  doctor_phone: string | null;
   notes: string | null;
   status: string;
   finished: boolean;
-  descriptions: string | null;
+  descriptions: DescriptionType | null;
   date: string | null;
   time: string | null;
   expire: string | null;
@@ -38,6 +45,7 @@ export const appointmentsApi = createApi({
     getAppointments: builder.query<AppointmentType[], void>({
       query: () => "appointments/",
       providesTags: ["Appointments"],
+      keepUnusedDataFor: 60,
     }),
     getDoctorStats: builder.query<DoctorStatsType, void>({
       query: () => "doctor/stats/",
@@ -80,5 +88,18 @@ export const futurAppointment = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching future appointments:", error);
+  }
+};
+
+export const deleteAllFinished = async () => {
+  try {
+    const { data } = await axiosInstance.delete("/patient/erase/");
+    return data;
+  } catch (error: unknown) {
+    const message =
+      error.response?.data?.detail ||
+      error.message ||
+      "Error deleting finished appointments";
+    throw new Error(message);
   }
 };

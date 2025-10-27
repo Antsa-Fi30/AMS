@@ -8,37 +8,40 @@ import {
   TableHead,
   TableRow,
   Chip,
-  CircularProgress,
+  Skeleton,
 } from "@mui/material";
 
-import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
-import AcceptDialog from "./AcceptDialog";
-import RejectDialog from "./RejectDialog";
-import DetailsDialog from "./DetailsDialog";
+import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
+import AcceptDialog from "../doctor/tickets/AcceptDialog";
+import RejectDialog from "../common/RejectDialog";
+import DetailsDialog from "../doctor/tickets/DetailsDialog";
 import { Cancel, Check } from "@mui/icons-material";
-import EmptyData from "../../common/EmptyData";
+import EmptyData from "./EmptyData";
+import { useMemo, memo } from "react";
+import { getStatusColor } from "../../utils/getColor";
 
-const TicketsTable = () => {
+interface TicketsTableProps {
+  client?: boolean;
+}
+
+const TicketsTableComponent: React.FC<TicketsTableProps> = ({ client }) => {
   const { data, isLoading } = useGetAppointmentsQuery(undefined, {
-    pollingInterval: 10000,
+    pollingInterval: undefined,
   });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "warning";
-      case "confirmed":
-        return "success";
-      case "rejected":
-        return "error";
-      default:
-        return "default";
-    }
-  };
+  const displayedData = useMemo(() => data || [], [data]);
 
   if (isLoading) {
-    return <CircularProgress size={24} />;
+    return (
+      <Box sx={{ mt: 2 }}>
+        {[...Array(6)].map((_, i) => (
+          <Skeleton key={i} variant="rectangular" height={40} sx={{ mb: 1 }} />
+        ))}
+      </Box>
+    );
   }
+
+  console.log(data);
 
   return (
     <div>
@@ -54,7 +57,7 @@ const TicketsTable = () => {
           <Typography variant="h6" fontWeight="bold">
             Liste des tickets
           </Typography>
-          {data?.length !== 0 && (
+          {displayedData?.length !== 0 && (
             <Chip
               label={`${
                 data?.filter((t) => t.status === "pending").length
@@ -65,7 +68,7 @@ const TicketsTable = () => {
           )}
         </Box>
 
-        {data?.length === 0 ? (
+        {displayedData?.length === 0 ? (
           <>
             <EmptyData
               title="No ticket for this month"
@@ -77,13 +80,13 @@ const TicketsTable = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Patient</TableCell>
+                  <TableCell>{client ? "Doctor" : "Patient"}</TableCell>
                   <TableCell>Reason</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Time</TableCell>
                   <TableCell>Statut</TableCell>
                   <TableCell>Finished</TableCell>
-                  <TableCell align="center">Actions</TableCell>
+                  {!client && <TableCell align="center">Actions</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -105,10 +108,14 @@ const TicketsTable = () => {
                       </Avatar> */}
                         <Box>
                           <Typography variant="subtitle2" fontWeight="medium">
-                            {ticket.patient_name}
+                            {client
+                              ? `Dr ${ticket.doctor_name}`
+                              : ticket.patient_name}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            {ticket.patient_phone}
+                            {client
+                              ? ticket.doctor_phone
+                              : ticket.patient_phone}
                           </Typography>
                         </Box>
                       </Box>
@@ -153,7 +160,7 @@ const TicketsTable = () => {
                     </TableCell>
 
                     <TableCell align="center">
-                      {ticket.status === "pending" && (
+                      {!client && ticket.status === "pending" && (
                         <Box
                           sx={{
                             display: "flex",
@@ -178,4 +185,5 @@ const TicketsTable = () => {
   );
 };
 
+export const TicketsTable = memo(TicketsTableComponent);
 export default TicketsTable;

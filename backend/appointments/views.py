@@ -50,19 +50,19 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.role == "doctor":
-            return Appointment.objects.filter(doctor=user.id)
+            return Appointment.objects.filter(doctor_id=user.id)
         elif user.role == "patient":
-            return Appointment.objects.filter(patient=user.id)
+            return Appointment.objects.filter(patient_id=user.id)
         else:
             return Appointment.objects.none()
 
     def update(self, request, *args, **kwargs):
-        if "status" in request.data:
-            if request.user.role not in ["admin", "doctor"]:
-                return Response(
-                    {"detail": "Non autorisé à changer le statut."},
-                    status=status.HTTP_403_FORBIDDEN,
-                )
+        # if "status" in request.data:
+        #     if request.user.role not in ["admin", "doctor"]:
+        #         return Response(
+        #             {"detail": "Non autorisé à changer le statut."},
+        #             status=status.HTTP_403_FORBIDDEN,
+        #         )
 
         return super().update(request, *args, **kwargs)
 
@@ -204,6 +204,18 @@ def get_doctor_stats(request):
             "scheduled": upcoming_appointments,
             "finished": finished_consultations,
         }
+    )
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_records(request):
+    deleted_count, _ = Appointment.objects.filter(
+        patient=request.user.id, finished=True
+    ).delete()
+    return Response(
+        {"message": f"{deleted_count} rendez-vous supprimés."},
+        status=status.HTTP_200_OK,
     )
 
 

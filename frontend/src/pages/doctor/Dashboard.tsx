@@ -26,6 +26,7 @@ export type Schedule = {
 
 const Dashboard = () => {
   const [futurData, setFuturData] = useState<Schedule[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -36,6 +37,8 @@ const Dashboard = () => {
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         showSnackbar(message, "error");
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -65,7 +68,7 @@ const Dashboard = () => {
           <Stack spacing={2}>
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent sx={{ p: 3 }}>
-                <UpcomingSchedule schedule={futurData} />
+                <UpcomingSchedule schedule={futurData} isLoading={isLoading} />
               </CardContent>
             </Card>
 

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../../../services/AuthServices";
 import { reinit } from "../../../redux/AuthSlice";
 import { useDispatch } from "react-redux";
+import { appointmentsApi } from "../../../services/AppointmentServices";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -32,6 +33,7 @@ export default function AccountMenu() {
     const refresh = localStorage.getItem("refresh");
     try {
       if (refresh) await logout(refresh);
+      dispatch(appointmentsApi.util.resetApiState());
     } catch (err) {
       console.error("logout failed", err);
     } finally {
@@ -42,6 +44,9 @@ export default function AccountMenu() {
       navigate("/");
     }
   };
+
+  const user = sessionStorage.getItem("user");
+  const parsed = user ? JSON.parse(user) : [];
 
   return (
     <React.Fragment>
@@ -99,14 +104,19 @@ export default function AccountMenu() {
       >
         <MenuItem
           onClick={() => {
-            navigate("/patient/profile");
+            navigate("/patient/profil");
             handleClose();
           }}
         >
-          <Avatar /> My account
+          <Avatar /> {parsed.name}
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate("/patient/settings/");
+          }}
+        >
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

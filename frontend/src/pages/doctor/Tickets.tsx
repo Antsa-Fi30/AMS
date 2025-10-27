@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Container,
   Grid,
@@ -14,10 +15,20 @@ import {
   // Cancel,
   // Schedule,
 } from "@mui/icons-material";
-import TicketsTable from "../../components/doctor/tickets/TicketsTable";
+import TicketsTable from "../../components/common/TicketsTable";
 import { TicketStats } from "../../components/doctor/tickets/TicketStats";
+import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
 
 const TicketDashboard = () => {
+  const { refetch } = useGetAppointmentsQuery(undefined, { skip: true });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [refetch]);
+
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* En-tête */}

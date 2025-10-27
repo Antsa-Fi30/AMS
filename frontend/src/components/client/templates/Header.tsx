@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/material";
-import { OutlinedInput, InputAdornment } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import MenuAvatar from "./MenuAvatar";
+// import { OutlinedInput, InputAdornment } from "@mui/material";
+// import SearchIcon from "@mui/icons-material/Search";
 
 const Header = () => {
   return (
@@ -19,7 +19,7 @@ const Header = () => {
       }}
     >
       {/* Champ de recherche */}
-      <OutlinedInput
+      {/* <OutlinedInput
         placeholder="Rechercher..."
         startAdornment={
           <InputAdornment position="start">
@@ -31,7 +31,8 @@ const Header = () => {
           borderRadius: 3,
           backgroundColor: "background.default",
         }}
-      />
+      /> */}
+      <Box></Box>
       {/* Bouton notification */}
       <Stack direction={"row"} spacing={2} alignItems="center">
         <MenuAvatar />

@@ -1,7 +1,10 @@
-import { Box, Typography, Chip, Avatar } from "@mui/material";
+import { Box, Typography, Chip, Skeleton } from "@mui/material";
 import { WavingHand } from "@mui/icons-material";
+import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
+import { formatDateToLocalString } from "../../../utils/Formats";
 
 export const WelcomeHeader = () => {
+  const { data, isLoading } = useGetAppointmentsQuery();
   const currentHour = new Date().getHours();
   const greeting =
     currentHour < 12
@@ -9,6 +12,27 @@ export const WelcomeHeader = () => {
       : currentHour < 18
       ? "Bon après-midi"
       : "Bonsoir";
+  const user = sessionStorage.getItem("user");
+  const name = user ? JSON.parse(user).name : "";
+
+  const nextAppointment = data
+    ?.filter((a) => a.status === "confirmed" && !a.finished)
+    ?.sort(
+      (a, b) =>
+        (a.date ? new Date(a.date).getTime() : 0) -
+        (b.date ? new Date(b.date).getTime() : 0)
+    )[0];
+
+  const now = new Date();
+  const target = nextAppointment?.date ? new Date(nextAppointment.date) : null;
+  if (target) {
+    target.setHours(0, 0, 0, 0);
+  }
+  now.setHours(0, 0, 0, 0);
+
+  if (isLoading) {
+    return <Skeleton />;
+  }
 
   return (
     <Box
@@ -21,19 +45,22 @@ export const WelcomeHeader = () => {
     >
       <Box>
         <Typography variant="h4" fontWeight="bold" gutterBottom>
-          {greeting}, Rado <WavingHand sx={{ color: "#FFB74D" }} />
+          {greeting}, {name} <WavingHand sx={{ color: "#FFB74D" }} />
         </Typography>
         <Typography variant="h6" color="text.secondary">
           Gérez vos rendez-vous médicaux en toute simplicité
         </Typography>
       </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Chip
-          label="Prochain RDV: Aujourd'hui 14:30"
-          color="primary"
-          variant="outlined"
-        />
-        <Avatar sx={{ bgcolor: "primary.main" }}>RR</Avatar>
+        {nextAppointment && (
+          <Chip
+            label={`Prochain RDV: ${
+              target === now ? "Aujourd'hui" : formatDateToLocalString(target)
+            } ${nextAppointment?.time}`}
+            color="primary"
+            variant="outlined"
+          />
+        )}
       </Box>
     </Box>
   );

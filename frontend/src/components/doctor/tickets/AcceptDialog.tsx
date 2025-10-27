@@ -121,6 +121,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
                 format="HH:mm"
                 onChange={(newValue) => setTime(newValue)}
                 ampm={false}
+                disablePast
               />
 
               <DatePicker

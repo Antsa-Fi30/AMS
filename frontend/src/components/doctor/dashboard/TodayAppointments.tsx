@@ -13,30 +13,20 @@ import ConfirmFinishedDialog from "./ConfirmFinishedDialog";
 import { formatDateToLocalString } from "../../../utils/Formats";
 import DetailsDialog from "../tickets/DetailsDialog";
 import EmptyData from "../../common/EmptyData";
+import { getStatusColor } from "../../../utils/getColor";
 
 export const TodayAppointments = () => {
   const { data, isLoading } = useGetAppointmentsQuery();
   const today = new Date();
+  const currentHour = new Date().getHours();
   const appointments =
-    data?.filter(
-      (ticket) =>
-        ticket.status === "confirmed" &&
-        !ticket.finished &&
-        ticket.date === formatDateToLocalString(today)
-    ) ?? [];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "confirmed":
-        return "success";
-      case "pending":
-        return "warning";
-      case "rejected":
-        return "error";
-      default:
-        return "default";
-    }
-  };
+    data?.filter((ticket) => {
+      if (ticket.status !== "confirmed" || ticket.finished) return false;
+      if (ticket.date !== formatDateToLocalString(today)) return false;
+      if (!ticket.time) return false;
+      const ticketHour = new Date(ticket.time).getHours();
+      return currentHour > ticketHour;
+    }) ?? [];
 
   return (
     <Box>

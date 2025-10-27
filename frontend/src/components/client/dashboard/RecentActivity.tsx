@@ -29,12 +29,6 @@ export const RecentActivity = () => {
       date: "Il y a 3 jours",
       color: "error",
     },
-    {
-      type: "prise",
-      message: "Nouveau RDV pris",
-      date: "Il y a 1 semaine",
-      color: "primary",
-    },
   ];
 
   return (

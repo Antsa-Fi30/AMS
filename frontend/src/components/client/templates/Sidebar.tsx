@@ -12,7 +12,7 @@ const menu = [
     label: "Your appointments",
     path: "/patient/appointments",
   },
-  { icon: <PersonIcon />, label: "Your profile", path: "/patient/profile" },
+  { icon: <PersonIcon />, label: "Your profile", path: "/patient/profil" },
   // { icon: <MedicalServicesIcon />, label: "Doctors", path: "/patient/doctors" },
 ];
 

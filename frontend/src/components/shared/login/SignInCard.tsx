@@ -10,7 +10,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import ForgotPassword from "./ForgotPassword";
-import { IconButton, InputAdornment, MenuItem, Select } from "@mui/material";
+import { IconButton, InputAdornment } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Person from "@mui/icons-material/Person";
@@ -164,11 +164,17 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
               refresh: data.tokens.refresh,
             })
           );
-          if (localStorage.getItem("refresh")) {
-            if (sessionStorage.getItem("role") === "doctor")
-              navigate("/doctor");
-            else if (sessionStorage.getItem("role") === "patient")
-              navigate("/patient");
+          const user = sessionStorage.getItem("user");
+          if (user) {
+            const parsed = JSON.parse(user);
+
+            if (localStorage.getItem("refresh")) {
+              if (parsed.role === "doctor") {
+                navigate("/doctor/");
+              } else if (parsed.role === "patient") {
+                navigate("/patient/");
+              }
+            }
           }
           alert("regsiter successfull");
         } catch (err) {

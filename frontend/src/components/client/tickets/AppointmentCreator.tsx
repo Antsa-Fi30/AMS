@@ -1,60 +1,72 @@
 import {
   Alert,
-  Box,
   Button,
   CircularProgress,
-  FormControl,
-  FormLabel,
   Snackbar,
-  TextField,
   Tooltip,
 } from "@mui/material";
 import GenericDialog from "../../common/GenericDialog";
 import AddIcon from "@mui/icons-material/Add";
 import { Send } from "@mui/icons-material";
-import { useAddAppointmentMutation } from "../../../services/AppointmentServices";
-import { useRef, useState } from "react";
+import {
+  useAddAppointmentMutation,
+  type DescriptionType,
+} from "../../../services/AppointmentServices";
+import { useState } from "react";
+import SymptomFormStepper from "./SymptomFormStepper";
 
-const AppointmentCreator = () => {
+const AppointmentCreator: React.FC = () => {
   const [addAppointment, { isLoading }] = useAddAppointmentMutation();
   const [openDialog, setOpenDialog] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false); // ✅ mini state, juste pour le bouton
-  const formRef = useRef<HTMLFormElement | null>(null);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const reason = data.get("reason")?.toString() ?? undefined;
-    const descriptions = data.get("descriptions")?.toString() ?? undefined;
+  const handleSubmitDescriptions = async (descriptions: DescriptionType) => {
     const user = sessionStorage.getItem("user");
     const patient = user ? JSON.parse(user).id : null;
 
-    try {
-      await addAppointment({
-        reason,
-        descriptions,
-        patient,
-        doctor: 7,
-      }).unwrap();
-      setOpenSuccess(true);
-      setOpenDialog(false);
-      form.reset(); // ✅ réinitialise les champs
-      setIsFormValid(false); // remet le bouton inactif
-    } catch (err) {
-      console.error("Erreur lors de la création :", err);
-      setOpenError(true);
-    }
+    await addAppointment({
+      reason: undefined, // auto généré côté backend
+      descriptions,
+      patient,
+      doctor: 7,
+    }).unwrap();
+
+    setOpenSuccess(true);
+    setOpenDialog(false);
   };
 
-  // ✅ vérifie la validité du formulaire à chaque frappe
-  const handleInput = () => {
-    if (formRef.current) {
-      setIsFormValid(formRef.current.checkValidity());
-    }
-  };
+  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const form = event.currentTarget;
+  //   const data = new FormData(form);
+  //   const reason = data.get("reason")?.toString() ?? undefined;
+  //   const user = sessionStorage.getItem("user");
+  //   const patient = user ? JSON.parse(user).id : null;
+
+  //   // const descriptionsData = {
+  //   //   symptoms: ["headache", "nausea", "tiredness"],
+  //   //   severity: "mild",
+  //   //   detectedBy: "AI Symptom Analyzer",
+  //   // };
+
+  //   try {
+  //     await addAppointment({
+  //       reason,
+  //       // descriptions: [],
+  //       patient,
+  //       doctor: 7,
+  //     }).unwrap();
+  //     setOpenSuccess(true);
+  //     setOpenDialog(false);
+  //     form.reset(); // ✅ réinitialise les champs
+  //     setIsFormValid(false); // remet le bouton inactif
+  //   } catch (err) {
+  //     console.error("Erreur lors de la création :", err);
+  //     setOpenError(true);
+  //   }
+  // };
 
   return (
     <>
@@ -93,50 +105,7 @@ const AppointmentCreator = () => {
           </Button>
         )}
       >
-        <Box
-          id="appointment-form"
-          component="form"
-          ref={formRef}
-          onSubmit={handleSubmit}
-          onInput={handleInput} // ✅ surveille la validité globale
-          noValidate
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "550px",
-            gap: 2,
-          }}
-        >
-          <FormControl>
-            <FormLabel htmlFor="reason">
-              What is the reason of your booking?
-            </FormLabel>
-            <TextField
-              id="reason"
-              name="reason"
-              type="text"
-              placeholder="ex: Dental checkup"
-              required
-              fullWidth
-              variant="outlined"
-              color="primary"
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel htmlFor="descriptions">Explain your symptoms</FormLabel>
-            <TextField
-              id="descriptions"
-              name="descriptions"
-              type="text"
-              multiline
-              required
-              placeholder="Describe your situation..."
-              fullWidth
-              color="primary"
-              variant="standard"
-            />
-          </FormControl>
-        </Box>
+        <SymptomFormStepper onSubmit={handleSubmitDescriptions} />
       </GenericDialog>
 
       {/* Success Snackbar */}

@@ -1,11 +1,11 @@
 import Header from "../../components/client/tickets/Header";
-import TicketsTable from "../../components/client/tickets/TicketsTable";
+import TicketsTable from "../../components/common/TicketsTable";
 
 const Appointments = () => {
   return (
     <div>
       <Header />
-      <TicketsTable />
+      <TicketsTable client />
     </div>
   );
 };
