@@ -19,17 +19,22 @@ import {
   Person,
   CalendarMonth,
   Security,
-  Settings,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 
-const ProfilCli = () => {
-  const navigate = useNavigate();
-  const patient = sessionStorage.getItem("user");
-  const user = patient ? JSON.parse(patient) : {};
+const Profil = () => {
+  const user = sessionStorage.getItem("user");
+
   // Exemple de données utilisateur
+  const users = {
+    name: "Rado Rakoto",
+    email: "rado@example.com",
+    phone: "+261 34 12 345 67",
+    role: "Client",
+    notifications: { email: true, sms: false },
+    joinDate: "15 Mars 2024",
+  };
 
-  console.log(user);
+  const doctor = user ? JSON.parse(user) : users;
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -55,20 +60,20 @@ const ProfilCli = () => {
                   fontSize: "2rem",
                 }}
               >
-                {user.name
+                {doctor.name
                   .split(" ")
-                  .map((n) => n[0])
+                  .map((n: string) => n[0])
                   .join("")}
               </Avatar>
               <Box>
                 <Typography variant="h4" fontWeight="bold">
-                  {user.name}
+                  {doctor.name}
                 </Typography>
                 <Typography variant="h6" sx={{ opacity: 0.9 }}>
-                  {user.role}
+                  {doctor.role}
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.8, mt: 0.5 }}>
-                  Membre depuis {user.joinDate}
+                  Membre depuis {doctor.joinDate}
                 </Typography>
               </Box>
             </Box>
@@ -97,7 +102,22 @@ const ProfilCli = () => {
                       Nom complet
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 0.5 }}>
-                      {user.name}
+                      {doctor.name}
+                    </Typography>
+                  </Box>
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      fontWeight="medium"
+                    >
+                      Rôle
+                    </Typography>
+                    <Typography variant="body1" sx={{ mt: 0.5 }}>
+                      {doctor.role}
                     </Typography>
                   </Box>
                 </Grid>
@@ -114,7 +134,7 @@ const ProfilCli = () => {
                         Email
                       </Typography>
                       <Typography variant="body1" sx={{ mt: 0.5 }}>
-                        {user.email}
+                        {doctor.email}
                       </Typography>
                     </Box>
                   </Box>
@@ -132,7 +152,7 @@ const ProfilCli = () => {
                         Téléphone
                       </Typography>
                       <Typography variant="body1" sx={{ mt: 0.5 }}>
-                        {user.phone_number}
+                        {doctor.phone}
                       </Typography>
                     </Box>
                   </Box>
@@ -151,7 +171,7 @@ const ProfilCli = () => {
           <Grid container direction="column" spacing={3}>
             {/* Préférences de notification */}
             <Grid size={12}>
-              {/* <Card elevation={2} sx={{ borderRadius: 3 }}>
+              <Card elevation={2} sx={{ borderRadius: 3 }}>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                     <Notifications color="primary" sx={{ mr: 1 }} />
@@ -162,14 +182,14 @@ const ProfilCli = () => {
 
                   <Box sx={{ mb: 2 }}>
                     <FormControlLabel
-                      control={<Switch checked={true} color="primary" />}
+                      control={<Switch color="primary" />}
                       label={
                         <Box>
                           <Typography variant="body2" fontWeight="medium">
-                            Push
+                            Email
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            Recevoir les notifications de
+                            Recevoir les notifications par email
                           </Typography>
                         </Box>
                       }
@@ -179,7 +199,7 @@ const ProfilCli = () => {
 
                   <Box>
                     <FormControlLabel
-                      control={<Switch checked={false} color="primary" />}
+                      control={<Switch color="primary" />}
                       label={
                         <Box>
                           <Typography variant="body2" fontWeight="medium">
@@ -194,13 +214,17 @@ const ProfilCli = () => {
                     />
                   </Box>
                 </CardContent>
-              </Card> */}
+              </Card>
             </Grid>
 
             {/* Actions rapides */}
             <Grid size={12}>
               <Card elevation={2} sx={{ borderRadius: 3 }}>
                 <CardContent sx={{ p: 3 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Actions
+                  </Typography>
+
                   <Button
                     variant="outlined"
                     startIcon={<Security />}
@@ -212,12 +236,11 @@ const ProfilCli = () => {
 
                   <Button
                     variant="outlined"
-                    startIcon={<Settings />}
+                    startIcon={<CalendarMonth />}
                     fullWidth
                     sx={{ justifyContent: "flex-start" }}
-                    onClick={() => navigate("/patient/settings/")}
                   >
-                    Settings
+                    Mes rendez-vous
                   </Button>
                 </CardContent>
               </Card>
@@ -229,4 +252,4 @@ const ProfilCli = () => {
   );
 };
 
-export default ProfilCli;
+export default Profil;

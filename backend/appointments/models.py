@@ -9,7 +9,8 @@ class Appointment(models.Model):
         ("rejected", "Rejected"),
         ("canceled", "Canceled"),
     ]
-    descriptions = models.TextField(null=True, blank=True)
+    descriptions = models.JSONField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
     reason = models.CharField(max_length=150, null=True, blank=True)
     patient = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # It's a place for a model, but here ...an exception
@@ -17,7 +18,7 @@ class Appointment(models.Model):
         related_name="appointments_as_patient",
     )
 
-    #### Doctor field (optional ,especially for multi-doctor feature)
+    #### Doctor field (optional ,especially for multi-doctor feature but not for now)
     doctor = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # It's a place for a model, but here ...an exception
         on_delete=models.CASCADE,
@@ -35,6 +36,7 @@ class Appointment(models.Model):
     date = models.DateField(null=True, blank=True)
     time = models.TimeField(null=True, blank=True)
     expire = models.DateField(null=True, blank=True)
+    finished = models.BooleanField(default=False)
 
     requested_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

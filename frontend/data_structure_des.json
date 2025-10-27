@@ -1,0 +1,5 @@
+{
+  "symptoms": ["fever", "headache", "tiredness"],
+  "severity": "moderate",
+  "detectedBy": "user_selection"
+}

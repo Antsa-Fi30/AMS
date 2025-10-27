@@ -1,104 +1,133 @@
-import { Box, Typography, List, ListItem, Chip, Avatar, IconButton } from "@mui/material";
-import { AccessTime, MoreVert, CheckCircle, Cancel } from "@mui/icons-material";
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  Chip,
+  Avatar,
+  CircularProgress,
+} from "@mui/material";
+import { AccessTime } from "@mui/icons-material";
+import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
+import ConfirmFinishedDialog from "./ConfirmFinishedDialog";
+import { formatDateToLocalString } from "../../../utils/Formats";
+import DetailsDialog from "../tickets/DetailsDialog";
+import EmptyData from "../../common/EmptyData";
+import { getStatusColor } from "../../../utils/getColor";
 
 export const TodayAppointments = () => {
-  const appointments = [
-    { 
-      id: 1, 
-      patient: "Jean Rabe", 
-      time: "14:30 - 15:00", 
-      type: "Contrôle", 
-      status: "confirmé",
-      avatar: "JR" 
-    },
-    { 
-      id: 2, 
-      patient: "Marie Andry", 
-      time: "15:15 - 15:45", 
-      type: "Soin dentaire", 
-      status: "confirmé",
-      avatar: "MA" 
-    },
-    { 
-      id: 3, 
-      patient: "Paul Razafy", 
-      time: "16:00 - 16:30", 
-      type: "Urgence", 
-      status: "en attente",
-      avatar: "PR" 
-    },
-    { 
-      id: 4, 
-      patient: "Sophie Rajaona", 
-      time: "16:45 - 17:15", 
-      type: "Consultation", 
-      status: "confirmé",
-      avatar: "SR" 
-    },
-  ];
-
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'confirmé': return 'success';
-      case 'en attente': return 'warning';
-      case 'annulé': return 'error';
-      default: return 'default';
-    }
-  };
+  const { data, isLoading } = useGetAppointmentsQuery();
+  const today = new Date();
+  const currentHour = new Date().getHours();
+  const appointments =
+    data?.filter((ticket) => {
+      if (ticket.status !== "confirmed" || ticket.finished) return false;
+      if (ticket.date !== formatDateToLocalString(today)) return false;
+      if (!ticket.time) return false;
+      const ticketHour = new Date(ticket.time).getHours();
+      return currentHour > ticketHour;
+    }) ?? [];
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <AccessTime color="primary" sx={{ mr: 1 }} />
         <Typography variant="h6" fontWeight="bold">
           Rendez-vous d'aujourd'hui
         </Typography>
       </Box>
 
-      <List sx={{ p: 0 }}>
-        {appointments.map((appointment) => (
-          <ListItem
-            key={appointment.id}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              py: 2,
-              px: 0,
-              borderBottom: '1px solid',
-              borderColor: 'divider',
-              '&:last-child': { borderBottom: 'none' }
-            }}
-          >
-            <Avatar sx={{ mr: 2, bgcolor: 'primary.main' }}>
-              {appointment.avatar}
-            </Avatar>
-            
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="subtitle1" fontWeight="medium">
-                {appointment.patient}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {appointment.type}
-              </Typography>
-            </Box>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <List
+          sx={{
+            p: 0,
+            height: 494,
+            maxHeight: 494,
+            overflowY: "auto",
+            scrollPadding: 0,
+            scrollbarGutter: "stable",
 
-            <Box sx={{ textAlign: 'right', mr: 2 }}>
-              <Typography variant="body2" fontWeight="medium">
-                {appointment.time}
-              </Typography>
-              <Chip 
-                label={appointment.status} 
-                color={getStatusColor(appointment.status)} 
-                size="small"
+            "&::-webkit-scrollbar": {
+              width: "6px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f8fafc",
+              borderRadius: "3px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#cbd5e1",
+              borderRadius: "3px",
+              "&:hover": {
+                background: "#94a3b8",
+              },
+            },
+
+            scrollbarWidth: "thin",
+            scrollbarColor: "#cbd5e1 #f8fafc",
+          }}
+        >
+          {appointments.length > 0 ? (
+            appointments.map((appointment) => (
+              <ListItem
+                key={appointment.id}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  py: 2,
+                  px: 2,
+                  borderBottom: "1px solid",
+                  borderColor: "divider",
+                  "&:last-child": { borderBottom: "none" },
+                }}
+              >
+                <Avatar sx={{ mr: 2, bgcolor: "primary.main" }}>
+                  {appointment.patient_name.charAt(0)}
+                </Avatar>
+
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" fontWeight="medium">
+                    {appointment.patient_name}
+                  </Typography>
+
+                  <Typography variant="body2" color="text.secondary">
+                    {appointment.reason}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ textAlign: "right", mr: 2 }}>
+                  <Typography variant="body2" fontWeight="medium">
+                    {appointment.time}
+                  </Typography>
+                  <Chip
+                    label={appointment.status}
+                    color={getStatusColor(appointment.status)}
+                    size="small"
+                    sx={{ mt: 1 }}
+                  />
+                </Box>
+                <DetailsDialog target={appointment} />
+                <ConfirmFinishedDialog appointment={appointment} />
+              </ListItem>
+            ))
+          ) : (
+            <Box
+              sx={{
+                height: 494,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <EmptyData
+                title="Aucun rendez-vous pour aujourd'hui"
+                hint="Les rendez-vous confirmés qui ne sont pas terminés sont affichés ici"
               />
             </Box>
-
-            <IconButton size="small">
-              <MoreVert />
-            </IconButton>
-          </ListItem>
-        ))}
-      </List>
+          )}
+        </List>
+      )}
     </Box>
   );
 };

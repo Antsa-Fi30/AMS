@@ -10,9 +10,13 @@ import DashboardCli from "./pages/client/DashboardCli";
 import Tickets from "./pages/doctor/Tickets";
 import PatientLayout from "./layouts/PatientLayout";
 import Appointments from "./pages/client/Appointments";
-import ProfileCli from "./pages/client/ProfileCli";
+import ProfilCli from "./pages/client/ProfileCli";
 import { useDispatch } from "react-redux";
 import { initializeAuth } from "./redux/AuthSlice";
+import Calendar from "./pages/doctor/AppointmentCalendar";
+import Profil from "./pages/doctor/Profil";
+import Settings from "./pages/doctor/Settings";
+import SettingsCli from "./pages/client/SettingsCli";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,12 +37,16 @@ const App = () => {
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<Dashboard />} />
             <Route path="tickets" element={<Tickets />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="profil" element={<Profil />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="patient" element={<PatientLayout />}>
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<DashboardCli />} />
             <Route path="appointments" element={<Appointments />} />
-            <Route path="profile" element={<ProfileCli />} />
+            <Route path="profil" element={<ProfilCli />} />
+            <Route path="settings" element={<SettingsCli />} />
           </Route>
         </Route>
 

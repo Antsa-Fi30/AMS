@@ -1,24 +1,35 @@
-import { Card, CardContent, Box, Typography } from "@mui/material";
+import { Card, CardContent, Box, Typography, Skeleton } from "@mui/material";
 import { CheckCircle, Schedule, Cancel } from "@mui/icons-material";
+import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 
 export const AppointmentsStats = () => {
+  const { data, isLoading } = useGetAppointmentsQuery();
+
+  const pending = data?.filter((a) => a.status === "pending").length;
+  const confirmed = data?.filter(
+    (a) => a.status === "confirmed" && a.finished
+  ).length;
+  const refused = data?.filter(
+    (a) => a.status === "rejected" && a.finished
+  ).length;
+
   const stats = [
     {
-      icon: <CheckCircle color="success" />,
+      icon: <CheckCircle />,
       label: "RDV honorés",
-      value: "12",
+      value: confirmed,
       color: "success",
     },
     {
-      icon: <Schedule color="warning" />,
+      icon: <Schedule />,
       label: "RDV à venir",
-      value: "3",
+      value: pending,
       color: "warning",
     },
     {
-      icon: <Cancel color="error" />,
+      icon: <Cancel />,
       label: "RDV annulés",
-      value: "2",
+      value: refused,
       color: "error",
     },
   ];
@@ -30,32 +41,48 @@ export const AppointmentsStats = () => {
           Statistiques
         </Typography>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-          {stats.map((stat, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                p: 2,
-                borderRadius: 2,
-                backgroundColor: `${stat.color}.light`,
-                border: `1px solid`,
-                borderColor: `${stat.color}.main`,
-              }}
-            >
-              <Box sx={{ mr: 2 }}>{stat.icon}</Box>
-              <Box>
-                <Typography variant="h4" fontWeight="bold">
-                  {stat.value}
-                </Typography>
-                <Typography variant="body2" color="text.primary ">
-                  {stat.label}
-                </Typography>
+        {isLoading ? (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+            {[...Array(3)].map((_, i) => (
+              <Skeleton
+                key={i}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  p: 2,
+                  borderRadius: 2,
+                }}
+              />
+            ))}
+          </Box>
+        ) : (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+            {stats.map((stat, index) => (
+              <Box
+                key={index}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  p: 2,
+                  borderRadius: 2,
+                  backgroundColor: `${stat.color}.light`,
+                  border: `1px solid`,
+                  borderColor: `${stat.color}.main`,
+                }}
+              >
+                <Box sx={{ mr: 2 }}>{stat.icon}</Box>
+                <Box>
+                  <Typography variant="h4" fontWeight="bold">
+                    {stat.value}
+                  </Typography>
+                  <Typography variant="body2" color="text.primary ">
+                    {stat.label}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          ))}
-        </Box>
+            ))}
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

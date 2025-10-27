@@ -7,12 +7,13 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
+import { CalendarMonth } from "@mui/icons-material";
 // import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 
 const mainListItems = [
   { text: "Home", icon: <HomeRoundedIcon />, path: "/doctor/home" },
   { text: "Tickets", icon: <AnalyticsRoundedIcon />, path: "/doctor/tickets" },
-  // { text: "Clients", icon: <PeopleRoundedIcon />, path: "/doctor/clients" },
+  { text: "Calendar", icon: <CalendarMonth />, path: "/doctor/calendar" },
 ];
 
 const SidebarMenu = () => {

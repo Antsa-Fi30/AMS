@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Container,
   Grid,
@@ -5,6 +6,7 @@ import {
   CardContent,
   Box,
   Typography,
+  Stack,
   // Chip,
 } from "@mui/material";
 import {
@@ -13,11 +15,20 @@ import {
   // Cancel,
   // Schedule,
 } from "@mui/icons-material";
-import { TicketsTable } from "../../components/tickets/TicketsTable";
-import { TicketStats } from "../../components/tickets/TicketStats";
-import { QuickTicketActions } from "../../components/tickets/QuickTicketActions";
+import TicketsTable from "../../components/common/TicketsTable";
+import { TicketStats } from "../../components/doctor/tickets/TicketStats";
+import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
 
 const TicketDashboard = () => {
+  const { refetch } = useGetAppointmentsQuery(undefined, { skip: true });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [refetch]);
+
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* En-tête */}
@@ -33,22 +44,23 @@ const TicketDashboard = () => {
         </Box>
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         {/* Statistiques */}
         <Grid size={12}>
           <TicketStats />
         </Grid>
 
         {/* Actions rapides */}
-        <Grid size={{ xs: 12, md: 4 }}>
-          <QuickTicketActions />
-        </Grid>
+        <Grid size={{ xs: 12, md: 4 }}></Grid>
 
         {/* Tableau principal */}
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Card elevation={2} sx={{ borderRadius: 3 }}>
             <CardContent sx={{ p: 3 }}>
-              <TicketsTable />
+              <Stack spacing={3}>
+                {/* <QuickTicketActions /> */}
+                <TicketsTable />
+              </Stack>
             </CardContent>
           </Card>
         </Grid>

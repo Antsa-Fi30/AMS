@@ -1,6 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../redux/baseQuery";
-// import axiosInstance from "./AxiosInstance";
+import axiosInstance from "./AxiosInstance";
+
+export type DescriptionType = {
+  symptoms?: string[];
+  severity?: string | null;
+  duration?: string;
+  detectedBy?: string;
+};
 
 export type AppointmentType = {
   id: number;
@@ -9,22 +16,39 @@ export type AppointmentType = {
   patient_name: string;
   patient_phone: string;
   doctor: number | null;
+  doctor_name: string | null;
+  doctor_phone: string | null;
+  notes: string | null;
   status: string;
-  descriptions: string | null;
+  finished: boolean;
+  descriptions: DescriptionType | null;
   date: string | null;
   time: string | null;
-  expire: string;
+  expire: string | null;
   requested_at: string;
   updated_at: string;
 };
 
+export type DoctorStatsType = {
+  patients: number;
+  scheduled: number;
+  finished: number;
+};
+
 export const appointmentsApi = createApi({
   reducerPath: "appointmentsApi",
+  refetchOnFocus: true, // quand l'utilisateur revient sur l'onglet
+  refetchOnReconnect: true, // quand la connexion revient
   baseQuery: baseQueryWithReauth,
   tagTypes: ["Appointments"],
   endpoints: (builder) => ({
     getAppointments: builder.query<AppointmentType[], void>({
       query: () => "appointments/",
+      providesTags: ["Appointments"],
+      keepUnusedDataFor: 60,
+    }),
+    getDoctorStats: builder.query<DoctorStatsType, void>({
+      query: () => "doctor/stats/",
       providesTags: ["Appointments"],
     }),
     addAppointment: builder.mutation<AppointmentType, Partial<AppointmentType>>(
@@ -53,6 +77,29 @@ export const appointmentsApi = createApi({
 
 export const {
   useGetAppointmentsQuery,
+  useGetDoctorStatsQuery,
   useAddAppointmentMutation,
   useUpdateAppointmentsMutation,
 } = appointmentsApi;
+
+export const futurAppointment = async () => {
+  try {
+    const response = await axiosInstance.get("/doctor/futur");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching future appointments:", error);
+  }
+};
+
+export const deleteAllFinished = async () => {
+  try {
+    const { data } = await axiosInstance.delete("/patient/erase/");
+    return data;
+  } catch (error: unknown) {
+    const message =
+      error.response?.data?.detail ||
+      error.message ||
+      "Error deleting finished appointments";
+    throw new Error(message);
+  }
+};
