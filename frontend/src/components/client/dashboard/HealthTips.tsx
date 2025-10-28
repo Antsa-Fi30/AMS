@@ -9,9 +9,15 @@ export const HealthTips = () => {
   ];
 
   return (
-    <Card sx={{ height: '100%', borderRadius: 3, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-      <CardContent sx={{ p: 3, color: 'white' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+    <Card
+      sx={{
+        height: "100%",
+        borderRadius: 3,
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      }}
+    >
+      <CardContent sx={{ p: 3, color: "white" }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
           <LocalHospital sx={{ mr: 1 }} />
           <Typography variant="h6" fontWeight="bold">
             Conseils santé
@@ -23,23 +29,21 @@ export const HealthTips = () => {
             <Box
               key={index}
               sx={{
-                display: 'flex',
-                alignItems: 'flex-start',
+                display: "flex",
+                alignItems: "flex-start",
                 mb: 2,
                 p: 2,
-                backgroundColor: 'rgba(255,255,255,0.1)',
+                backgroundColor: "rgba(255,255,255,0.1)",
                 borderRadius: 2,
-                backdropFilter: 'blur(10px)'
+                backdropFilter: "blur(10px)",
               }}
             >
-              <Typography variant="body2">
-                {tip}
-              </Typography>
+              <Typography variant="body2">{tip}</Typography>
             </Box>
           ))}
         </Box>
 
-        <Button 
+        {/* <Button 
           variant="outlined" 
           endIcon={<ArrowForward />}
           sx={{ 
@@ -52,7 +56,7 @@ export const HealthTips = () => {
           }}
         >
           Voir plus
-        </Button>
+        </Button> */}
       </CardContent>
     </Card>
   );

@@ -193,6 +193,7 @@ def get_doctor_stats(request):
 
     finished_consultations = Appointment.objects.filter(
         doctor=doctor,
+        status="confirmed",
         date__gte=today,
         date__lte=today + timedelta(days=7),
         finished=True,

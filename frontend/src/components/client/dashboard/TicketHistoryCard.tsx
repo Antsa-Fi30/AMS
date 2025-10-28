@@ -11,7 +11,7 @@ import { CalendarMonth, AccessTime, EditNote } from "@mui/icons-material";
 import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 import EmptyData from "../../common/EmptyData";
 import { getStatusColor } from "../../../utils/getColor";
-import DetailsDialog from "../../doctor/tickets/DetailsDialog";
+import DetailsDialog from "../../common/DetailsDialog";
 
 const TicketHistoryCard = () => {
   const { data, isLoading, isFetching } = useGetAppointmentsQuery();

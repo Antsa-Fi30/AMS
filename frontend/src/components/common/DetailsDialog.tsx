@@ -17,9 +17,10 @@ import {
   LocalHospital,
   LocalPhone,
 } from "@mui/icons-material";
-import GenericDialog from "../../common/GenericDialog";
-import type { AppointmentType } from "../../../services/AppointmentServices";
+import GenericDialog from "./GenericDialog";
+import type { AppointmentType } from "../../services/AppointmentServices";
 import DescriptionDetails from "./DescriptionDetails";
+import { formatDateToLocalString } from "../../utils/Formats";
 
 interface DetailsDialogProps {
   target: AppointmentType;
@@ -33,7 +34,6 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
   const isModified = Math.abs(updated.getTime() - requested.getTime()) > 1000;
   return (
     <GenericDialog
-      title={`${target.patient_name} - Détails du rendez-vous`}
       renderTrigger={(open) => (
         <Tooltip title={"Descriptions"}>
           <IconButton
@@ -47,88 +47,6 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
         </Tooltip>
       )}
     >
-      {/* <Stack spacing={2} sx={{ pt: 2, px: 1 }}>
-        <Chip
-          label={
-            target.status === "pending"
-              ? "En attente"
-              : target.status === "confirmed"
-              ? "Confirmé"
-              : "Refusé"
-          }
-          color={
-            target.status === "pending"
-              ? "warning"
-              : target.status === "confirmed"
-              ? "success"
-              : "error"
-          }
-          sx={{ width: "fit-content" }}
-        />
-        <Divider />
-        <Stack spacing={1}>
-          <Typography variant="h3">Patient:</Typography>
-          <Typography variant="body1">{target.patient_name}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {target.patient_phone}
-          </Typography>
-        </Stack>
-        <Divider />
-        <Stack spacing={1}>
-          <Typography variant="h3">Motif</Typography>
-          <Typography variant="body1">{target.reason}</Typography>
-        </Stack>
-        <Divider />
-        <DescriptionDetails target={target.descriptions} />
-        <Divider />
-        {target.status === "rejected" && (
-          <>
-            <Stack spacing={1}>
-              <Typography variant="h3">Notes </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {target.notes || "N/A"}
-              </Typography>
-            </Stack>
-            <Divider />
-          </>
-        )}
-        <Stack spacing={1} direction={{ xs: "column", sm: "row" }} gap={2}>
-          <Stack>
-            <Typography variant="h3">Date</Typography>
-            <Typography variant="body1">{target.date || "N/A"}</Typography>
-          </Stack>
-          <Stack>
-            <Typography variant="h3">Heure</Typography>
-            <Typography variant="body1">{target.time || "N/A"}</Typography>
-          </Stack>
-        </Stack>
-        <Divider />
-        <Stack spacing={1}>
-          <Typography variant="h3">Docteur</Typography>
-          <Typography variant="body1">
-            {target.doctor_name || "Non assigné"}
-          </Typography>
-        </Stack>
-        <Divider />
-        <Stack spacing={1}>
-          <Typography variant="h3">Expiration du ticket</Typography>
-          <Typography variant="body1">{target.expire || "N/A"}</Typography>
-        </Stack>
-        <Divider />
-        <Stack spacing={1}>
-          <Typography variant="h3">Date de création</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {new Date(target.requested_at).toLocaleString()}
-          </Typography>
-        </Stack>
-        <Divider />
-        <Stack direction={"row"} alignItems={"center"} spacing={3}>
-          <Typography variant="h3">Dernière mise à jour</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {new Date(target.updated_at).toLocaleString()}
-          </Typography>
-        </Stack>
-      </Stack> */}
       <Stack
         spacing={2}
         sx={{
@@ -149,17 +67,28 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
                 ? "En attente"
                 : target.status === "confirmed"
                 ? "Confirmé"
-                : "Refusé"
+                : target.status === "rejected"
+                ? "Refusé"
+                : "Canceled"
             }
             color={
               target.status === "pending"
                 ? "warning"
                 : target.status === "confirmed"
                 ? "success"
-                : "error"
+                : target.status === "rejected"
+                ? "error"
+                : "secondary"
             }
             sx={{ width: "fit-content" }}
           />
+          {target.finished && (
+            <Chip
+              label={"Finished"}
+              color={"primary"}
+              sx={{ width: "fit-content" }}
+            />
+          )}
         </Stack>
 
         <Divider flexItem sx={{ borderStyle: "dashed" }} />
@@ -171,7 +100,9 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
               <Tooltip title={"Date du rendez-vous"}>
                 <CalendarMonth />
               </Tooltip>
-              <Typography variant="body1">{target.date || "N/A"}</Typography>
+              <Typography variant="body1">
+                {formatDateToLocalString(target.date) || "N/A"}
+              </Typography>
             </Stack>
             <Stack spacing={1} direction="row" alignItems={"center"}>
               <Tooltip title={"Heure du rendez-vous"}>
@@ -183,7 +114,9 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
               <Tooltip title={"Expiration du ticket du rendez-vous"}>
                 <TimerOffRounded />
               </Tooltip>
-              <Typography variant="body1">{target.expire || "N/A"}</Typography>
+              <Typography variant="body1">
+                {formatDateToLocalString(target.expire) || "N/A"}
+              </Typography>
             </Stack>
           </Stack>
         </Stack>

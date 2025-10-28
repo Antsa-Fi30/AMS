@@ -82,9 +82,7 @@ const NotificationsContainer = () => {
             Notifications
           </Typography>
         </Stack>
-        <Typography variant="body2" color="white">
-          <Chip label={`${mockAlerts.length}`} color="primary" />
-        </Typography>
+        <Chip label={`${mockAlerts.length}`} color="primary" />
       </Box>
       <CardContent sx={{ p: 1 }}>
         {mockAlerts.length === 0 ? (

@@ -22,7 +22,8 @@ import {
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 import {
   combineDateAndTime,
-  formatDateToLocalString,
+  DisableSpecificTime,
+  formatDateForBackend,
   formatTimeToLocalString,
 } from "../../../utils/Formats";
 
@@ -36,8 +37,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
   const [time, setTime] = React.useState<Date | null>(null);
   const { showSnackbar } = useSnackbar();
 
-  const [updateAppointments, { isLoading, error }] =
-    useUpdateAppointmentsMutation();
+  const [updateAppointments, { isLoading }] = useUpdateAppointmentsMutation();
 
   const handleConfirm = async (close: () => void) => {
     try {
@@ -50,9 +50,9 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
 
       const updatedData = {
         ...appointment,
-        date: formatDateToLocalString(finalDate),
+        date: formatDateForBackend(finalDate),
         time: formatTimeToLocalString(finalDate),
-        expire: expireDate ? formatDateToLocalString(expireDate) : null,
+        expire: expireDate ? formatDateForBackend(expireDate) : null,
         status: "confirmed",
       };
 
@@ -61,7 +61,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
       showSnackbar("Appointment updated successfully!", "success");
     } catch (err) {
       console.error(err);
-      showSnackbar(error?.data.detail, "error");
+      showSnackbar("Something went wrong, check console", "error");
     } finally {
       setTime(null);
       setDate(null);
@@ -121,7 +121,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
                 format="HH:mm"
                 onChange={(newValue) => setTime(newValue)}
                 ampm={false}
-                disablePast
+                disablePast={DisableSpecificTime(date)}
               />
 
               <DatePicker

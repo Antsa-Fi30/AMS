@@ -1,7 +1,7 @@
 import DialogContentText from "@mui/material/DialogContentText";
 import { IconButton, Tooltip } from "@mui/material";
 import { RemoveRedEye } from "@mui/icons-material";
-import GenericDialog from "../../common/GenericDialog";
+import GenericDialog from "./GenericDialog";
 
 interface DialogComponentProps {
   description: string;

@@ -8,11 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {
-  CheckBoxRounded,
-  CheckCircleOutline,
-  Close,
-} from "@mui/icons-material";
+import { CheckCircleOutline } from "@mui/icons-material";
 import {
   useUpdateAppointmentsMutation,
   useGetAppointmentsQuery,
@@ -51,7 +47,6 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
 
   return (
     <GenericDialog
-      title={`${appointment.patient_name} 's appointment ticket`}
       renderTrigger={(open) => (
         <Tooltip title="Mark finished">
           <IconButton aria-label="decline" size="small" onClick={open}>

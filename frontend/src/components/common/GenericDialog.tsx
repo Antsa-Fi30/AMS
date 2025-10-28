@@ -71,6 +71,8 @@ const GenericDialog: React.FC<GenericDialogProps> = ({
               width: "100%",
               maxWidth: 800,
               borderRadius: 3,
+              bgcolor: "background.paper",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
             },
           },
         }}
@@ -78,8 +80,24 @@ const GenericDialog: React.FC<GenericDialogProps> = ({
         aria-describedby="alert-dialog-slide-description"
         {...dialogProps}
       >
-        {title && <DialogTitle>{title}</DialogTitle>}
-        <DialogContent>{children}</DialogContent>
+        {title && (
+          <DialogTitle
+            sx={{
+              bgcolor: "background.paper",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+            }}
+          >
+            {title}
+          </DialogTitle>
+        )}
+        <DialogContent
+          sx={{
+            bgcolor: "background.paper",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+          }}
+        >
+          {children}
+        </DialogContent>
         {actions !== undefined ? (
           <>
             <DialogActions>
@@ -88,7 +106,12 @@ const GenericDialog: React.FC<GenericDialogProps> = ({
             </DialogActions>
           </>
         ) : (
-          <DialogActions>
+          <DialogActions
+            sx={{
+              bgcolor: "background.paper",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+            }}
+          >
             <Button onClick={handleClose}>Close</Button>
           </DialogActions>
         )}

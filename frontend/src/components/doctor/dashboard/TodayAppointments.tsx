@@ -10,8 +10,11 @@ import {
 import { AccessTime } from "@mui/icons-material";
 import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 import ConfirmFinishedDialog from "./ConfirmFinishedDialog";
-import { formatDateToLocalString } from "../../../utils/Formats";
-import DetailsDialog from "../tickets/DetailsDialog";
+import {
+  formatDateForBackend,
+  // formatDateToLocalString,
+} from "../../../utils/Formats";
+import DetailsDialog from "../../common/DetailsDialog";
 import EmptyData from "../../common/EmptyData";
 import { getStatusColor } from "../../../utils/getColor";
 
@@ -22,11 +25,13 @@ export const TodayAppointments = () => {
   const appointments =
     data?.filter((ticket) => {
       if (ticket.status !== "confirmed" || ticket.finished) return false;
-      if (ticket.date !== formatDateToLocalString(today)) return false;
+      if (ticket.date !== formatDateForBackend(today)) return false;
       if (!ticket.time) return false;
-      const ticketHour = new Date(ticket.time).getHours();
+      const ticketHour = new Date(ticket.date).getHours();
       return currentHour > ticketHour;
     }) ?? [];
+
+  console.log(currentHour);
 
   return (
     <Box>

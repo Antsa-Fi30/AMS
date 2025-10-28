@@ -9,7 +9,7 @@ import Dashboard from "./pages/doctor/Dashboard";
 import DashboardCli from "./pages/client/DashboardCli";
 import Tickets from "./pages/doctor/Tickets";
 import PatientLayout from "./layouts/PatientLayout";
-import Appointments from "./pages/client/Appointments";
+import Appointments from "./components/common/Appointments";
 import ProfilCli from "./pages/client/ProfileCli";
 import { useDispatch } from "react-redux";
 import { initializeAuth } from "./redux/AuthSlice";
@@ -44,7 +44,7 @@ const App = () => {
           <Route path="patient" element={<PatientLayout />}>
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<DashboardCli />} />
-            <Route path="appointments" element={<Appointments />} />
+            <Route path="appointments" element={<Appointments client />} />
             <Route path="profil" element={<ProfilCli />} />
             <Route path="settings" element={<SettingsCli />} />
           </Route>
