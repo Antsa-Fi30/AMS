@@ -10,7 +10,7 @@ import {
 import { CalendarMonth, AccessTime } from "@mui/icons-material";
 import HistoryToggleOffRoundedIcon from "@mui/icons-material/HistoryToggleOffRounded";
 import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
-import DetailsDialog from "../../doctor/tickets/DetailsDialog";
+import DetailsDialog from "../../common/DetailsDialog";
 import RejectDialog from "../../common/RejectDialog";
 import EmptyData from "../../common/EmptyData";
 

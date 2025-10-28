@@ -1,12 +1,8 @@
 import { useEffect } from "react";
 import {
   Container,
-  Grid,
-  Card,
-  CardContent,
   Box,
   Typography,
-  Stack,
   // Chip,
 } from "@mui/material";
 import {
@@ -15,9 +11,8 @@ import {
   // Cancel,
   // Schedule,
 } from "@mui/icons-material";
-import TicketsTable from "../../components/common/TicketsTable";
-import { TicketStats } from "../../components/doctor/tickets/TicketStats";
 import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
+import Appointments from "../../components/common/Appointments";
 
 const TicketDashboard = () => {
   const { refetch } = useGetAppointmentsQuery(undefined, { skip: true });
@@ -44,27 +39,7 @@ const TicketDashboard = () => {
         </Box>
       </Box>
 
-      <Grid container spacing={1}>
-        {/* Statistiques */}
-        <Grid size={12}>
-          <TicketStats />
-        </Grid>
-
-        {/* Actions rapides */}
-        <Grid size={{ xs: 12, md: 4 }}></Grid>
-
-        {/* Tableau principal */}
-        <Grid size={{ xs: 12, md: 12 }}>
-          <Card elevation={2} sx={{ borderRadius: 3 }}>
-            <CardContent sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                {/* <QuickTicketActions /> */}
-                <TicketsTable />
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <Appointments />
     </Container>
   );
 };

@@ -41,5 +41,17 @@ class Appointment(models.Model):
     requested_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        if not self.reason:
+            last_appointment = Appointment.objects.order_by("-id").first()
+            if last_appointment:
+                last_id = last_appointment.id + 1
+            else:
+                last_id = 1
+
+            self.reason = f"APT-{last_id:03d}"
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.patient} → {self.doctor} ({self.status})"

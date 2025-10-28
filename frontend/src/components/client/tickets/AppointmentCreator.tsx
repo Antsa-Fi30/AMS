@@ -20,7 +20,6 @@ const AppointmentCreator: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false); // ✅ mini state, juste pour le bouton
 
   const handleSubmitDescriptions = async (descriptions: DescriptionType) => {
     const user = sessionStorage.getItem("user");
@@ -72,7 +71,9 @@ const AppointmentCreator: React.FC = () => {
     <>
       <GenericDialog
         open={openDialog}
-        onClose={() => setOpenDialog(false)}
+        onClose={() => {
+          setOpenDialog(false);
+        }}
         title="Create your appointment here"
         renderTrigger={() => (
           <Tooltip title="Accept appointment">
@@ -86,23 +87,17 @@ const AppointmentCreator: React.FC = () => {
           </Tooltip>
         )}
         actions={() => (
-          <Button
-            form="appointment-form"
-            type="submit"
-            variant="contained"
-            color="success"
-            disabled={isLoading || !isFormValid} // ✅ désactivé si formulaire invalide
-          >
+          <>
             {isLoading ? (
               <>
-                Sending <CircularProgress size={20} sx={{ ml: 1 }} />
+                <CircularProgress size={20} sx={{ ml: 1 }} />
               </>
             ) : (
               <>
-                Send <Send sx={{ ml: 1 }} />
+                <Send color="primary" />
               </>
             )}
-          </Button>
+          </>
         )}
       >
         <SymptomFormStepper onSubmit={handleSubmitDescriptions} />

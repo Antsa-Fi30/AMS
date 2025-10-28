@@ -21,6 +21,9 @@ const Drawer = styled(MuiDrawer)({
 });
 
 const Sidebar = () => {
+  const user = sessionStorage.getItem("user");
+  const parsedUser = user ? JSON.parse(user) : [];
+
   return (
     <Drawer
       variant="permanent"
@@ -69,15 +72,15 @@ const Sidebar = () => {
           src="/static/images/avatar/7.jpg"
           sx={{ width: 36, height: 36 }}
         />
-        <Box sx={{ mr: "auto" }}>
+        <Box sx={{ mr: "auto", overflowX: "hidden" }}>
           <Typography
             variant="body2"
             sx={{ fontWeight: 500, lineHeight: "16px" }}
           >
-            Riley Carter
+            {parsedUser.name}
           </Typography>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            riley@email.com
+            {parsedUser.email}
           </Typography>
         </Box>
         <Options />

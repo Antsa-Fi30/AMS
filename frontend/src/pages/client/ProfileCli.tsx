@@ -4,8 +4,6 @@ import {
   Typography,
   Grid,
   Button,
-  Switch,
-  FormControlLabel,
   Avatar,
   Box,
   Container,
@@ -13,11 +11,9 @@ import {
 } from "@mui/material";
 import {
   Edit,
-  Notifications,
   Phone,
   Email,
   Person,
-  CalendarMonth,
   Security,
   Settings,
 } from "@mui/icons-material";
@@ -27,9 +23,6 @@ const ProfilCli = () => {
   const navigate = useNavigate();
   const patient = sessionStorage.getItem("user");
   const user = patient ? JSON.parse(patient) : {};
-  // Exemple de données utilisateur
-
-  console.log(user);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -57,7 +50,7 @@ const ProfilCli = () => {
               >
                 {user.name
                   .split(" ")
-                  .map((n) => n[0])
+                  .map((n: string) => n[0])
                   .join("")}
               </Avatar>
               <Box>
@@ -66,9 +59,6 @@ const ProfilCli = () => {
                 </Typography>
                 <Typography variant="h6" sx={{ opacity: 0.9 }}>
                   {user.role}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8, mt: 0.5 }}>
-                  Membre depuis {user.joinDate}
                 </Typography>
               </Box>
             </Box>

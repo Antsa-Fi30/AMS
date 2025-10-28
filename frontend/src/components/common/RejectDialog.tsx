@@ -35,12 +35,13 @@ const RejectDialog: React.FC<RejectDialogProps> = ({ appointment, client }) => {
         await updateAppointments({
           id,
           status: "rejected",
+          finished: true,
           notes,
         }).unwrap();
       } else {
         await updateAppointments({
           id,
-          status: "rejected",
+          status: "canceled",
           finished: true,
         }).unwrap();
       }

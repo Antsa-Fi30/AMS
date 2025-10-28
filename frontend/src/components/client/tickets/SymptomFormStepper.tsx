@@ -16,12 +16,18 @@ import {
   Divider,
 } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
+import {
+  symptomsConstants,
+  detectedByConst,
+  durationConstants,
+} from "../../../constants/Symptoms";
 
 type DescriptionType = {
   symptoms: string[];
   severity: "mild" | "moderate" | "severe";
   duration: string;
   detectedBy: string;
+  // key: [any];
 };
 
 type Props = {
@@ -29,10 +35,11 @@ type Props = {
 };
 
 const SymptomFormStepper: React.FC<Props> = ({ onSubmit }) => {
-  const steps = ["Symptômes", "Détails", "Confirmation"];
+  const steps = ["Symptômes", "Détails", "Détecté par", "Confirmation"];
 
   const [activeStep, setActiveStep] = useState(0);
   const [symptoms, setSymptoms] = useState<string[]>([]);
+  const [detectedBy, setDetectedBy] = useState<string>("");
   const [severity, setSeverity] = useState<"mild" | "moderate" | "severe">(
     "mild"
   );
@@ -44,8 +51,11 @@ const SymptomFormStepper: React.FC<Props> = ({ onSubmit }) => {
         symptoms,
         severity,
         duration,
-        detectedBy: "user_selection",
+        detectedBy,
       });
+      setActiveStep(0);
+      setSymptoms([]);
+      setSeverity("mild");
     } else {
       setActiveStep((prev) => prev + 1);
     }
@@ -83,13 +93,11 @@ const SymptomFormStepper: React.FC<Props> = ({ onSubmit }) => {
               color="primary"
               sx={{ flexWrap: "wrap", gap: 1 }}
             >
-              <ToggleButton value="fièvre">Fièvre</ToggleButton>
-              <ToggleButton value="toux">Toux</ToggleButton>
-              <ToggleButton value="fatigue">Fatigue</ToggleButton>
-              <ToggleButton value="maux de tête">Maux de tête</ToggleButton>
-              <ToggleButton value="douleur abdominale">
-                Douleur abdominale
-              </ToggleButton>
+              {symptomsConstants.map((item, index) => (
+                <ToggleButton key={index} value={item.value}>
+                  {item.label}
+                </ToggleButton>
+              ))}
             </ToggleButtonGroup>
           </Box>
         )}
@@ -121,15 +129,32 @@ const SymptomFormStepper: React.FC<Props> = ({ onSubmit }) => {
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
             >
-              <MenuItem value="1 jour">1 jour</MenuItem>
-              <MenuItem value="2-3 jours">2-3 jours</MenuItem>
-              <MenuItem value="1 semaine">1 semaine</MenuItem>
-              <MenuItem value="plus d'une semaine">Plus d'une semaine</MenuItem>
+              {durationConstants.map((item, index) => (
+                <MenuItem key={index} value={item.value}>
+                  {item.label}
+                </MenuItem>
+              ))}
             </Select>
           </Box>
         )}
 
         {activeStep === 2 && (
+          <Box>
+            <Select
+              fullWidth
+              value={detectedBy}
+              onChange={(e) => setDetectedBy(e.target.value)}
+            >
+              {detectedByConst.map((item, index) => (
+                <MenuItem key={index} value={item.value}>
+                  {item.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+        )}
+
+        {activeStep === 3 && (
           <Card variant="outlined" sx={{ mt: 2 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -150,6 +175,10 @@ const SymptomFormStepper: React.FC<Props> = ({ onSubmit }) => {
               <Typography>
                 <strong>Durée :</strong> {duration}
               </Typography>
+              <Typography>
+                <strong>Detected by :</strong> {detectedBy}
+              </Typography>
+              <Divider sx={{ borderStyle: "dashed", mt: 2 }} />
               <Typography
                 variant="body2"
                 sx={{ mt: 1, color: "text.secondary" }}
@@ -176,7 +205,8 @@ const SymptomFormStepper: React.FC<Props> = ({ onSubmit }) => {
           onClick={handleNext}
           disabled={
             (activeStep === 0 && symptoms.length === 0) ||
-            (activeStep === 1 && !severity)
+            (activeStep === 1 && !severity) ||
+            (activeStep === 2 && !severity)
           }
           startIcon={activeStep === steps.length - 1 ? <CheckCircle /> : null}
         >

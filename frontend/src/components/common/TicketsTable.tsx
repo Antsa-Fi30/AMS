@@ -14,22 +14,58 @@ import {
 import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
 import AcceptDialog from "../doctor/tickets/AcceptDialog";
 import RejectDialog from "../common/RejectDialog";
-import DetailsDialog from "../doctor/tickets/DetailsDialog";
+import DetailsDialog from "./DetailsDialog";
 import { Cancel, Check } from "@mui/icons-material";
 import EmptyData from "./EmptyData";
 import { useMemo, memo } from "react";
 import { getStatusColor } from "../../utils/getColor";
+import { formatDateToLocalString } from "../../utils/Formats";
 
 interface TicketsTableProps {
   client?: boolean;
+  filter?: string;
 }
 
-const TicketsTableComponent: React.FC<TicketsTableProps> = ({ client }) => {
+const TicketsTableComponent: React.FC<TicketsTableProps> = ({
+  client,
+  filter,
+}) => {
   const { data, isLoading } = useGetAppointmentsQuery(undefined, {
     pollingInterval: undefined,
   });
 
   const displayedData = useMemo(() => data || [], [data]);
+
+  const heinData = (filter: string | undefined) => {
+    let dataFilter = [];
+    switch (filter) {
+      case "pending":
+        dataFilter = displayedData.filter(
+          (tickets) => tickets.status === filter
+        );
+        return dataFilter;
+      case "confirmed":
+        dataFilter = displayedData.filter(
+          (tickets) => tickets.status === filter
+        );
+        return dataFilter;
+      case "rejected":
+        dataFilter = displayedData.filter(
+          (tickets) => tickets.status === filter
+        );
+        return dataFilter;
+      case "canceled":
+        dataFilter = displayedData.filter(
+          (tickets) => tickets.status === filter
+        );
+        return dataFilter;
+      default:
+        dataFilter = displayedData;
+        return dataFilter;
+    }
+  };
+
+  const filteredData = heinData(filter);
 
   if (isLoading) {
     return (
@@ -40,8 +76,6 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({ client }) => {
       </Box>
     );
   }
-
-  console.log(data);
 
   return (
     <div>
@@ -57,7 +91,7 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({ client }) => {
           <Typography variant="h6" fontWeight="bold">
             Liste des tickets
           </Typography>
-          {displayedData?.length !== 0 && (
+          {filteredData?.length !== 0 && (
             <Chip
               label={`${
                 data?.filter((t) => t.status === "pending").length
@@ -68,7 +102,7 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({ client }) => {
           )}
         </Box>
 
-        {displayedData?.length === 0 ? (
+        {filteredData?.length === 0 ? (
           <>
             <EmptyData
               title="No ticket for this month"
@@ -80,17 +114,21 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({ client }) => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell>Numero</TableCell>
                   <TableCell>{client ? "Doctor" : "Patient"}</TableCell>
-                  <TableCell>Reason</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Time</TableCell>
                   <TableCell>Statut</TableCell>
                   <TableCell>Finished</TableCell>
-                  {!client && <TableCell align="center">Actions</TableCell>}
+                  {!client ? (
+                    <TableCell align="center">Actions</TableCell>
+                  ) : (
+                    <TableCell align="center">Voir details</TableCell>
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data?.map((ticket) => (
+                {filteredData?.map((ticket) => (
                   <TableRow
                     key={ticket.id}
                     sx={{
@@ -101,6 +139,9 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({ client }) => {
                           : "transparent",
                     }}
                   >
+                    <TableCell>
+                      <Typography variant="body2">{ticket.reason}</Typography>
+                    </TableCell>
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         {/* <Avatar sx={{ mr: 2, width: 32, height: 32 }}>
@@ -120,13 +161,13 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({ client }) => {
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">{ticket.reason}</Typography>
-                    </TableCell>
+
                     <TableCell>
                       <Box>
                         <Typography variant="body2" fontWeight="medium">
-                          {ticket.date ? ticket.date : "N/A"}
+                          {ticket.date
+                            ? formatDateToLocalString(ticket.date)
+                            : "N/A"}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -145,7 +186,9 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({ client }) => {
                             ? "En attente"
                             : ticket.status === "confirmed"
                             ? "Confirmé"
-                            : "Refusé"
+                            : ticket.status === "rejected"
+                            ? "Refusé"
+                            : "Canceled"
                         }
                         color={getStatusColor(ticket.status)}
                         size="small"

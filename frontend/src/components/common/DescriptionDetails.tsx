@@ -1,6 +1,6 @@
 import { Stack, Typography, Chip, Box, Divider, Card } from "@mui/material";
 import { AccessTime, Whatshot, Healing } from "@mui/icons-material";
-import type { DescriptionType } from "../../../services/AppointmentServices";
+import type { DescriptionType } from "../../services/AppointmentServices";
 
 interface DescriptionDetailsProps {
   target?: DescriptionType | null;

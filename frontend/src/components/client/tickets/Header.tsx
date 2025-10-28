@@ -1,7 +1,6 @@
-import React from "react";
+import React, { type SetStateAction } from "react";
 import {
   Box,
-  Typography,
   Stack,
   TextField,
   ToggleButton,
@@ -9,15 +8,19 @@ import {
 } from "@mui/material";
 import AppointmentCreator from "./AppointmentCreator";
 
-const Header = () => {
-  const [filter, setFilter] = React.useState("all");
+interface HeaderClientsProps {
+  state: string;
+  client?: boolean;
+  set: React.Dispatch<SetStateAction<string>>;
+}
 
+const Header: React.FC<HeaderClientsProps> = ({ state, set, client }) => {
   const handleFilter = (
     _: React.MouseEvent<HTMLElement>,
     newFilter: string
   ) => {
     if (newFilter !== null) {
-      setFilter(newFilter);
+      set(newFilter);
     }
   };
 
@@ -28,11 +31,6 @@ const Header = () => {
       justifyContent="space-between"
       mb={3}
     >
-      {/* Titre */}
-      <Typography variant="h5" fontWeight="bold">
-        My Appointment
-      </Typography>
-
       {/* Barre d’actions */}
       <Stack direction="row" spacing={2} alignItems="center">
         {/* Recherche */}
@@ -40,7 +38,7 @@ const Header = () => {
 
         {/* Filtres */}
         <ToggleButtonGroup
-          value={filter}
+          value={state}
           exclusive
           onChange={handleFilter}
           size="small"
@@ -49,10 +47,11 @@ const Header = () => {
           <ToggleButton value="pending">⏳ Pending</ToggleButton>
           <ToggleButton value="confirmed">✅ Accepted</ToggleButton>
           <ToggleButton value="rejected">❌ Rejected</ToggleButton>
+          <ToggleButton value="canceled">💥 Canceled</ToggleButton>
         </ToggleButtonGroup>
 
         {/* Action */}
-        <AppointmentCreator />
+        {client && <AppointmentCreator />}
       </Stack>
     </Box>
   );
