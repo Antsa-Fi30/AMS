@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, useRef, useCallback, type FormEvent } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
@@ -61,12 +61,21 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
   const [typePassword, setTypePassword] = useState<boolean>(false);
   const [phone, setPhone] = useState("");
   const navigate = useNavigate();
+  // Ref pour éviter plusieurs navigations rapides (protection contre flood)
+  const navigatedRef = useRef(false);
+
+  const safeNavigate = useCallback((path: string) => {
+    if (!navigatedRef.current) {
+      navigatedRef.current = true;
+      navigate(path);
+    }
+  }, [navigate]);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (localStorage.getItem("refresh")) {
-      navigate("/doctor");
+      safeNavigate("/doctor");
     }
   }, []);
 
@@ -119,8 +128,8 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
             const parsedUser = JSON.parse(user);
 
             if (localStorage.getItem("refresh")) {
-              if (parsedUser.role === "doctor") navigate("/doctor");
-              else if (parsedUser.role === "patient") navigate("/patient");
+              if (parsedUser.role === "doctor") safeNavigate("/doctor");
+              else if (parsedUser.role === "patient") safeNavigate("/patient");
             }
             alert("login successfull");
             alert(localStorage.getItem("refresh"));
@@ -170,9 +179,9 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
 
             if (localStorage.getItem("refresh")) {
               if (parsed.role === "doctor") {
-                navigate("/doctor/");
+                safeNavigate("/doctor/");
               } else if (parsed.role === "patient") {
-                navigate("/patient/");
+                safeNavigate("/patient/");
               }
             }
           }

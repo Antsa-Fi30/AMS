@@ -14,3 +14,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Fond blanc global de l'application pour le thème MediPlan */
+body {
+  background-color: #ffffff;
+  color: #0f172a; /* gris foncé pour le texte */
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Assure que les conteneurs prennent toute la hauteur si besoin */
+html, #root {
+  height: 100%;
+}

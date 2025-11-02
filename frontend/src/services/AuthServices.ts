@@ -14,7 +14,7 @@ export interface RegisterData {
   password2: string | null;
 }
 
-const apiUrl = import.meta.env.VITE_LOCAL_URL;
+const apiUrl = import.meta.env.VITE_LOCAL_URL.endsWith("/");
 
 export const authenticate = async (data: AuthData) => {
   try {
