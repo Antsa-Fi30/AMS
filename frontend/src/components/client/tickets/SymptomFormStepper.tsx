@@ -67,6 +67,7 @@ const SymptomFormStepper: React.FC<Props> = ({ onSubmit }) => {
     event: React.MouseEvent<HTMLElement>,
     newSymptoms: string[]
   ) => {
+    event.preventDefault();
     setSymptoms(newSymptoms);
   };
 

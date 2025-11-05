@@ -152,7 +152,7 @@ const Profil = () => {
                         Téléphone
                       </Typography>
                       <Typography variant="body1" sx={{ mt: 0.5 }}>
-                        {doctor.phone}
+                        {doctor.phone_number}
                       </Typography>
                     </Box>
                   </Box>

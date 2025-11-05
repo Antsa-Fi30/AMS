@@ -17,6 +17,7 @@ import Calendar from "./pages/doctor/AppointmentCalendar";
 import Profil from "./pages/doctor/Profil";
 import Settings from "./pages/doctor/Settings";
 import SettingsCli from "./pages/client/SettingsCli";
+import Disponibility from "./pages/doctor/Disponibility";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,15 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeAuth());
   }, [dispatch]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      dispatch(initializeAuth());
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, []);
 
   return (
     <BrowserRouter>
@@ -36,6 +46,7 @@ const App = () => {
           <Route path="doctor" element={<DoctorLayout />}>
             <Route index element={<Navigate to="home" replace />} />
             <Route path="home" element={<Dashboard />} />
+            <Route path="disponibility" element={<Disponibility />} />
             <Route path="tickets" element={<Tickets />} />
             <Route path="calendar" element={<Calendar />} />
             <Route path="profil" element={<Profil />} />

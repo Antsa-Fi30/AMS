@@ -2,7 +2,7 @@ import React, { type SetStateAction } from "react";
 import {
   Box,
   Stack,
-  TextField,
+  // TextField,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
@@ -34,7 +34,7 @@ const Header: React.FC<HeaderClientsProps> = ({ state, set, client }) => {
       {/* Barre d’actions */}
       <Stack direction="row" spacing={2} alignItems="center">
         {/* Recherche */}
-        <TextField size="small" placeholder="Rechercher..." />
+        {/* <TextField size="small" placeholder="Rechercher..." /> */}
 
         {/* Filtres */}
         <ToggleButtonGroup

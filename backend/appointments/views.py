@@ -16,7 +16,7 @@ from django.utils import timezone
 from datetime import date, time, timedelta
 from django.db.models import Count
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
+
 from .models import Appointment
 
 # from django.conf import settings
@@ -37,6 +37,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    # Pour la creation du ticket contenant la description en JSON
     def create(self, request, *args, **kwargs):
         many = isinstance(request.data, list)
         serializer = self.get_serializer(data=request.data, many=many)

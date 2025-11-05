@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "users",
     "appointments",
+    "disponibility",
     "channels",
 ]
 
