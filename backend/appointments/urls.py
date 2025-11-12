@@ -1,7 +1,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import AppointmentViewSet, futur_plan, get_doctor_stats, delete_records
+from .views import (
+    AppointmentViewSet,
+    futur_plan,
+    get_doctor_stats,
+    delete_records,
+    last_appointment,
+)
 
 # from .views import create_checkout_session
 
@@ -10,9 +16,22 @@ router.register(r"appointments", AppointmentViewSet, basename="appointments")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("doctor/futur/", futur_plan, name="Fetch futur appointment"),
-    path("doctor/stats/", get_doctor_stats, name="Fetch stats doctor appointment"),
-    path("patient/erase/", delete_records, name="Delete all records finished"),
+    path("appointments/doctor/futur/", futur_plan, name="Fetch futur appointment"),
+    path(
+        "appointments/doctor/stats/",
+        get_doctor_stats,
+        name="Fetch stats doctor appointment",
+    ),
+    path(
+        "appointments/patient/erase/",
+        delete_records,
+        name="Delete all records finished",
+    ),
+    path(
+        "appointments/patient/last/",
+        last_appointment,
+        name="Delete all records finished",
+    ),
     # path("doctor/appointments/", doctor_appointments, name="doctor-appointments"),
     # path(
     #     "create-checkout-session/",

@@ -28,7 +28,8 @@ const App = () => {
 
   useEffect(() => {
     const handleUnload = () => {
-      dispatch(initializeAuth());
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
     };
 
     window.addEventListener("beforeunload", handleUnload);

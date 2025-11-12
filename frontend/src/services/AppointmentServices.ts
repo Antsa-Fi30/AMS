@@ -2,16 +2,10 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../redux/baseQuery";
 import axiosInstance from "./AxiosInstance";
 
-export type DescriptionType = {
-  symptoms?: string[];
-  severity?: string | null;
-  duration?: string;
-  detectedBy?: string;
-};
-
 export type AppointmentType = {
   id: number;
-  reason: string;
+  code: string;
+  type: string;
   patient: number;
   patient_name: string;
   patient_phone: string;
@@ -21,10 +15,8 @@ export type AppointmentType = {
   notes: string | null;
   status: string;
   finished: boolean;
-  descriptions: DescriptionType | null;
+  disponibility: number | null;
   date: string | null;
-  time: string | null;
-  expire: string | null;
   requested_at: string;
   updated_at: string;
 };
@@ -48,7 +40,7 @@ export const appointmentsApi = createApi({
       keepUnusedDataFor: 60,
     }),
     getDoctorStats: builder.query<DoctorStatsType, void>({
-      query: () => "doctor/stats/",
+      query: () => "appointments/doctor/stats/",
       providesTags: ["Appointments"],
     }),
     addAppointment: builder.mutation<AppointmentType, Partial<AppointmentType>>(
@@ -84,16 +76,25 @@ export const {
 
 export const futurAppointment = async () => {
   try {
-    const response = await axiosInstance.get("/doctor/futur");
+    const response = await axiosInstance.get("appointments/doctor/futur");
     return response.data;
   } catch (error) {
     console.error("Error fetching future appointments:", error);
   }
 };
 
+export const lastAppointment = async () => {
+  try {
+    const response = await axiosInstance.get("appointments/patient/last/");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching last appointment:", error);
+  }
+};
+
 export const deleteAllFinished = async () => {
   try {
-    const { data } = await axiosInstance.delete("/patient/erase/");
+    const { data } = await axiosInstance.delete("appointments/patient/erase/");
     return data;
   } catch (error: unknown) {
     const message =

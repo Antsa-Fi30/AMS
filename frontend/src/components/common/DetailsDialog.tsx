@@ -21,12 +21,17 @@ import GenericDialog from "./GenericDialog";
 import type { AppointmentType } from "../../services/AppointmentServices";
 import DescriptionDetails from "./DescriptionDetails";
 import { formatDateToLocalString } from "../../utils/Formats";
+import type { DisponibilityType } from "../../services/DisponibilityServices";
 
 interface DetailsDialogProps {
   target: AppointmentType;
+  disponibility: DisponibilityType[];
 }
 
-const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
+const DetailsDialog: React.FC<DetailsDialogProps> = ({
+  target,
+  disponibility,
+}) => {
   const requested = new Date(target.requested_at);
   const updated = new Date(target.updated_at);
 
@@ -59,7 +64,7 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
         {/* Description libre */}
         <Stack direction={"row"} alignItems={"center"} spacing={5}>
           <Typography variant="h5" color="primary">
-            {target.reason ? target.reason : "APT-0005"}
+            {target.code ? target.code : "APT-05555"}
           </Typography>
           <Chip
             label={
@@ -105,17 +110,32 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
               </Typography>
             </Stack>
             <Stack spacing={1} direction="row" alignItems={"center"}>
-              <Tooltip title={"Heure du rendez-vous"}>
+              <Tooltip title={"Type du rendez-vous"}>
                 <LockClock />
               </Tooltip>
-              <Typography variant="body1">{target.time || "N/A"}</Typography>
+              <Typography>
+                {target.type
+                  ? target.type === "first"
+                    ? "Consultation"
+                    : "Contrôle"
+                  : "Aucun"}
+              </Typography>
             </Stack>
             <Stack spacing={1} direction="row" alignItems={"center"}>
-              <Tooltip title={"Expiration du ticket du rendez-vous"}>
+              <Tooltip title={"Creneau du rendez-vous"}>
                 <TimerOffRounded />
               </Tooltip>
-              <Typography variant="body1">
-                {formatDateToLocalString(target.expire) || "N/A"}
+              <Typography variant="caption" color="text.secondary">
+                {(() => {
+                  const dispo = disponibility.find(
+                    (d: DisponibilityType) => d.id === target.disponibility
+                  );
+                  console.log(target.disponibility);
+                  console.log(dispo);
+                  return dispo
+                    ? `${dispo.start_time} → ${dispo.end_time}`
+                    : "N/Aasdasd";
+                })()}
               </Typography>
             </Stack>
           </Stack>
@@ -137,10 +157,6 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
             </Stack>
           </Stack>
         </Stack>
-
-        <Divider flexItem sx={{ borderStyle: "dashed" }} />
-        <DescriptionDetails target={target.descriptions} />
-        <Divider flexItem sx={{ borderStyle: "dashed" }} />
 
         <Stack direction="row" spacing={2} flexWrap="wrap">
           <Stack spacing={5} direction="row" flexWrap="wrap" useFlexGap>
@@ -170,6 +186,9 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
             </Paper>
           </>
         )}
+
+        <Divider flexItem sx={{ borderStyle: "dashed" }} />
+        <DescriptionDetails target={target.descriptions} />
         <Divider flexItem sx={{ borderStyle: "dashed" }} />
 
         <Stack spacing={3} direction={"row"} alignSelf={"end"}>
@@ -180,6 +199,7 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
             {requested.toLocaleString()}
           </Typography>
         </Stack>
+
         {isModified && (
           <Stack direction={"row"} alignSelf={"end"} spacing={3}>
             <Typography variant="body2" color="textDisabled">

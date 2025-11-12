@@ -1,10 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../redux/baseQuery";
+import axiosInstance from "./AxiosInstance";
 
 export interface DisponibilityType {
-  id?: number;
+  id: number;
   start_time: string;
   end_time: string;
+  doctor_name: string;
+  doctor_phone: string;
   doctor: number;
 }
 
@@ -55,3 +58,10 @@ export const {
   useUpdateDispoMutation,
   useDeleteAllDispoMutation,
 } = disponibilityApi;
+
+export const GetDoctorDispos = async (doctorId: number) => {
+  const response = await axiosInstance.get<DisponibilityType[]>(
+    `/disponibility/doctor_dispo/?id=${doctorId}`
+  );
+  return response.data;
+};

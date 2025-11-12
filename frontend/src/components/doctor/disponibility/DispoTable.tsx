@@ -7,7 +7,6 @@ import {
 import EmptyData from "../../common/EmptyData";
 import {
   Box,
-  Typography,
   Table,
   TableBody,
   TableCell,

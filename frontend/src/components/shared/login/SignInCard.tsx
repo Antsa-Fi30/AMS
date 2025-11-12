@@ -10,7 +10,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import ForgotPassword from "./ForgotPassword";
-import { IconButton, InputAdornment } from "@mui/material";
+import { IconButton, InputAdornment, MenuItem, Select } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Person from "@mui/icons-material/Person";
@@ -142,7 +142,7 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
       const rawName = data.get("name");
       const rawPasswordConfirmation = data.get("confirmPassword");
       const rawEmail = data.get("email");
-      // const role = data.get("role");
+      const role = data.get("role");
 
       const register = async (answers: RegisterData) => {
         try {
@@ -157,8 +157,7 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
                 name: data.name,
                 email: data.email,
                 phone_number: data.phone_number,
-                role: "patient",
-                // role: data.get("role"),
+                role: data.get("role"),
               },
               access: data.tokens.access,
               refresh: data.tokens.refresh,
@@ -191,8 +190,7 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
         name: typeof rawName === "string" ? rawName : null,
         email: typeof rawEmail === "string" ? rawEmail : null,
         phone_number: `+261${data.get("phone")}`,
-        // role: typeof role === "string" ? role : null,
-        role: "patient",
+        role: typeof role === "string" ? role : null,
         password1: typeof rawPassword === "string" ? rawPassword : null,
         password2:
           typeof rawPasswordConfirmation === "string"
@@ -349,7 +347,7 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
             }}
           />
         </FormControl>
-        {/* {register && (
+        {register && (
           <FormControl>
             <FormLabel htmlFor="role">Role</FormLabel>
             <Select id="role" name="role" label="role">
@@ -357,7 +355,7 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
               <MenuItem value={"doctor"}>Doctor</MenuItem>
             </Select>
           </FormControl>
-        )} */}
+        )}
         <FormControl>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <FormLabel htmlFor="password">Password</FormLabel>

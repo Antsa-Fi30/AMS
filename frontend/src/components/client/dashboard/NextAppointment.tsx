@@ -70,7 +70,7 @@ export const NextAppointment = () => {
                         Heure
                       </Typography>
                       <Typography fontWeight="medium">
-                        {nextAppointment.time}
+                        {nextAppointment.disponibility}
                       </Typography>
                     </Box>
                   </Box>
@@ -101,9 +101,6 @@ export const NextAppointment = () => {
                     <Box>
                       <Typography variant="body2" color="text.secondary">
                         Date d'expiration
-                      </Typography>
-                      <Typography fontWeight="medium">
-                        {nextAppointment.expire || "N/A"}
                       </Typography>
                     </Box>
                   </Box>

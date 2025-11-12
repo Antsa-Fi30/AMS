@@ -136,7 +136,7 @@ def futur_plan(request):
         finished=False,
         date__gt=today,
         date__lte=today + timedelta(days=7),
-    ).order_by("date", "time")
+    ).order_by("date")
 
     from collections import defaultdict
 
@@ -219,6 +219,23 @@ def delete_records(request):
         {"message": f"{deleted_count} rendez-vous supprimés."},
         status=status.HTTP_200_OK,
     )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def last_appointment(request):
+    try:
+        last_apt = (
+            Appointment.objects.filter(patient=request.user).order_by("-date").first()
+        )
+        serializer = AppointmentSerializer(last_apt)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        if not last_apt:
+            return Response(
+                {"detail": "Aucun rendez-vous précédent trouvé."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
 
 # @api_view(["POST"])

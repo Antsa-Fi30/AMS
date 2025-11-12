@@ -20,10 +20,11 @@ import { getStatusColor } from "../../../utils/getColor";
 
 export const TodayAppointments = () => {
   const { data, isLoading } = useGetAppointmentsQuery();
+  console.log(data);
   const today = new Date();
   const currentHour = new Date().getHours();
   const appointments =
-    data?.filter((ticket) => {
+    data.results.filter((ticket) => {
       if (ticket.status !== "confirmed" || ticket.finished) return false;
       if (ticket.date !== formatDateForBackend(today)) return false;
       if (!ticket.time) return false;

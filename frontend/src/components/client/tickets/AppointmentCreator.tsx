@@ -1,39 +1,43 @@
-import {
-  Alert,
-  Button,
-  CircularProgress,
-  Snackbar,
-  Tooltip,
-} from "@mui/material";
+import { Button, CircularProgress, Tooltip } from "@mui/material";
 import GenericDialog from "../../common/GenericDialog";
 import AddIcon from "@mui/icons-material/Add";
 import { Send } from "@mui/icons-material";
-import {
-  useAddAppointmentMutation,
-  type DescriptionType,
-} from "../../../services/AppointmentServices";
+import { useAddAppointmentMutation } from "../../../services/AppointmentServices";
 import { useState } from "react";
-import SymptomFormStepper from "./SymptomFormStepper";
+import FormStepper from "./FormStepper";
+import { formatDateForBackend } from "../../../utils/Formats";
+import { useSnackbar } from "../../../contexts/SnackbarContext";
 
 const AppointmentCreator: React.FC = () => {
   const [addAppointment, { isLoading }] = useAddAppointmentMutation();
   const [openDialog, setOpenDialog] = useState(false);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
+  const [typeApt, setTypeApt] = useState<string>("");
+  const [disponibility, setDisponibility] = useState<number>(0);
+  const [date, setDate] = useState<Date | null>(null);
+  const { showSnackbar } = useSnackbar();
 
-  const handleSubmitDescriptions = async (descriptions: DescriptionType) => {
+  const handleSubmitStepper = async (answers: {
+    typeApt: string;
+    disponibility: number | null;
+  }) => {
     const user = sessionStorage.getItem("user");
     const patient = user ? JSON.parse(user).id : null;
 
-    await addAppointment({
-      reason: undefined, // auto généré côté backend
-      descriptions,
-      patient,
-      doctor: 7,
-    }).unwrap();
-
-    setOpenSuccess(true);
-    setOpenDialog(false);
+    try {
+      await addAppointment({
+        type: answers.typeApt,
+        disponibility: answers.disponibility,
+        date: typeApt === "first" ? formatDateForBackend(date) : null,
+        patient,
+        doctor: 2,
+      }).unwrap();
+      showSnackbar("Appointment created successfully", "success");
+      setOpenDialog(false);
+    } catch (error) {
+      console.error(error);
+      showSnackbar("Something went wrong", "error");
+      setOpenDialog(false);
+    }
   };
 
   // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -73,6 +77,9 @@ const AppointmentCreator: React.FC = () => {
         open={openDialog}
         onClose={() => {
           setOpenDialog(false);
+          setTypeApt("");
+          setDisponibility(0);
+          setDate(null);
         }}
         title="Create your appointment here"
         renderTrigger={() => (
@@ -80,7 +87,12 @@ const AppointmentCreator: React.FC = () => {
             <Button
               variant="contained"
               startIcon={<AddIcon />}
-              onClick={() => setOpenDialog(true)}
+              onClick={() => {
+                setOpenDialog(true);
+                setTypeApt("");
+                setDisponibility(0);
+                setDate(null);
+              }}
             >
               Prendre rendez-vous
             </Button>
@@ -94,46 +106,22 @@ const AppointmentCreator: React.FC = () => {
               </>
             ) : (
               <>
-                <Send color="primary" />
+                <Send color="secondary" />
               </>
             )}
           </>
         )}
       >
-        <SymptomFormStepper onSubmit={handleSubmitDescriptions} />
+        <FormStepper
+          typeApt={typeApt}
+          setTypeApt={setTypeApt}
+          disponibility={disponibility}
+          setDisponibility={setDisponibility}
+          date={date}
+          setDate={setDate}
+          onSubmit={handleSubmitStepper}
+        />
       </GenericDialog>
-
-      {/* Success Snackbar */}
-      <Snackbar
-        open={openSuccess}
-        autoHideDuration={3000}
-        onClose={() => setOpenSuccess(false)}
-      >
-        <Alert
-          severity="success"
-          variant="filled"
-          onClose={() => setOpenSuccess(false)}
-          sx={{ width: "100%" }}
-        >
-          Appointment created successfully!
-        </Alert>
-      </Snackbar>
-
-      {/* Error Snackbar */}
-      <Snackbar
-        open={openError}
-        autoHideDuration={3000}
-        onClose={() => setOpenError(false)}
-      >
-        <Alert
-          severity="error"
-          variant="filled"
-          onClose={() => setOpenError(false)}
-          sx={{ width: "100%" }}
-        >
-          Failed to create appointment.
-        </Alert>
-      </Snackbar>
     </>
   );
 };
