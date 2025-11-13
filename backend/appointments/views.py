@@ -33,7 +33,7 @@ User = get_user_model()
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.all()
+    queryset = Appointment.objects.all().order_by("code")
     serializer_class = AppointmentSerializer
     permission_classes = [permissions.IsAuthenticated]
 

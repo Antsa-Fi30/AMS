@@ -26,16 +26,6 @@ const App = () => {
     dispatch(initializeAuth());
   }, [dispatch]);
 
-  useEffect(() => {
-    const handleUnload = () => {
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-    };
-
-    window.addEventListener("beforeunload", handleUnload);
-    return () => window.removeEventListener("beforeunload", handleUnload);
-  }, []);
-
   return (
     <BrowserRouter>
       <Routes>

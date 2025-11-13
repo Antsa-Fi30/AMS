@@ -15,8 +15,8 @@ export const WelcomeHeader = () => {
   const user = sessionStorage.getItem("user");
   const name = user ? JSON.parse(user).name : "";
 
-  const nextAppointment = data
-    ?.filter((a) => a.status === "confirmed" && !a.finished)
+  const nextAppointment = data?.results
+    .filter((a) => a.status === "confirmed" && !a.finished)
     ?.sort(
       (a, b) =>
         (a.date ? new Date(a.date).getTime() : 0) -

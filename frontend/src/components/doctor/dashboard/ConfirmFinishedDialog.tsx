@@ -12,12 +12,12 @@ import { CheckCircleOutline } from "@mui/icons-material";
 import {
   useUpdateAppointmentsMutation,
   useGetAppointmentsQuery,
-  type AppointmentType,
+  type Appointments,
 } from "../../../services/AppointmentServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 
 interface ConfirmFinishedDialogProps {
-  appointment: AppointmentType;
+  appointment: Appointments;
 }
 
 const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({

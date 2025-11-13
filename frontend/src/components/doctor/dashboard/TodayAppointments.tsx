@@ -24,7 +24,7 @@ export const TodayAppointments = () => {
   const today = new Date();
   const currentHour = new Date().getHours();
   const appointments =
-    data.results.filter((ticket) => {
+    data?.results.filter((ticket) => {
       if (ticket.status !== "confirmed" || ticket.finished) return false;
       if (ticket.date !== formatDateForBackend(today)) return false;
       if (!ticket.time) return false;
@@ -98,7 +98,7 @@ export const TodayAppointments = () => {
                   </Typography>
 
                   <Typography variant="body2" color="text.secondary">
-                    {appointment.reason}
+                    {appointment.code}
                   </Typography>
                 </Box>
 

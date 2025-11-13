@@ -9,6 +9,8 @@ import {
   TableRow,
   Chip,
   Skeleton,
+  Stack,
+  Pagination,
 } from "@mui/material";
 
 import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
@@ -22,7 +24,7 @@ import { getStatusColor } from "../../utils/getColor";
 import { formatDateToLocalString } from "../../utils/Formats";
 import {
   GetDoctorDispos,
-  type DisponibilityType,
+  type DisponibilityResults,
 } from "../../services/DisponibilityServices";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 
@@ -35,31 +37,33 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
   client,
   filter,
 }) => {
+  const [page, setPage] = useState<number>(1);
   const { showSnackbar } = useSnackbar();
-  const { data, isLoading } = useGetAppointmentsQuery(undefined, {
+  const { data, isLoading } = useGetAppointmentsQuery(page, {
     pollingInterval: undefined,
   });
 
-  const [dispoData, setDispoData] = useState<DisponibilityType[]>([]);
+  const [dispoData, setDispoData] = useState<DisponibilityResults[]>(
+    [] as unknown as DisponibilityResults[]
+  );
 
   //Need more better practice than this shitty way, but it's fine for now
   useEffect(() => {
     const fetchDispos = async () => {
       try {
-        const data = await GetDoctorDispos(2);
-        setDispoData(data);
-      } catch (error) {
-        showSnackbar(
-          error.data?.details || "Erreur lors du chargement",
-          "error"
-        );
+        const datas = await GetDoctorDispos(2);
+        setDispoData(datas);
+      } catch (error: unknown) {
+        const err = error as { data?: { details?: string } };
+        showSnackbar(err.data?.details || "Erreur lors du chargement", "error");
       }
     };
 
     fetchDispos();
+    console.log("Data backend : " + data);
   }, []);
 
-  const displayedData = useMemo(() => data.results || [], [data.results]);
+  const displayedData = useMemo(() => data?.results || [], [data?.results]);
 
   const heinData = (filter: string | undefined) => {
     let dataFilter = [];
@@ -91,6 +95,25 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
   };
 
   const filteredData = heinData(filter);
+
+  // Pagination
+  useEffect(() => {
+    setPage(1);
+  }, [filter]);
+
+  const totalPages = useMemo(() => {
+    if (!data?.count) return 1;
+    return Math.ceil(data.count / 5); // 10 éléments par page (basé sur votre API)
+  }, [data?.count]);
+
+  // Gérer le changement de page
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+    console.log("Data backend : " + data);
+  };
 
   if (isLoading) {
     return (
@@ -142,6 +165,8 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
                   <TableCell>Numero</TableCell>
                   <TableCell>{client ? "Doctor" : "Patient"}</TableCell>
                   <TableCell>Date</TableCell>
+                  <TableCell>Time</TableCell>
+                  <TableCell>Type</TableCell>
                   <TableCell>Creneau</TableCell>
                   <TableCell>Statut</TableCell>
                   <TableCell>Finished</TableCell>
@@ -198,13 +223,30 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
                     </TableCell>
                     <TableCell>
                       <Box>
+                        <Typography variant="body2" fontWeight="medium">
+                          {ticket.time ? ticket.time : "N/A"}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={
+                          ticket.type === "first" ? "Consultation" : "Contrôle"
+                        }
+                        color={
+                          ticket.type === "first" ? "primary" : "secondary"
+                        }
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Box>
                         <Typography variant="caption" color="text.secondary">
                           {(() => {
                             const dispo = dispoData.find(
                               (d) => d.id === ticket.disponibility
                             );
-                            console.log(ticket.disponibility);
-                            console.log(dispo);
+
                             return dispo
                               ? `${dispo.start_time} → ${dispo.end_time}`
                               : "N/Aasdasd";
@@ -259,6 +301,19 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
               </TableBody>
             </Table>
           </TableContainer>
+        )}
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <Stack spacing={2} sx={{ mt: 3, alignItems: "center" }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+              showFirstButton
+              showLastButton
+            />
+          </Stack>
         )}
       </Box>
     </div>

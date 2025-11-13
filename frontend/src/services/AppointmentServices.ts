@@ -2,10 +2,21 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../redux/baseQuery";
 import axiosInstance from "./AxiosInstance";
 
-export type AppointmentType = {
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JSONValue[]
+  | { [key: string]: JSONValue };
+
+export type DescriptionsType = { [key: string]: JSONValue };
+
+export type Appointments = {
   id: number;
   code: string;
   type: string;
+  descriptions: DescriptionsType | null;
   patient: number;
   patient_name: string;
   patient_phone: string;
@@ -17,8 +28,16 @@ export type AppointmentType = {
   finished: boolean;
   disponibility: number | null;
   date: string | null;
+  time: string | null;
   requested_at: string;
   updated_at: string;
+};
+
+export type AppointmentType = {
+  results: Appointments[];
+  count: number;
+  next: string | null;
+  previous: string | null;
 };
 
 export type DoctorStatsType = {
@@ -27,6 +46,14 @@ export type DoctorStatsType = {
   finished: number;
 };
 
+// Ajoutez ces types dans vos interfaces
+interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
 export const appointmentsApi = createApi({
   reducerPath: "appointmentsApi",
   refetchOnFocus: true, // quand l'utilisateur revient sur l'onglet
@@ -34,8 +61,11 @@ export const appointmentsApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ["Appointments"],
   endpoints: (builder) => ({
-    getAppointments: builder.query<AppointmentType[], void>({
-      query: () => "appointments/",
+    getAppointments: builder.query<
+      PaginatedResponse<Appointments>,
+      number | void
+    >({
+      query: (page = 1) => `appointments/?page=${page}`,
       providesTags: ["Appointments"],
       keepUnusedDataFor: 60,
     }),
@@ -43,19 +73,17 @@ export const appointmentsApi = createApi({
       query: () => "appointments/doctor/stats/",
       providesTags: ["Appointments"],
     }),
-    addAppointment: builder.mutation<AppointmentType, Partial<AppointmentType>>(
-      {
-        query: (data) => ({
-          url: "appointments/",
-          method: "POST",
-          body: data,
-        }),
-        invalidatesTags: ["Appointments"],
-      }
-    ),
+    addAppointment: builder.mutation<Appointments, Partial<Appointments>>({
+      query: (data) => ({
+        url: "appointments/",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Appointments"],
+    }),
     updateAppointments: builder.mutation<
-      AppointmentType,
-      Partial<AppointmentType> & { id: number }
+      Appointments,
+      Partial<Appointments> & { id: number }
     >({
       query: ({ id, ...patch }) => ({
         url: `appointments/${id}/`,

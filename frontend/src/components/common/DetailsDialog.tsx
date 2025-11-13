@@ -16,16 +16,17 @@ import {
   TimerOffRounded,
   LocalHospital,
   LocalPhone,
+  TimerRounded,
 } from "@mui/icons-material";
 import GenericDialog from "./GenericDialog";
-import type { AppointmentType } from "../../services/AppointmentServices";
+import type { Appointments } from "../../services/AppointmentServices";
 import DescriptionDetails from "./DescriptionDetails";
 import { formatDateToLocalString } from "../../utils/Formats";
-import type { DisponibilityType } from "../../services/DisponibilityServices";
+import type { DisponibilityResults } from "../../services/DisponibilityServices";
 
 interface DetailsDialogProps {
-  target: AppointmentType;
-  disponibility: DisponibilityType[];
+  target: Appointments;
+  disponibility?: DisponibilityResults[];
 }
 
 const DetailsDialog: React.FC<DetailsDialogProps> = ({
@@ -110,16 +111,20 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({
               </Typography>
             </Stack>
             <Stack spacing={1} direction="row" alignItems={"center"}>
+              <Tooltip title={"Date du rendez-vous"}>
+                <TimerRounded />
+              </Tooltip>
+              <Typography variant="body1">{target.time || "N/A"}</Typography>
+            </Stack>
+            <Stack spacing={1} direction="row" alignItems={"center"}>
               <Tooltip title={"Type du rendez-vous"}>
                 <LockClock />
               </Tooltip>
-              <Typography>
-                {target.type
-                  ? target.type === "first"
-                    ? "Consultation"
-                    : "Contrôle"
-                  : "Aucun"}
-              </Typography>
+              <Chip
+                label={target.type === "first" ? "Consultation" : "Contrôle"}
+                color={target.type === "first" ? "info" : "secondary"}
+                size="small"
+              />
             </Stack>
             <Stack spacing={1} direction="row" alignItems={"center"}>
               <Tooltip title={"Creneau du rendez-vous"}>
@@ -127,11 +132,9 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({
               </Tooltip>
               <Typography variant="caption" color="text.secondary">
                 {(() => {
-                  const dispo = disponibility.find(
-                    (d: DisponibilityType) => d.id === target.disponibility
+                  const dispo = disponibility?.find(
+                    (d: DisponibilityResults) => d.id === target.disponibility
                   );
-                  console.log(target.disponibility);
-                  console.log(dispo);
                   return dispo
                     ? `${dispo.start_time} → ${dispo.end_time}`
                     : "N/Aasdasd";

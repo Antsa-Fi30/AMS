@@ -37,7 +37,7 @@ const DispoTable: React.FC<DispoTableProps> = ({ edit }) => {
   // Initialize form values from API
   useEffect(() => {
     if (data) {
-      const initial = data.reduce((acc, d) => {
+      const initial = data?.results.reduce((acc, d) => {
         acc[d.id!] = {
           start: new Date(`2000-01-01T${d.start_time}`),
           end: new Date(`2000-01-01T${d.end_time}`),
@@ -48,6 +48,7 @@ const DispoTable: React.FC<DispoTableProps> = ({ edit }) => {
       setForm(initial);
     }
   }, [data]);
+  console.log(data);
 
   const handleUpdate = async (id: number) => {
     const { start, end } = form[id];
@@ -75,7 +76,7 @@ const DispoTable: React.FC<DispoTableProps> = ({ edit }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Box>
-        {data?.length === 0 ? (
+        {data?.results.length === 0 ? (
           <EmptyData />
         ) : (
           <TableContainer>
@@ -90,7 +91,7 @@ const DispoTable: React.FC<DispoTableProps> = ({ edit }) => {
               </TableHead>
 
               <TableBody>
-                {data?.map((d) => (
+                {data?.results.map((d) => (
                   <TableRow key={d.id}>
                     <TableCell>{d.id}</TableCell>
 

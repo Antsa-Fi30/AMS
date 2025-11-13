@@ -14,6 +14,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             "id",
             "code",
             "type",
+            "notes",
             "patient",
             "patient_name",
             "patient_phone",

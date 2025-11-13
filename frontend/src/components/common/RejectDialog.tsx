@@ -14,12 +14,12 @@ import {
 import { Close } from "@mui/icons-material";
 import {
   useUpdateAppointmentsMutation,
-  type AppointmentType,
+  type Appointments,
 } from "../../services/AppointmentServices";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 
 interface RejectDialogProps {
-  appointment: AppointmentType;
+  appointment: Appointments;
   client?: boolean;
 }
 

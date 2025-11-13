@@ -17,8 +17,8 @@ import EmptyData from "../../common/EmptyData";
 export const NextAppointment = () => {
   const { data, isLoading, isFetching } = useGetAppointmentsQuery();
 
-  const nextAppointment = data
-    ?.filter((a) => a.status === "confirmed" && !a.finished)
+  const nextAppointment = data?.results
+    .filter((a) => a.status === "confirmed" && !a.finished)
     ?.sort(
       (a, b) =>
         (a.date ? new Date(a.date).getTime() : 0) -
