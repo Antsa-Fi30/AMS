@@ -1,11 +1,10 @@
 import type { Appointments } from "../services/AppointmentServices";
 
 export function getAppointmentPermissions(lastApt: Appointments | null) {
-  if (!lastApt) {
+  if (!lastApt || lastApt.code === "") {
     return {
       canConsult: true,
       canFollow: false,
-      canCreate: true,
     };
   }
 
@@ -13,7 +12,6 @@ export function getAppointmentPermissions(lastApt: Appointments | null) {
     return {
       canConsult: false,
       canFollow: false,
-      canCreate: false,
     };
   }
 
@@ -21,7 +19,6 @@ export function getAppointmentPermissions(lastApt: Appointments | null) {
     return {
       canConsult: true,
       canFollow: true,
-      canCreate: true,
     };
   }
 
@@ -29,13 +26,21 @@ export function getAppointmentPermissions(lastApt: Appointments | null) {
     return {
       canConsult: true,
       canFollow: true,
-      canCreate: true,
+    };
+  }
+
+  if (
+    lastApt.type === "first" &&
+    lastApt.descriptions?.notes === "Contrôle nécessaire"
+  ) {
+    return {
+      canConsult: false,
+      canFollow: false,
     };
   }
 
   return {
     canConsult: true,
     canFollow: false,
-    canCreate: true,
   };
 }

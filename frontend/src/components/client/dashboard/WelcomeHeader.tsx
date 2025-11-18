@@ -56,7 +56,7 @@ export const WelcomeHeader = () => {
           <Chip
             label={`Prochain RDV: ${
               target === now ? "Aujourd'hui" : formatDateToLocalString(target)
-            } ${nextAppointment?.type === "".time}`}
+            }-${nextAppointment?.time ? nextAppointment?.time : ""} `}
             color="primary"
             variant="outlined"
           />

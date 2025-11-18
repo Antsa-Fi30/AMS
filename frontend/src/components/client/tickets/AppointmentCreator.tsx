@@ -105,7 +105,7 @@ const AppointmentCreator: React.FC<AppointmentCreatorProps> = ({
                 setDisponibility(0);
                 setDate(null);
               }}
-              disabled={lastApt !== null && !lastApt.finished}
+              disabled={lastApt.code !== "" && !lastApt.finished}
             >
               Prendre rendez-vous
             </Button>

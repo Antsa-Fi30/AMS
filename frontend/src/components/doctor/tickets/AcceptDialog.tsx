@@ -18,6 +18,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import {
   type Appointments,
   useUpdateAppointmentsMutation,
+  useGetAppointmentsQuery,
 } from "../../../services/AppointmentServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 import {
@@ -37,6 +38,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
   const { showSnackbar } = useSnackbar();
 
   const [updateAppointments, { isLoading }] = useUpdateAppointmentsMutation();
+  const { data } = useGetAppointmentsQuery();
 
   const handleConfirm = async (close: () => void) => {
     try {

@@ -61,13 +61,6 @@ export const NextAppointment = () => {
   return (
     <Card elevation={2} sx={{ height: "100%", borderRadius: 3 }}>
       <CardContent sx={{ p: 4 }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-          <CalendarMonth color="primary" sx={{ mr: 1, fontSize: 28 }} />
-          <Typography variant="h5" fontWeight="bold">
-            Votre prochain rendez-vous
-          </Typography>
-        </Box>
-
         {nextAppointment ? (
           <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
             {isFetching ? (

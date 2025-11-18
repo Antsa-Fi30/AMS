@@ -75,19 +75,6 @@ const Settings = () => {
         </TextField>
       </Box>
 
-      <Box sx={{ mb: 2 }}>
-        <Typography>Notifications SMS</Typography>
-        <Switch
-          checked={preferences.notifications.sms}
-          onChange={(e) =>
-            setPreferences((p) => ({
-              ...p,
-              notifications: { ...p.notifications, sms: e.target.checked },
-            }))
-          }
-        />
-      </Box>
-
       <Button variant="contained" onClick={handleSave}>
         Sauvegarder
       </Button>

@@ -139,7 +139,10 @@ const FormStepper: React.FC<Props> = ({
               >
                 <ToggleButton
                   value={"first"}
-                  disabled={!permissions.canConsult}
+                  disabled={
+                    !permissions.canConsult ||
+                    lastApt.descriptions?.notes === "Contrôle nécessaire"
+                  }
                 >
                   Consultation
                 </ToggleButton>
