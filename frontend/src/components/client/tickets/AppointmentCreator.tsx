@@ -35,13 +35,14 @@ const AppointmentCreator: React.FC<AppointmentCreatorProps> = ({
     const patient = user ? JSON.parse(user).id : null;
 
     try {
-      await addAppointment({
+      const create = await addAppointment({
         type: answers.typeApt,
         disponibility: answers.disponibility,
         date: typeApt === "first" ? formatDateForBackend(date) : null,
         patient,
         doctor: 2,
       }).unwrap();
+      setLastApt(create);
       showSnackbar("Appointment created successfully", "success");
       setOpenDialog(false);
     } catch (error) {
@@ -104,7 +105,7 @@ const AppointmentCreator: React.FC<AppointmentCreatorProps> = ({
                 setDisponibility(0);
                 setDate(null);
               }}
-              disabled={lastApt.code === "" ? false : !lastApt.finished}
+              disabled={lastApt !== null && !lastApt.finished}
             >
               Prendre rendez-vous
             </Button>

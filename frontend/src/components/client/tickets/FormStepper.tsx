@@ -14,7 +14,6 @@ import {
   Stack,
 } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
-import { TypeRDV } from "../../../constants/Symptoms";
 import {
   GetDoctorDispos,
   type DisponibilityResults,
@@ -26,6 +25,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { formatDateForBackend } from "../../../utils/Formats";
+import { getAppointmentPermissions } from "../../../utils/AppointmentsLogixs";
 import { type Appointments } from "../../../services/AppointmentServices";
 
 type AnswerType = {
@@ -113,6 +113,8 @@ const FormStepper: React.FC<Props> = ({
 
   const selectedDispo = dispoData.find((d) => d.id === disponibility);
 
+  const permissions = getAppointmentPermissions(lastApt);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Box sx={{ width: "100%", p: 1 }}>
@@ -135,17 +137,18 @@ const FormStepper: React.FC<Props> = ({
                 color="primary"
                 sx={{ flexWrap: "wrap", gap: 1 }}
               >
-                {TypeRDV.map((item, index) => (
-                  <ToggleButton
-                    key={index}
-                    value={item.value}
-                    disabled={
-                      lastApt?.code === "" && item.value === "follow_up"
-                    }
-                  >
-                    {item.label}
-                  </ToggleButton>
-                ))}
+                <ToggleButton
+                  value={"first"}
+                  disabled={!permissions.canConsult}
+                >
+                  Consultation
+                </ToggleButton>
+                <ToggleButton
+                  value={"follow_up"}
+                  disabled={!permissions.canFollow}
+                >
+                  Suivi / Contrôle
+                </ToggleButton>
               </ToggleButtonGroup>
             </Box>
           )}

@@ -16,11 +16,21 @@ import {
   useUpdateAppointmentsMutation,
   useGetAppointmentsQuery,
   type Appointments,
+  type JSONValue,
 } from "../../../services/AppointmentServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 
 interface ConfirmFinishedDialogProps {
   appointment: Appointments;
+}
+
+interface MedocJSON {
+  name: string;
+  dosage: string;
+  duration: string;
+  frequency: string;
+  days: string;
+  [key: string]: JSONValue;
 }
 
 const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
@@ -34,7 +44,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
   const [temperature, setTemperature] = useState("");
   const [weight, setWeight] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
-  const [medocs, setMedocs] = useState([
+  const [medocs, setMedocs] = useState<MedocJSON[]>([
     { name: "", dosage: "", duration: "", frequency: "", days: "" },
   ]);
   const [notes, setNotes] = useState<string>("");
@@ -48,7 +58,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
   };
 
   // Modifier un médicament
-  const updateMedoc = (index: number, key: string, value: string) => {
+  const updateMedoc = (index: number, key: keyof MedocJSON, value: string) => {
     const updated = [...medocs];
     updated[index][key] = value;
     setMedocs(updated);
@@ -81,13 +91,27 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
 
       showSnackbar("Consultation terminée et sauvegardée.", "success");
       close();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       showSnackbar(
         err?.data?.detail || "Erreur lors de la sauvegarde",
         "error"
       );
     }
+  };
+
+  const isFormMedocValid = () => {
+    const hasVitals = temperature || weight || bloodPressure;
+
+    const hasValidMedocs = medocs.some(
+      (m) =>
+        m.name.trim() &&
+        m.dosage.trim() &&
+        m.duration.trim() &&
+        m.frequency.trim()
+    );
+
+    return hasVitals || hasValidMedocs;
   };
 
   return (
@@ -104,7 +128,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
           variant="contained"
           color="secondary"
           onClick={() => handleConfirm(close, appointment.id)}
-          disabled={isLoading}
+          disabled={isLoading || !isFormMedocValid()}
         >
           {isLoading ? (
             <CircularProgress size={18} sx={{ mr: 1 }} />
@@ -121,7 +145,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
 
         {/* --- VITALS --- */}
         <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               label="Température (°C)"
               fullWidth
@@ -131,7 +155,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               label="Poids (kg)"
               fullWidth
@@ -141,7 +165,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               label="Tension artérielle"
               fullWidth
@@ -168,7 +192,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Nom du médicament"
                   fullWidth
@@ -177,7 +201,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={6} md={2}>
+              <Grid size={{ xs: 6, md: 2 }}>
                 <TextField
                   label="Dosage"
                   fullWidth
@@ -186,7 +210,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={6} md={2}>
+              <Grid size={{ xs: 6, md: 2 }}>
                 <TextField
                   label="Durée"
                   fullWidth
@@ -197,7 +221,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={6} md={2}>
+              <Grid size={{ xs: 6, md: 2 }}>
                 <TextField
                   label="Fréquence"
                   fullWidth
@@ -208,7 +232,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
                 />
               </Grid>
 
-              <Grid item xs={6} md={2}>
+              <Grid size={{ xs: 6, md: 2 }}>
                 <TextField
                   label="Prise"
                   placeholder="matin, soir..."
