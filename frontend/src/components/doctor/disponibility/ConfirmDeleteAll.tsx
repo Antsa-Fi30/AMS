@@ -1,5 +1,5 @@
 import { Check } from "@mui/icons-material";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, DialogContentText } from "@mui/material";
 import { useDeleteAllDispoMutation } from "../../../services/DisponibilityServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 
@@ -29,7 +29,7 @@ const ConfirmDeleteAll = () => {
   };
   return (
     <GenericDialog
-      title={`Create`}
+      title={`Delete all appointments`}
       renderTrigger={(open) => (
         <Button
           color="error"
@@ -52,12 +52,14 @@ const ConfirmDeleteAll = () => {
               <CircularProgress color="primary" size="30px" /> <Check />
             </>
           ) : (
-            "Confirm"
+            "Oui"
           )}
         </Button>
       )}
     >
-      ConfirmDeleteAll
+      <DialogContentText>
+        Voulez-vous supprimer tous les creneaux?
+      </DialogContentText>
     </GenericDialog>
   );
 };

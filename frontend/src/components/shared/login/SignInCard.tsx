@@ -157,25 +157,17 @@ const SignInCard: React.FC<SignInCardProps> = ({ register = false }) => {
                 name: data.name,
                 email: data.email,
                 phone_number: data.phone_number,
-                role: data.get("role"),
+                role: data.role,
               },
               access: data.tokens.access,
               refresh: data.tokens.refresh,
             })
           );
-          const user = sessionStorage.getItem("user");
-          if (user) {
-            const parsed = JSON.parse(user);
-
-            if (localStorage.getItem("refresh")) {
-              if (parsed.role === "doctor") {
-                navigate("/doctor/");
-              } else if (parsed.role === "patient") {
-                navigate("/patient/");
-              }
-            }
+          if (data.role === "doctor") {
+            navigate("/doctor/");
+          } else if (data.role === "patient") {
+            navigate("/patient/");
           }
-          alert("regsiter successfull");
         } catch (err) {
           if (err instanceof Error) {
             console.error(err.message);

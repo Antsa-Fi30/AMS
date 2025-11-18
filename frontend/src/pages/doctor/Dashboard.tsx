@@ -83,7 +83,7 @@ const Dashboard = () => {
       </Card> */}
 
       <Typography textAlign="center" color="text.secondary" sx={{ mt: 4 }}>
-        © 2024 Befiana - Solution Médicale
+        © 2025 Befiana
       </Typography>
     </Container>
   );

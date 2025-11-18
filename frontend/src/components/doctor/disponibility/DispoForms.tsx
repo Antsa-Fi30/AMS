@@ -16,14 +16,14 @@ import { useSnackbar } from "../../../contexts/SnackbarContext";
 import {
   useAddDispoMutation,
   useGetDisposQuery,
-  type DisponibilityType,
+  type DisponibilityResults,
 } from "../../../services/DisponibilityServices";
 import { Check } from "@mui/icons-material";
 
 const isOverlapping = (
   newStart: Date,
   newEnd: Date,
-  existingSlots: DisponibilityType[]
+  existingSlots: DisponibilityResults[]
 ) => {
   return existingSlots.some((slot) => {
     const slotStart = new Date(slot.start_time);
@@ -57,7 +57,7 @@ const DispoForms = () => {
         );
       }
 
-      if (isOverlapping(startTime, endTime, data ?? [])) {
+      if (isOverlapping(startTime, endTime, data?.results ?? [])) {
         showSnackbar("Ce créneau existe déjà ou chevauche un autre !", "error");
       }
 

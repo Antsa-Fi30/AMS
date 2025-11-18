@@ -17,22 +17,37 @@ import {
 import DetailsDialog from "../../common/DetailsDialog";
 import EmptyData from "../../common/EmptyData";
 import { getStatusColor } from "../../../utils/getColor";
+import {
+  GetDoctorDispos,
+  type DisponibilityResults,
+} from "../../../services/DisponibilityServices";
+import { useEffect, useState } from "react";
 
 export const TodayAppointments = () => {
+  const [dispo, setDispo] = useState<DisponibilityResults[]>([]);
   const { data, isLoading } = useGetAppointmentsQuery();
-  console.log(data);
   const today = new Date();
   const currentHour = new Date().getHours();
   const appointments =
     data?.results.filter((ticket) => {
       if (ticket.status !== "confirmed" || ticket.finished) return false;
       if (ticket.date !== formatDateForBackend(today)) return false;
-      if (!ticket.time) return false;
       const ticketHour = new Date(ticket.date).getHours();
       return currentHour > ticketHour;
     }) ?? [];
 
-  console.log(currentHour);
+  useEffect(() => {
+    const fetchDispo = async () => {
+      try {
+        const datas = await GetDoctorDispos(2);
+        setDispo(datas);
+      } catch (error) {
+        console.error("Something went wrong" + error);
+      }
+    };
+
+    fetchDispo();
+  }, []);
 
   return (
     <Box>
@@ -113,7 +128,7 @@ export const TodayAppointments = () => {
                     sx={{ mt: 1 }}
                   />
                 </Box>
-                <DetailsDialog target={appointment} />
+                <DetailsDialog target={appointment} disponibility={dispo} />
                 <ConfirmFinishedDialog appointment={appointment} />
               </ListItem>
             ))

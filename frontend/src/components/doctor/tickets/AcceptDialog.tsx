@@ -33,7 +33,6 @@ interface AcceptDialogProps {
 
 const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
   const [date, setDate] = React.useState<Date | null>(null);
-  const [expireDate, setExpireDate] = React.useState<Date | null>(null);
   const [time, setTime] = React.useState<Date | null>(null);
   const { showSnackbar } = useSnackbar();
 
@@ -53,7 +52,6 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
           ...appointment,
           date: formatDateForBackend(finalDate),
           time: formatTimeToLocalString(finalDate),
-          expire: expireDate ? formatDateForBackend(expireDate) : null,
           status: "confirmed",
         };
 
@@ -168,13 +166,6 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
                     onChange={(newValue) => setTime(newValue)}
                     ampm={false}
                     disablePast={DisableSpecificTime(date)}
-                  />
-
-                  <DatePicker
-                    label="Choisir l'expiration du ticket"
-                    value={expireDate}
-                    onChange={(newValue) => setExpireDate(newValue)}
-                    format="dd/MM/yyyy"
                   />
                 </Stack>
               </Stack>

@@ -13,9 +13,30 @@ import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 import DetailsDialog from "../../common/DetailsDialog";
 import RejectDialog from "../../common/RejectDialog";
 import EmptyData from "../../common/EmptyData";
+import {
+  GetDoctorDispos,
+  type DisponibilityResults,
+} from "../../../services/DisponibilityServices";
+import { useState, useEffect } from "react";
 
 export const NextAppointment = () => {
   const { data, isLoading, isFetching } = useGetAppointmentsQuery();
+
+  const [dispo, setDispo] = useState<DisponibilityResults[]>([]);
+
+  useEffect(() => {
+    const fetchDispo = async () => {
+      try {
+        const response = await GetDoctorDispos(2);
+        setDispo(response);
+      } catch (error) {
+        console.error("Something went wrong" + error);
+      }
+    };
+    fetchDispo();
+  }, []);
+
+  console.log(dispo);
 
   const nextAppointment = data?.results
     .filter((a) => a.status === "confirmed" && !a.finished)
@@ -24,6 +45,14 @@ export const NextAppointment = () => {
         (a.date ? new Date(a.date).getTime() : 0) -
         (b.date ? new Date(b.date).getTime() : 0)
     )[0];
+
+  const getDisponibility = (idDispo: number | null) => {
+    const selectedDispo = dispo.find((d) => d.id === idDispo);
+    return selectedDispo;
+  };
+
+  console.log(getDisponibility(2)?.start_time);
+  console.log("ssu" + nextAppointment);
 
   if (isLoading) {
     return <Skeleton sx={{ height: "100%", borderRadius: 3 }} />;
@@ -67,10 +96,20 @@ export const NextAppointment = () => {
                     <AccessTime color="action" sx={{ mr: 1 }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
-                        Heure
+                        {nextAppointment.type === "first"
+                          ? "Creneaux"
+                          : "Heure"}
                       </Typography>
                       <Typography fontWeight="medium">
-                        {nextAppointment.disponibility}
+                        {nextAppointment.type === "first"
+                          ? `${
+                              getDisponibility(nextAppointment.disponibility)
+                                ?.start_time
+                            } à ${
+                              getDisponibility(nextAppointment.disponibility)
+                                ?.end_time
+                            }`
+                          : `${nextAppointment.time}`}
                       </Typography>
                     </Box>
                   </Box>
@@ -100,7 +139,9 @@ export const NextAppointment = () => {
                     />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
-                        Date d'expiration
+                        {nextAppointment.type === "first"
+                          ? "Consultation"
+                          : "Control ou suivi"}
                       </Typography>
                     </Box>
                   </Box>

@@ -11,13 +11,15 @@ import {
   Skeleton,
   Stack,
   Pagination,
+  IconButton,
+  CircularProgress,
 } from "@mui/material";
 
 import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
 import AcceptDialog from "../doctor/tickets/AcceptDialog";
 import RejectDialog from "../common/RejectDialog";
 import DetailsDialog from "./DetailsDialog";
-import { Cancel, Check } from "@mui/icons-material";
+import { Cancel, Check, Sync } from "@mui/icons-material";
 import EmptyData from "./EmptyData";
 import { useMemo, memo, useEffect, useState } from "react";
 import { getStatusColor } from "../../utils/getColor";
@@ -39,9 +41,7 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
 }) => {
   const [page, setPage] = useState<number>(1);
   const { showSnackbar } = useSnackbar();
-  const { data, isLoading } = useGetAppointmentsQuery(page, {
-    pollingInterval: undefined,
-  });
+  const { data, isLoading, refetch } = useGetAppointmentsQuery(page);
 
   const [dispoData, setDispoData] = useState<DisponibilityResults[]>(
     [] as unknown as DisponibilityResults[]
@@ -139,6 +139,9 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
           <Typography variant="h6" fontWeight="bold">
             Liste des tickets
           </Typography>
+          <IconButton onClick={() => refetch()} disabled={isLoading}>
+            {isLoading ? <CircularProgress /> : <Sync />}
+          </IconButton>
           {filteredData?.length !== 0 && (
             <Chip
               label={`${
