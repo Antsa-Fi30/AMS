@@ -58,8 +58,8 @@ interface PaginatedResponse<T> {
 
 export const appointmentsApi = createApi({
   reducerPath: "appointmentsApi",
-  refetchOnFocus: true, // quand l'utilisateur revient sur l'onglet
-  refetchOnReconnect: true, // quand la connexion revient
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
   baseQuery: baseQueryWithReauth,
   tagTypes: ["Appointments"],
   endpoints: (builder) => ({
@@ -70,6 +70,12 @@ export const appointmentsApi = createApi({
       query: (page = 1) => `appointments/?page=${page}`,
       providesTags: ["Appointments"],
       keepUnusedDataFor: 60,
+    }),
+    getAllAppointments: builder.query<Appointments[], void>({
+      query: () => "appointments/?page_size=1000",
+      providesTags: ["Appointments"],
+      transformResponse: (response: PaginatedResponse<Appointments>) =>
+        response.results,
     }),
     getDoctorStats: builder.query<DoctorStatsType, void>({
       query: () => "appointments/doctor/stats/",
@@ -99,6 +105,7 @@ export const appointmentsApi = createApi({
 
 export const {
   useGetAppointmentsQuery,
+  useGetAllAppointmentsQuery,
   useGetDoctorStatsQuery,
   useAddAppointmentMutation,
   useUpdateAppointmentsMutation,

@@ -12,61 +12,110 @@ import {
 } from "@mui/material";
 import { AccessTime, Phone, Block } from "@mui/icons-material";
 import {
-  useGetAppointmentsQuery,
+  useGetAllAppointmentsQuery,
   type Appointments,
 } from "../../../services/AppointmentServices";
 import ConfirmFinishedDialog from "./ConfirmFinishedDialog";
 import DetailsDialog from "../../common/DetailsDialog";
 import EmptyData from "../../common/EmptyData";
-// import { getStatusColor } from "../../../utils/getColor";
-
 import { formatDateForBackend } from "../../../utils/Formats";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Ajout de useEffect
 
-export const TodayAppointments = () => {
-  const { data, isLoading } = useGetAppointmentsQuery();
-  const [disable, setDisable] = useState<boolean>(false);
-  const [seconds, setSeconds] = useState<number>(5);
+const TodayControl = () => {
+  const { data, isLoading } = useGetAllAppointmentsQuery();
+  const [disabledButtons, setDisabledButtons] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [countdowns, setCountdowns] = useState<{ [key: string]: number }>({});
 
   const today = new Date();
 
   // ---- FILTRER LES RDV DU JOUR ----//
-  const appointments =
-    data?.results
-      .filter((apt) => {
-        return (
+  const controlsToday =
+    data
+      ?.filter(
+        (apt) =>
           apt.status === "confirmed" &&
           !apt.finished &&
-          apt.date === formatDateForBackend(today)
-        );
-      })
+          apt.date === formatDateForBackend(today) &&
+          apt.type === "follow_up" &&
+          apt.time !== null
+      )
       .sort((a, b) => {
-        // Tri du controle selon time
-        if (a.type === "follow_up" && b.type === "follow_up") {
-          if (a.time !== null && b.time !== null) {
-            a.time.localeCompare(b.time);
-          }
-        }
-
-        // Tri des consultations par requested_at asc
-        if (a.type === "first") {
-          return (
-            new Date(a.requested_at).getTime() -
-            new Date(b.requested_at).getTime()
-          );
-        }
-
-        return 0;
+        const ta = a.time;
+        const tb = b.time;
+        if (ta === null && tb === null) return 0;
+        if (ta === null) return 1;
+        if (tb === null) return -1;
+        return ta.localeCompare(tb);
       }) ?? [];
 
   const handleCall = (apt: Appointments) => {
     alert(`${apt.patient_name} , viens ici`);
-    setDisable(true);
+
+    // Désactiver le bouton pour cet appointment spécifique
+    setDisabledButtons((prev) => ({
+      ...prev,
+      [apt.id]: true,
+    }));
+
+    // Démarrer le compte à rebours pour cet appointment
+    setCountdowns((prev) => ({
+      ...prev,
+      [apt.id]: 7,
+    }));
   };
 
-  setTimeout(() => {
-    setSeconds((seconds) => seconds - 1);
-  }, 3000);
+  // Gérer les comptes à rebours
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountdowns((prev) => {
+        const updated = { ...prev };
+        let hasChanges = false;
+
+        for (const aptId in updated) {
+          if (updated[aptId] > 0) {
+            updated[aptId]--;
+            hasChanges = true;
+
+            // Quand on arrive à 0, réactiver le bouton
+            if (updated[aptId] === 0) {
+              setDisabledButtons((prevDisabled) => ({
+                ...prevDisabled,
+                [aptId]: false,
+              }));
+            }
+          }
+        }
+
+        // Supprimer les countdowns à 0
+        const filtered = Object.fromEntries(
+          Object.entries(updated).filter(([, seconds]) => seconds > 0)
+        );
+
+        return hasChanges ? filtered : prev;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    return `00:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  const toMinutes = (t: string | null): number => {
+    if (!t) return -1;
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+  };
+  const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  const canCall = (apt: Appointments) => {
+    const t = toMinutes(apt.time);
+    return nowMinutes >= t;
+  };
 
   return (
     <Box>
@@ -74,7 +123,7 @@ export const TodayAppointments = () => {
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <AccessTime color="primary" sx={{ mr: 1 }} />
         <Typography variant="h6" fontWeight="bold">
-          File d’attente du jour
+          File d'attente de controle
         </Typography>
       </Box>
 
@@ -83,8 +132,9 @@ export const TodayAppointments = () => {
       ) : (
         <Box
           sx={{
-            height: 494,
+            height: "fit",
             overflowY: "auto",
+
             pr: 1,
             "&::-webkit-scrollbar": { width: 6 },
             "&::-webkit-scrollbar-thumb": {
@@ -93,8 +143,8 @@ export const TodayAppointments = () => {
             },
           }}
         >
-          {appointments.length > 0 ? (
-            appointments.map((appointment, index) => (
+          {controlsToday.length > 0 ? (
+            controlsToday.map((appointment, index) => (
               <Card
                 key={appointment.id}
                 sx={{
@@ -114,7 +164,13 @@ export const TodayAppointments = () => {
                       <Typography variant="subtitle1" fontWeight="bold">
                         {appointment.patient_name}
                       </Typography>
-
+                      <Typography
+                        variant="body2"
+                        fontWeight="medium"
+                        color="primary"
+                      >
+                        {appointment.patient_phone}
+                      </Typography>
                       <Typography variant="body2" color="text.secondary">
                         {appointment.code}
                       </Typography>
@@ -136,7 +192,7 @@ export const TodayAppointments = () => {
                     Heure :
                     {appointment.type === "follow_up"
                       ? appointment.time
-                      : "Appel selon file d’attente"}
+                      : "Appel selon file d'attente"}
                   </Typography>
                 </CardContent>
 
@@ -144,7 +200,7 @@ export const TodayAppointments = () => {
                 <CardActions
                   sx={{ justifyContent: "space-between", px: 2, pb: 2 }}
                 >
-                  {index === 0 && (
+                  {index === 0 && canCall(appointment) && (
                     <>
                       <Button
                         startIcon={<Phone />}
@@ -152,9 +208,11 @@ export const TodayAppointments = () => {
                         color="primary"
                         size="small"
                         onClick={() => handleCall(appointment)}
-                        disabled={disable}
+                        disabled={disabledButtons[appointment.id] || false}
                       >
-                        {disable ? `00:0${seconds}` : `Appeler`}
+                        {disabledButtons[appointment.id]
+                          ? formatTime(countdowns[appointment.id] || 0)
+                          : "Appeler"}
                       </Button>
                       <Button
                         startIcon={<Block />}
@@ -174,7 +232,7 @@ export const TodayAppointments = () => {
             ))
           ) : (
             <EmptyData
-              title="Aucun rendez-vous pour aujourd’hui"
+              title="Aucun rendez-vous pour le moment"
               hint="Les rendez-vous confirmés apparaissent ici."
             />
           )}
@@ -183,3 +241,5 @@ export const TodayAppointments = () => {
     </Box>
   );
 };
+
+export default TodayControl;

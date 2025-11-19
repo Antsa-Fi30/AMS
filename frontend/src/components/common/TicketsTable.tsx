@@ -24,11 +24,8 @@ import EmptyData from "./EmptyData";
 import { useMemo, memo, useEffect, useState } from "react";
 import { getStatusColor } from "../../utils/getColor";
 import { formatDateToLocalString } from "../../utils/Formats";
-import {
-  GetDoctorDispos,
-  type DisponibilityResults,
-} from "../../services/DisponibilityServices";
-import { useSnackbar } from "../../contexts/SnackbarContext";
+
+// import { useSnackbar } from "../../contexts/SnackbarContext";
 
 interface TicketsTableProps {
   client?: boolean;
@@ -40,8 +37,8 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
   filter,
 }) => {
   const [page, setPage] = useState<number>(1);
-  const { showSnackbar } = useSnackbar();
   const { data, isLoading, refetch } = useGetAppointmentsQuery(page);
+  // const { showSnackbar } = useSnackbar();
 
   const displayedData = useMemo(() => data?.results || [], [data?.results]);
 
@@ -92,7 +89,6 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
     value: number
   ) => {
     setPage(value);
-    console.log("Data backend : " + data);
   };
 
   if (isLoading) {
