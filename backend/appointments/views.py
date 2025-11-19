@@ -235,6 +235,19 @@ def last_appointment(request):
             )
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def ticket_queue(request):
+    doctor = request.user
+
+    queue = Appointment.objects.filter(
+        doctor=doctor, type="first", status="confirmed", finished=False
+    ).order_by("requested_at")
+
+    serializer = AppointmentSerializer(queue, many=True)
+    return Response(serializer.data, status=200)
+
+
 # @api_view(["POST"])
 # @permission_classes([IsAuthenticated])
 # def create_checkout_session(request):

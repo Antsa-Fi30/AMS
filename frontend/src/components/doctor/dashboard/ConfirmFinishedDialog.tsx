@@ -172,6 +172,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
               placeholder="ex: 13.7"
               value={bloodPressure}
               onChange={(e) => setBloodPressure(e.target.value)}
+              type="number"
             />
           </Grid>
         </Grid>
@@ -212,6 +213,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
 
               <Grid size={{ xs: 6, md: 2 }}>
                 <TextField
+                  type="number"
                   label="Durée"
                   fullWidth
                   value={m.duration}
@@ -223,6 +225,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
 
               <Grid size={{ xs: 6, md: 2 }}>
                 <TextField
+                  type="number"
                   label="Fréquence"
                   fullWidth
                   value={m.frequency}

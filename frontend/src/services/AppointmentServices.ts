@@ -29,6 +29,8 @@ export type Appointments = {
   disponibility: number | null;
   date: string | null;
   time: string | null;
+  start_time: string | null;
+  end_time: string | null;
   requested_at: string;
   updated_at: string;
 };

@@ -43,26 +43,6 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
   const { showSnackbar } = useSnackbar();
   const { data, isLoading, refetch } = useGetAppointmentsQuery(page);
 
-  const [dispoData, setDispoData] = useState<DisponibilityResults[]>(
-    [] as unknown as DisponibilityResults[]
-  );
-
-  //Need more better practice than this shitty way, but it's fine for now
-  useEffect(() => {
-    const fetchDispos = async () => {
-      try {
-        const datas = await GetDoctorDispos(2);
-        setDispoData(datas);
-      } catch (error: unknown) {
-        const err = error as { data?: { details?: string } };
-        showSnackbar(err.data?.details || "Erreur lors du chargement", "error");
-      }
-    };
-
-    fetchDispos();
-    console.log("Data backend : " + data);
-  }, []);
-
   const displayedData = useMemo(() => data?.results || [], [data?.results]);
 
   const heinData = (filter: string | undefined) => {
@@ -245,15 +225,9 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
                     <TableCell>
                       <Box>
                         <Typography variant="caption" color="text.secondary">
-                          {(() => {
-                            const dispo = dispoData.find(
-                              (d) => d.id === ticket.disponibility
-                            );
-
-                            return dispo
-                              ? `${dispo.start_time} → ${dispo.end_time}`
-                              : "N/Aasdasd";
-                          })()}
+                          {ticket.disponibility
+                            ? `${ticket.start_time} → ${ticket.end_time}`
+                            : "N/A"}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -294,10 +268,7 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
                           <RejectDialog appointment={ticket} />
                         </Box>
                       )}
-                      <DetailsDialog
-                        target={ticket}
-                        disponibility={dispoData}
-                      />
+                      <DetailsDialog target={ticket} />
                     </TableCell>
                   </TableRow>
                 ))}

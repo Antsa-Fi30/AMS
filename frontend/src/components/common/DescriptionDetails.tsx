@@ -13,13 +13,13 @@ import {
   MonitorWeight,
   Favorite,
   Medication,
-  Healing,
   HealthAndSafety,
 } from "@mui/icons-material";
-import type { DescriptionsType } from "../../services/AppointmentServices";
+// import type { DescriptionsType } from "../../services/AppointmentServices";
 
 interface DescriptionDetailsProps {
-  target?: DescriptionsType | null;
+  // target?: DescriptionsType | null;
+  target?: any;
 }
 
 const DescriptionDetails: React.FC<DescriptionDetailsProps> = ({ target }) => {
@@ -51,7 +51,7 @@ const DescriptionDetails: React.FC<DescriptionDetailsProps> = ({ target }) => {
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Paper
                 variant="outlined"
                 sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}
@@ -62,13 +62,13 @@ const DescriptionDetails: React.FC<DescriptionDetailsProps> = ({ target }) => {
                     Température
                   </Typography>
                   <Typography fontWeight="bold">
-                    {vitals.temperature} °C
+                    {vitals?.temperature} °C
                   </Typography>
                 </Box>
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Paper
                 variant="outlined"
                 sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}
@@ -78,12 +78,12 @@ const DescriptionDetails: React.FC<DescriptionDetailsProps> = ({ target }) => {
                   <Typography variant="body2" color="text.secondary">
                     Poids
                   </Typography>
-                  <Typography fontWeight="bold">{vitals.weight} kg</Typography>
+                  <Typography fontWeight="bold">{vitals?.weight} kg</Typography>
                 </Box>
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Paper
                 variant="outlined"
                 sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}
@@ -112,13 +112,13 @@ const DescriptionDetails: React.FC<DescriptionDetailsProps> = ({ target }) => {
             Médicaments prescrits
           </Typography>
 
-          {medocs.length === 0 ? (
+          {medocs?.length === 0 ? (
             <Typography color="text.disabled" fontStyle="italic">
               Aucun médicament prescrit.
             </Typography>
           ) : (
             <Stack spacing={2}>
-              {medocs.map((m, index) => (
+              {medocs?.map((m, index) => (
                 <Paper
                   key={index}
                   variant="outlined"
@@ -136,7 +136,7 @@ const DescriptionDetails: React.FC<DescriptionDetailsProps> = ({ target }) => {
                     </Stack>
 
                     <Grid container spacing={1}>
-                      <Grid item xs={6} md={3}>
+                      <Grid size={{ xs: 6, md: 3 }}>
                         <Chip
                           label={`Dosage : ${m.dosage}`}
                           variant="outlined"
@@ -144,14 +144,14 @@ const DescriptionDetails: React.FC<DescriptionDetailsProps> = ({ target }) => {
                           size="small"
                         />
                       </Grid>
-                      <Grid item xs={6} md={3}>
+                      <Grid size={{ xs: 6, md: 3 }}>
                         <Chip
                           label={`Durée : ${m.duration} j`}
                           variant="outlined"
                           size="small"
                         />
                       </Grid>
-                      <Grid item xs={6} md={3}>
+                      <Grid size={{ xs: 6, md: 3 }}>
                         <Chip
                           label={`Fréquence : ${m.frequency} fois/jour`}
                           variant="outlined"
@@ -159,7 +159,7 @@ const DescriptionDetails: React.FC<DescriptionDetailsProps> = ({ target }) => {
                           size="small"
                         />
                       </Grid>
-                      <Grid item xs={6} md={3}>
+                      <Grid size={{ xs: 6, md: 3 }}>
                         <Chip
                           label={`Prise : ${m.days}`}
                           variant="outlined"
@@ -191,8 +191,17 @@ const DescriptionDetails: React.FC<DescriptionDetailsProps> = ({ target }) => {
               sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}
             >
               <HealthAndSafety color="error" />
-              <Box>
-                <Typography fontWeight="bold">{notes}</Typography>
+              <Box sx={{ flex: 1 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    whiteSpace: "pre-wrap",
+                    lineHeight: 1.5,
+                    color: "text.secondary",
+                  }}
+                >
+                  {notes}
+                </Typography>
               </Box>
             </Paper>
           </Box>

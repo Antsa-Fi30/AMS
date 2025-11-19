@@ -62,6 +62,8 @@ const FormStepper: React.FC<Props> = ({
   const [dispoData, setDispoData] = useState<DisponibilityResults[]>([]);
   const { showSnackbar } = useSnackbar();
 
+  const today = new Date();
+
   useEffect(() => {
     const fetchDispos = async () => {
       try {
@@ -190,6 +192,9 @@ const FormStepper: React.FC<Props> = ({
                 value={date}
                 onChange={setDate}
                 disablePast
+                // shouldDisableDate={(date) =>
+                //   date.toDateString() === today.toDateString()
+                // }
                 format="dd/MM/yyyy"
               />
             </Stack>

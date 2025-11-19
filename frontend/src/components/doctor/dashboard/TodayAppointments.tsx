@@ -1,153 +1,184 @@
 import {
   Box,
   Typography,
-  List,
-  ListItem,
   Chip,
   Avatar,
   CircularProgress,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Stack,
 } from "@mui/material";
-import { AccessTime } from "@mui/icons-material";
-import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
-import ConfirmFinishedDialog from "./ConfirmFinishedDialog";
+import { AccessTime, Phone, Block } from "@mui/icons-material";
 import {
-  formatDateForBackend,
-  // formatDateToLocalString,
-} from "../../../utils/Formats";
+  useGetAppointmentsQuery,
+  type Appointments,
+} from "../../../services/AppointmentServices";
+import ConfirmFinishedDialog from "./ConfirmFinishedDialog";
 import DetailsDialog from "../../common/DetailsDialog";
 import EmptyData from "../../common/EmptyData";
-import { getStatusColor } from "../../../utils/getColor";
-import {
-  GetDoctorDispos,
-  type DisponibilityResults,
-} from "../../../services/DisponibilityServices";
-import { useEffect, useState } from "react";
+// import { getStatusColor } from "../../../utils/getColor";
+
+import { formatDateForBackend } from "../../../utils/Formats";
+import { useState } from "react";
 
 export const TodayAppointments = () => {
-  const [dispo, setDispo] = useState<DisponibilityResults[]>([]);
   const { data, isLoading } = useGetAppointmentsQuery();
+  const [disable, setDisable] = useState<boolean>(false);
+  const [seconds, setSeconds] = useState<number>(5);
+
   const today = new Date();
-  const currentHour = new Date().getHours();
+
+  // ---- FILTRER LES RDV DU JOUR ----//
   const appointments =
-    data?.results.filter((ticket) => {
-      if (ticket.status !== "confirmed" || ticket.finished) return false;
-      if (ticket.date !== formatDateForBackend(today)) return false;
-      const ticketHour = new Date(ticket.date).getHours();
-      return currentHour > ticketHour;
-    }) ?? [];
+    data?.results
+      .filter((apt) => {
+        return (
+          apt.status === "confirmed" &&
+          !apt.finished &&
+          apt.date === formatDateForBackend(today)
+        );
+      })
+      .sort((a, b) => {
+        // Tri du controle selon time
+        if (a.type === "follow_up" && b.type === "follow_up") {
+          if (a.time !== null && b.time !== null) {
+            a.time.localeCompare(b.time);
+          }
+        }
 
-  useEffect(() => {
-    const fetchDispo = async () => {
-      try {
-        const datas = await GetDoctorDispos(2);
-        setDispo(datas);
-      } catch (error) {
-        console.error("Something went wrong" + error);
-      }
-    };
+        // Tri des consultations par requested_at asc
+        if (a.type === "first") {
+          return (
+            new Date(a.requested_at).getTime() -
+            new Date(b.requested_at).getTime()
+          );
+        }
 
-    fetchDispo();
-  }, []);
+        return 0;
+      }) ?? [];
+
+  const handleCall = (apt: Appointments) => {
+    alert(`${apt.patient_name} , viens ici`);
+    setDisable(true);
+  };
+
+  setTimeout(() => {
+    setSeconds((seconds) => seconds - 1);
+  }, 3000);
 
   return (
     <Box>
+      {/* HEADER */}
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <AccessTime color="primary" sx={{ mr: 1 }} />
         <Typography variant="h6" fontWeight="bold">
-          Rendez-vous d'aujourd'hui
+          File d’attente du jour
         </Typography>
       </Box>
 
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <List
+        <Box
           sx={{
-            p: 0,
             height: 494,
-            maxHeight: 494,
             overflowY: "auto",
-            scrollPadding: 0,
-            scrollbarGutter: "stable",
-
-            "&::-webkit-scrollbar": {
-              width: "6px",
-            },
-            "&::-webkit-scrollbar-track": {
-              background: "#f8fafc",
-              borderRadius: "3px",
-            },
+            pr: 1,
+            "&::-webkit-scrollbar": { width: 6 },
             "&::-webkit-scrollbar-thumb": {
               background: "#cbd5e1",
-              borderRadius: "3px",
-              "&:hover": {
-                background: "#94a3b8",
-              },
+              borderRadius: 3,
             },
-
-            scrollbarWidth: "thin",
-            scrollbarColor: "#cbd5e1 #f8fafc",
           }}
         >
           {appointments.length > 0 ? (
-            appointments.map((appointment) => (
-              <ListItem
+            appointments.map((appointment, index) => (
+              <Card
                 key={appointment.id}
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  py: 2,
-                  px: 2,
-                  borderBottom: "1px solid",
-                  borderColor: "divider",
-                  "&:last-child": { borderBottom: "none" },
+                  mb: 2,
+                  borderRadius: 3,
+                  border: "1px solid #e2e8f0",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
                 }}
               >
-                <Avatar sx={{ mr: 2, bgcolor: "primary.main" }}>
-                  {appointment.patient_name.charAt(0)}
-                </Avatar>
+                <CardContent sx={{ pb: 1 }}>
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <Avatar sx={{ bgcolor: "primary.main" }}>
+                      {appointment.patient_name.charAt(0)}
+                    </Avatar>
 
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="subtitle1" fontWeight="medium">
-                    {appointment.patient_name}
-                  </Typography>
+                    <Box sx={{ flexGrow: 1, pb: 1 }}>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {appointment.patient_name}
+                      </Typography>
 
-                  <Typography variant="body2" color="text.secondary">
-                    {appointment.code}
-                  </Typography>
-                </Box>
+                      <Typography variant="body2" color="text.secondary">
+                        {appointment.code}
+                      </Typography>
+                    </Box>
 
-                <Box sx={{ textAlign: "right", mr: 2 }}>
-                  <Typography variant="body2" fontWeight="medium">
-                    {appointment.time}
+                    <Chip
+                      label={
+                        appointment.type === "first"
+                          ? "Consultation"
+                          : "Contrôle"
+                      }
+                      color={appointment.type === "first" ? "info" : "warning"}
+                      size="small"
+                    />
+                  </Stack>
+
+                  {/* Heure */}
+                  <Typography variant="body2" sx={{ mt: 1, py: 1 }}>
+                    Heure :
+                    {appointment.type === "follow_up"
+                      ? appointment.time
+                      : "Appel selon file d’attente"}
                   </Typography>
-                  <Chip
-                    label={appointment.status}
-                    color={getStatusColor(appointment.status)}
-                    size="small"
-                    sx={{ mt: 1 }}
-                  />
-                </Box>
-                <DetailsDialog target={appointment} disponibility={dispo} />
-                <ConfirmFinishedDialog appointment={appointment} />
-              </ListItem>
+                </CardContent>
+
+                {/* ACTION BUTTONS */}
+                <CardActions
+                  sx={{ justifyContent: "space-between", px: 2, pb: 2 }}
+                >
+                  {index === 0 && (
+                    <>
+                      <Button
+                        startIcon={<Phone />}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={() => handleCall(appointment)}
+                        disabled={disable}
+                      >
+                        {disable ? `00:0${seconds}` : `Appeler`}
+                      </Button>
+                      <Button
+                        startIcon={<Block />}
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                      >
+                        Absent
+                      </Button>
+                      <ConfirmFinishedDialog appointment={appointment} />
+                    </>
+                  )}
+
+                  <DetailsDialog target={appointment} />
+                </CardActions>
+              </Card>
             ))
           ) : (
-            <Box
-              sx={{
-                height: 494,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <EmptyData
-                title="Aucun rendez-vous pour aujourd'hui"
-                hint="Les rendez-vous confirmés qui ne sont pas terminés sont affichés ici"
-              />
-            </Box>
+            <EmptyData
+              title="Aucun rendez-vous pour aujourd’hui"
+              hint="Les rendez-vous confirmés apparaissent ici."
+            />
           )}
-        </List>
+        </Box>
       )}
     </Box>
   );
