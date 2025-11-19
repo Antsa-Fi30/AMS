@@ -18,12 +18,11 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import {
   type Appointments,
   useUpdateAppointmentsMutation,
-  useGetAppointmentsQuery,
+  useGetAllAppointmentsQuery,
 } from "../../../services/AppointmentServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 import {
   combineDateAndTime,
-  DisableSpecificTime,
   formatDateForBackend,
   formatTimeToLocalString,
 } from "../../../utils/Formats";
@@ -38,7 +37,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
   const { showSnackbar } = useSnackbar();
 
   const [updateAppointments, { isLoading }] = useUpdateAppointmentsMutation();
-  const { data } = useGetAppointmentsQuery();
+  const { data } = useGetAllAppointmentsQuery();
 
   const handleConfirm = async (close: () => void) => {
     try {
@@ -77,6 +76,24 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
       close();
     }
   };
+
+  const takenAppointments =
+    data
+      ?.filter(
+        (apt) =>
+          apt.patient === appointment.patient && apt.status === "confirmed"
+      )
+      .map((apt) => new Date(`${apt.date}T${apt.time}`)) || [];
+
+  const takenSlots = takenAppointments
+    .filter(
+      (apt) =>
+        date &&
+        apt.getFullYear() === date.getFullYear() &&
+        apt.getMonth() === date.getMonth() &&
+        apt.getDate() === date.getDate()
+    )
+    .map((apt) => apt.getHours());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -164,10 +181,25 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
                   <TimePicker
                     label="Choisir l'heure"
                     value={time}
-                    format="HH:mm"
                     onChange={(newValue) => setTime(newValue)}
                     ampm={false}
-                    disablePast={DisableSpecificTime(date)}
+                    shouldDisableTime={(hour, clockType) => {
+                      if (!date) return false;
+
+                      const hourNum =
+                        typeof hour === "number"
+                          ? hour
+                          : (hour as Date).getHours();
+
+                      if (clockType === "hours") {
+                        return takenSlots.some(
+                          (takenHour) =>
+                            hourNum === takenHour || hourNum === takenHour + 1
+                        );
+                      }
+
+                      return false;
+                    }}
                   />
                 </Stack>
               </Stack>
