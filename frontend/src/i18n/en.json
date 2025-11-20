@@ -1,0 +1,40 @@
+{
+  "home": {
+    "greeting": "Good evening",
+    "subgreeting": "Your consultation day",
+    "patientNow": "Patients today",
+    "rdvProg": "Scheduled appointments",
+    "plan": "Next appointments",
+    "consultFin": "Consultations completed",
+    "noQueue": "No consultation at the moment",
+    "hintNoQueue": "The appointments displayed in the upcoming planning section will be displayed here on the day",
+    "controltitle": "Control queue",
+    "Nodata": "No appointments at the moment",
+    "hintNoData": "Confirmed appointments appear here.",
+    "noDataFutur": "No future appointment",
+    "hintNoDataFutur": "The confirmed ticket will appear here",
+    "noDataNotif": "No notification for now",
+    "hintNoDataNotif": "Notifications will appear here when a patient sends a ticket demands",
+    "btnCall": "Call"
+  },
+  "tickets": {
+    "title": "Ticket Management",
+    "subtitle": "Manage and confirm appointment requests",
+    "btn1": "All",
+    "btn2": "Pending",
+    "btn3": "Accepted",
+    "btn4": "Rejected",
+    "btn5": "Canceled",
+    "etiqu": "List of tickets",
+    "Nodata": "No ticket for this month",
+    "hintNoData": "Any patient who sends an appointment-demand will appear here."
+  },
+  "disponibility": {
+    "title": "Your time slots",
+    "btn1": "Create an availability window",
+    "btn2": "Edit slots",
+    "btn3": "Delete all slots",
+    "col1": "Beginning",
+    "col2": "END"
+  }
+}

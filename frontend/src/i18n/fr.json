@@ -1,0 +1,40 @@
+{
+  "home": {
+    "greeting": "Bonne soirée",
+    "subgreeting": "Votre journée de consultation",
+    "patientNow": "Les patients aujourd'hui",
+    "rdvProg": "Rendez-vous programmés",
+    "plan": "Planning à venir",
+    "consultFin": "Consultations terminées",
+    "noQueue": "Aucune consultation pour le moment",
+    "hintNoQueue": "Les rendez-vous affichés dans la section planification à venir seront affichés ici le jour même",
+    "controltitle": "File d'attente de contrôle",
+    "Nodata": "Aucun rendez-vous pour le moment",
+    "hintNoData": "Les rendez-vous confirmés apparaissent ici.",
+    "noDataFutur": "Pas de prochain rendez-vous",
+    "hintNoDataFutur": "Le billet confirmé apparaîtra ici",
+    "noDataNotif": "Aucune notification pour l'instant",
+    "hintNoDataNotif": "Des notifications apparaîtront ici lorsqu'un patient envoie une demande de ticket",
+    "btnCall": "Appeler"
+  },
+  "tickets": {
+    "title": "Gestion des tickets",
+    "subtitle": "Gérer et confirmer les demandes de rendez-vous",
+    "btn1": "Tous",
+    "btn2": "En attente",
+    "btn3": "Accepté",
+    "btn4": "Rejeté",
+    "btn5": "Annulé",
+    "etiqu": "Liste des tickets",
+    "Nodata": "Pas de ticket pour ce mois",
+    "hintNoData": "Tout patient qui envoie une demande de rendez-vous apparaîtra ici."
+  },
+  "disponibility": {
+    "title": "Vos plages horaires",
+    "btn1": "Créer une fenêtre de disponibilité",
+    "btn2": "Modifier les emplacements",
+    "btn3": "Supprimer tous les emplacements",
+    "col1": "Début",
+    "col2": "FIN"
+  }
+}

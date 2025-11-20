@@ -7,6 +7,8 @@ import { createAppTheme } from "./utils/themes/ThemeMUI";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import { SnackbarProvider } from "./contexts/SnackbarContext";
+import "./i18n/i18n";
+
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
 const themeMode = localStorage.getItem("theme");

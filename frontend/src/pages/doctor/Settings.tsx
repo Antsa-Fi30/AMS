@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Switch, Button, TextField } from "@mui/material";
+import { Box, Typography, Button, TextField } from "@mui/material";
 import axiosInstance from "../../services/AxiosInstance";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -85,7 +85,7 @@ const Settings = () => {
       });
       showSnackbar("Paramètres sauvegardés !", "success");
     } catch (err) {
-      showSnackbar("Erreur lors de la sauvegarde", "error");
+      showSnackbar("Erreur lors de la sauvegarde" + err, "error");
     }
   };
 
