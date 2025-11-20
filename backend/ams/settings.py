@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "users",
-    "user_settings.apps.UserSettingsConfig",
     "appointments",
     "disponibility",
     "channels",
