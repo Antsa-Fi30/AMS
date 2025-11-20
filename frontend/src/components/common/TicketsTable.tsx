@@ -24,6 +24,7 @@ import EmptyData from "./EmptyData";
 import { useMemo, memo, useEffect, useState } from "react";
 import { getStatusColor } from "../../utils/getColor";
 import { formatDateToLocalString } from "../../utils/Formats";
+import { useTranslation } from "react-i18next";
 
 // import { useSnackbar } from "../../contexts/SnackbarContext";
 
@@ -39,7 +40,7 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
   const [page, setPage] = useState<number>(1);
   const { data, isLoading, refetch } = useGetAppointmentsQuery(page);
   // const { showSnackbar } = useSnackbar();
-
+  const { t } = useTranslation();
   const displayedData = useMemo(() => data?.results || [], [data?.results]);
 
   const heinData = (filter: string | undefined) => {
@@ -113,7 +114,7 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
           }}
         >
           <Typography variant="h6" fontWeight="bold">
-            Liste des tickets
+            {t("tickets.etiqu")}
           </Typography>
           <IconButton onClick={() => refetch()} disabled={isLoading}>
             {isLoading ? <CircularProgress /> : <Sync />}
@@ -132,8 +133,8 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
         {filteredData?.length === 0 ? (
           <>
             <EmptyData
-              title="No ticket for this month"
-              hint="Any patient who sent an appointment-demand will appear here"
+              title={t("tickets.Nodata")}
+              hint={t("tickets.hintNoData")}
             />
           </>
         ) : (

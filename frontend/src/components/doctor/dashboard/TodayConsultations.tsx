@@ -20,6 +20,7 @@ import DetailsDialog from "../../common/DetailsDialog";
 import EmptyData from "../../common/EmptyData";
 import { formatDateForBackend } from "../../../utils/Formats";
 import { useState, useEffect } from "react"; // Ajout de useEffect
+import { useTranslation } from "react-i18next";
 
 const TodayConsultations = () => {
   const { data, isLoading } = useGetAllAppointmentsQuery();
@@ -27,7 +28,7 @@ const TodayConsultations = () => {
     [key: string]: boolean;
   }>({});
   const [countdowns, setCountdowns] = useState<{ [key: string]: number }>({});
-
+  const { t } = useTranslation();
   const today = new Date();
 
   const appointments =
@@ -134,14 +135,7 @@ const TodayConsultations = () => {
   });
 
   if (!isInsideAnySlot) {
-    return (
-      <EmptyData
-        title={"No consultation for the moment"}
-        hint={
-          "Les rdv affiches dans le section planning a venir afficheront ici au jour J"
-        }
-      />
-    );
+    return <EmptyData title={t("home.noQueue")} hint={t("home.hintNoQueue")} />;
   }
 
   return (

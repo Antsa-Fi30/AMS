@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useTranslation } from "react-i18next";
 
 interface DispoTableProps {
   edit: boolean;
@@ -28,7 +29,7 @@ const DispoTable: React.FC<DispoTableProps> = ({ edit }) => {
   const { data, isLoading, error } = useGetDisposQuery();
   const [updateDispo] = useUpdateDispoMutation();
   const { showSnackbar } = useSnackbar();
-
+  const { t } = useTranslation();
   // ✅ State par ligne
   const [form, setForm] = useState<{
     [key: number]: { start: Date; end: Date };
@@ -83,8 +84,8 @@ const DispoTable: React.FC<DispoTableProps> = ({ edit }) => {
               <TableHead>
                 <TableRow>
                   <TableCell>id</TableCell>
-                  <TableCell>Début</TableCell>
-                  <TableCell>Fin</TableCell>
+                  <TableCell>{t("disponibility.col1")}</TableCell>
+                  <TableCell>{t("disponibility.col2")}</TableCell>
                   {edit && <TableCell>Action</TableCell>}
                 </TableRow>
               </TableHead>
@@ -135,7 +136,7 @@ const DispoTable: React.FC<DispoTableProps> = ({ edit }) => {
                           variant="contained"
                           onClick={() => handleUpdate(d.id!)}
                         >
-                          Enregistrer
+                          {t("disponibility.btn3_3")}
                         </Button>
                       </TableCell>
                     )}

@@ -7,7 +7,7 @@
     "plan": "Planning à venir",
     "consultFin": "Consultations terminées",
     "noQueue": "Aucune consultation pour le moment",
-    "hintNoQueue": "Les rendez-vous affichés dans la section planification à venir seront affichés ici le jour même",
+    "hintNoQueue": "Les rdv affiches dans le section planning a venir afficheront ici au jour J",
     "controltitle": "File d'attente de contrôle",
     "Nodata": "Aucun rendez-vous pour le moment",
     "hintNoData": "Les rendez-vous confirmés apparaissent ici.",
@@ -22,7 +22,7 @@
     "subtitle": "Gérer et confirmer les demandes de rendez-vous",
     "btn1": "Tous",
     "btn2": "En attente",
-    "btn3": "Accepté",
+    "btn3": "Confirmé",
     "btn4": "Rejeté",
     "btn5": "Annulé",
     "etiqu": "Liste des tickets",
@@ -33,8 +33,13 @@
     "title": "Vos plages horaires",
     "btn1": "Créer une fenêtre de disponibilité",
     "btn2": "Modifier les emplacements",
+    "btn2_1": "Terminer la modification",
     "btn3": "Supprimer tous les emplacements",
+    "btn3_1": "Oui",
+    "btn3_2": "Voulez-vous supprimer tous les creneaux?",
+    "btn3_3": "Enregistrer",
     "col1": "Début",
-    "col2": "FIN"
-  }
+    "col2": "Fin"
+  },
+  "confirm_btn": "Confirmer"
 }

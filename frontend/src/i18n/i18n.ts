@@ -12,7 +12,7 @@ const resources = {
 };
 
 i18n.use(initReactI18next).init({
-  fallbackLng: "en",
+  fallbackLng: "fr",
   debug: false,
   interpolation: {
     escapeValue: false,

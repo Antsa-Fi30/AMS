@@ -18,6 +18,7 @@ import {
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import EmptyData from "../../common/EmptyData";
+import { useTranslation } from "react-i18next";
 
 type AlertType = "info" | "warning" | "error" | "success";
 
@@ -51,8 +52,9 @@ const iconForType: Record<AlertType, JSX.Element> = {
   error: <ErrorOutline fontSize="small" />,
   success: <CheckCircleOutline fontSize="small" />,
 };
-
 const NotificationsContainer = () => {
+  const { t } = useTranslation();
+
   return (
     <Card
       sx={{
@@ -88,8 +90,8 @@ const NotificationsContainer = () => {
       <CardContent sx={{ p: 1 }}>
         {mockAlerts.length === 0 ? (
           <EmptyData
-            title="No notification for now"
-            hint="Notifications will appear here when a patient send a ticket demands"
+            title={t("home.noDataNotif")}
+            hint={t("home.hintNoDataNotif")}
           />
         ) : (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
