@@ -13,7 +13,6 @@ const ConfirmDeleteAll = () => {
   const handleConfirm = async (close: () => void) => {
     try {
       const data = await deleteAllDispo().unwrap();
-      console.log(data);
       showSnackbar(
         "Tous les créneaux ont été supprimés ✅ : " + data.detail,
         "success"

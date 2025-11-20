@@ -36,8 +36,6 @@ export const NextAppointment = () => {
     fetchDispo();
   }, []);
 
-  console.log(dispo);
-
   const nextAppointment = data?.results
     .filter((a) => a.status === "confirmed" && !a.finished)
     ?.sort(
@@ -50,9 +48,6 @@ export const NextAppointment = () => {
     const selectedDispo = dispo.find((d) => d.id === idDispo);
     return selectedDispo;
   };
-
-  console.log(getDisponibility(2)?.start_time);
-  console.log("ssu" + nextAppointment);
 
   if (isLoading) {
     return <Skeleton sx={{ height: "100%", borderRadius: 3 }} />;

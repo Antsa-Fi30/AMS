@@ -30,7 +30,6 @@ const TodayConsultations = () => {
 
   const today = new Date();
 
-  // ---- FILTRER LES RDV DU JOUR ----//
   const appointments =
     data
       ?.filter((apt) => {
@@ -41,13 +40,6 @@ const TodayConsultations = () => {
         );
       })
       .sort((a, b) => {
-        // Tri du controle selon time
-        if (a.type === "follow_up" && b.type === "follow_up") {
-          if (a.time !== null && b.time !== null) {
-            a.time.localeCompare(b.time);
-          }
-        }
-
         // Tri des consultations par requested_at asc
         if (a.type === "first") {
           return (
@@ -140,10 +132,16 @@ const TodayConsultations = () => {
 
     return nowMinutes >= start && nowMinutes <= end;
   });
-  console.log("RABE tsy ao : " + consulationsToday);
 
   if (!isInsideAnySlot) {
-    return <Typography>Pause</Typography>;
+    return (
+      <EmptyData
+        title={"No consultation for the moment"}
+        hint={
+          "Les rdv affiches dans le section planning a venir afficheront ici au jour J"
+        }
+      />
+    );
   }
 
   return (

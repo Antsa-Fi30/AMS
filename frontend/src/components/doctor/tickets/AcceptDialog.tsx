@@ -79,10 +79,7 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
 
   const takenAppointments =
     data
-      ?.filter(
-        (apt) =>
-          apt.patient === appointment.patient && apt.status === "confirmed"
-      )
+      ?.filter((apt) => apt.status === "confirmed" && apt.type === "follow_up")
       .map((apt) => new Date(`${apt.date}T${apt.time}`)) || [];
 
   const takenSlots = takenAppointments
@@ -194,7 +191,9 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
                       if (clockType === "hours") {
                         return takenSlots.some(
                           (takenHour) =>
-                            hourNum === takenHour || hourNum === takenHour + 1
+                            hourNum === takenHour ||
+                            hourNum === takenHour + 1 ||
+                            hourNum === takenHour - 1
                         );
                       }
 

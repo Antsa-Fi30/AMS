@@ -56,7 +56,7 @@ const Dashboard = () => {
 
       <Card elevation={2} sx={{ borderRadius: 3, my: 2 }}>
         <CardContent sx={{ p: 3 }}>
-          <TodayControl />
+          <TodayConsultations />
         </CardContent>
       </Card>
 
@@ -65,7 +65,7 @@ const Dashboard = () => {
           <Stack spacing={3}>
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent sx={{ p: 3 }}>
-                <TodayConsultations />
+                <TodayControl />
               </CardContent>
             </Card>
           </Stack>

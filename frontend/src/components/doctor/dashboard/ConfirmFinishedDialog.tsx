@@ -22,6 +22,7 @@ import { useSnackbar } from "../../../contexts/SnackbarContext";
 
 interface ConfirmFinishedDialogProps {
   appointment: Appointments;
+  followUp?: boolean;
 }
 
 interface MedocJSON {
@@ -35,6 +36,7 @@ interface MedocJSON {
 
 const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
   appointment,
+  followUp,
 }) => {
   const [updateAppointments, { isLoading }] = useUpdateAppointmentsMutation();
   const { refetch } = useGetAppointmentsQuery();
@@ -128,7 +130,7 @@ const ConfirmFinishedDialog: React.FC<ConfirmFinishedDialogProps> = ({
           variant="contained"
           color="secondary"
           onClick={() => handleConfirm(close, appointment.id)}
-          disabled={isLoading || !isFormMedocValid()}
+          disabled={isLoading || (!followUp && !isFormMedocValid())}
         >
           {isLoading ? (
             <CircularProgress size={18} sx={{ mr: 1 }} />

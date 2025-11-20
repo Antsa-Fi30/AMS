@@ -27,7 +27,6 @@ const Header: React.FC<HeaderClientsProps> = ({ state, set, client }) => {
     const fetchLastAppointment = async () => {
       try {
         const data = await lastAppointment();
-        console.log(data);
         setLastApt(data);
       } catch (error) {
         console.error(error);

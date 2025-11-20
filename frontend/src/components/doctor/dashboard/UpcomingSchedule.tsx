@@ -33,8 +33,6 @@ export const UpcomingSchedule: React.FC<UpcomingScheduleProps> = memo(
       );
     }
 
-    console.log(schedule);
-
     return (
       <Box>
         <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>

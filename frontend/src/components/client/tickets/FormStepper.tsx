@@ -192,9 +192,9 @@ const FormStepper: React.FC<Props> = ({
                 value={date}
                 onChange={setDate}
                 disablePast
-                // shouldDisableDate={(date) =>
-                //   date.toDateString() === today.toDateString()
-                // }
+                shouldDisableDate={(date) =>
+                  date.toDateString() === today.toDateString()
+                }
                 format="dd/MM/yyyy"
               />
             </Stack>

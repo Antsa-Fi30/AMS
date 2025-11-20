@@ -222,7 +222,10 @@ const TodayControl = () => {
                       >
                         Absent
                       </Button>
-                      <ConfirmFinishedDialog appointment={appointment} />
+                      <ConfirmFinishedDialog
+                        appointment={appointment}
+                        followUp
+                      />
                     </>
                   )}
 

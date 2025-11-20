@@ -48,7 +48,6 @@ const DispoTable: React.FC<DispoTableProps> = ({ edit }) => {
       setForm(initial);
     }
   }, [data]);
-  console.log(data);
 
   const handleUpdate = async (id: number) => {
     const { start, end } = form[id];
