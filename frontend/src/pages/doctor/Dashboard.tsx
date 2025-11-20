@@ -78,11 +78,10 @@ const Dashboard = () => {
                 <UpcomingSchedule schedule={futurData} isLoading={isLoading} />
               </CardContent>
             </Card>
-
-            <NotificationsContainer />
           </Stack>
         </Grid>
       </Grid>
+      <NotificationsContainer />
       {/* <Card elevation={2} sx={{ borderRadius: 3, my: 2 }}>
         <CardContent sx={{ p: 3 }}>
           <Conseils />

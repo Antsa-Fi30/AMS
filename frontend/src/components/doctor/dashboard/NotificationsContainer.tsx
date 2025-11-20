@@ -56,12 +56,13 @@ const NotificationsContainer = () => {
   return (
     <Card
       sx={{
-        maxHeight: 220,
-        height: 220,
+        maxHeight: 340,
+        height: 340,
         overflowY: "scroll",
         borderRadius: "16px",
         boxShadow: 3,
         bgcolor: "background.paper",
+        mt: 2,
       }}
     >
       <Box
