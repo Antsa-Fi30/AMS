@@ -7,6 +7,7 @@ from .views import (
     get_doctor_stats,
     delete_records,
     last_appointment,
+    ticket_queue,
 )
 
 # from .views import create_checkout_session
@@ -21,6 +22,11 @@ urlpatterns = [
         "appointments/doctor/stats/",
         get_doctor_stats,
         name="Fetch stats doctor appointment",
+    ),
+    path(
+        "appointments/doctor/queue/",
+        ticket_queue,
+        name="Fetch doctor appointments with queuing",
     ),
     path(
         "appointments/patient/erase/",

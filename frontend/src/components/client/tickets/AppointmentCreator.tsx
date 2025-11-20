@@ -2,13 +2,24 @@ import { Button, CircularProgress, Tooltip } from "@mui/material";
 import GenericDialog from "../../common/GenericDialog";
 import AddIcon from "@mui/icons-material/Add";
 import { Send } from "@mui/icons-material";
-import { useAddAppointmentMutation } from "../../../services/AppointmentServices";
+import {
+  useAddAppointmentMutation,
+  type Appointments,
+} from "../../../services/AppointmentServices";
 import { useState } from "react";
 import FormStepper from "./FormStepper";
 import { formatDateForBackend } from "../../../utils/Formats";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 
-const AppointmentCreator: React.FC = () => {
+interface AppointmentCreatorProps {
+  lastApt: Appointments;
+  setLastApt: (value: Appointments | null) => void;
+}
+
+const AppointmentCreator: React.FC<AppointmentCreatorProps> = ({
+  lastApt,
+  setLastApt,
+}) => {
   const [addAppointment, { isLoading }] = useAddAppointmentMutation();
   const [openDialog, setOpenDialog] = useState(false);
   const [typeApt, setTypeApt] = useState<string>("");
@@ -24,13 +35,14 @@ const AppointmentCreator: React.FC = () => {
     const patient = user ? JSON.parse(user).id : null;
 
     try {
-      await addAppointment({
+      const create = await addAppointment({
         type: answers.typeApt,
         disponibility: answers.disponibility,
         date: typeApt === "first" ? formatDateForBackend(date) : null,
         patient,
         doctor: 2,
       }).unwrap();
+      setLastApt(create);
       showSnackbar("Appointment created successfully", "success");
       setOpenDialog(false);
     } catch (error) {
@@ -93,6 +105,7 @@ const AppointmentCreator: React.FC = () => {
                 setDisponibility(0);
                 setDate(null);
               }}
+              disabled={lastApt.code !== "" && !lastApt.finished}
             >
               Prendre rendez-vous
             </Button>
@@ -113,6 +126,8 @@ const AppointmentCreator: React.FC = () => {
         )}
       >
         <FormStepper
+          lastApt={lastApt}
+          setLastApt={setLastApt}
           typeApt={typeApt}
           setTypeApt={setTypeApt}
           disponibility={disponibility}

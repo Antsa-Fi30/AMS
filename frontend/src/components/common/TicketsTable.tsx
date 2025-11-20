@@ -11,22 +11,21 @@ import {
   Skeleton,
   Stack,
   Pagination,
+  IconButton,
+  CircularProgress,
 } from "@mui/material";
 
 import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
 import AcceptDialog from "../doctor/tickets/AcceptDialog";
 import RejectDialog from "../common/RejectDialog";
 import DetailsDialog from "./DetailsDialog";
-import { Cancel, Check } from "@mui/icons-material";
+import { Cancel, Check, Sync } from "@mui/icons-material";
 import EmptyData from "./EmptyData";
 import { useMemo, memo, useEffect, useState } from "react";
 import { getStatusColor } from "../../utils/getColor";
 import { formatDateToLocalString } from "../../utils/Formats";
-import {
-  GetDoctorDispos,
-  type DisponibilityResults,
-} from "../../services/DisponibilityServices";
-import { useSnackbar } from "../../contexts/SnackbarContext";
+
+// import { useSnackbar } from "../../contexts/SnackbarContext";
 
 interface TicketsTableProps {
   client?: boolean;
@@ -38,30 +37,8 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
   filter,
 }) => {
   const [page, setPage] = useState<number>(1);
-  const { showSnackbar } = useSnackbar();
-  const { data, isLoading } = useGetAppointmentsQuery(page, {
-    pollingInterval: undefined,
-  });
-
-  const [dispoData, setDispoData] = useState<DisponibilityResults[]>(
-    [] as unknown as DisponibilityResults[]
-  );
-
-  //Need more better practice than this shitty way, but it's fine for now
-  useEffect(() => {
-    const fetchDispos = async () => {
-      try {
-        const datas = await GetDoctorDispos(2);
-        setDispoData(datas);
-      } catch (error: unknown) {
-        const err = error as { data?: { details?: string } };
-        showSnackbar(err.data?.details || "Erreur lors du chargement", "error");
-      }
-    };
-
-    fetchDispos();
-    console.log("Data backend : " + data);
-  }, []);
+  const { data, isLoading, refetch } = useGetAppointmentsQuery(page);
+  // const { showSnackbar } = useSnackbar();
 
   const displayedData = useMemo(() => data?.results || [], [data?.results]);
 
@@ -112,7 +89,6 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
     value: number
   ) => {
     setPage(value);
-    console.log("Data backend : " + data);
   };
 
   if (isLoading) {
@@ -139,6 +115,9 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
           <Typography variant="h6" fontWeight="bold">
             Liste des tickets
           </Typography>
+          <IconButton onClick={() => refetch()} disabled={isLoading}>
+            {isLoading ? <CircularProgress /> : <Sync />}
+          </IconButton>
           {filteredData?.length !== 0 && (
             <Chip
               label={`${
@@ -242,15 +221,9 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
                     <TableCell>
                       <Box>
                         <Typography variant="caption" color="text.secondary">
-                          {(() => {
-                            const dispo = dispoData.find(
-                              (d) => d.id === ticket.disponibility
-                            );
-
-                            return dispo
-                              ? `${dispo.start_time} → ${dispo.end_time}`
-                              : "N/Aasdasd";
-                          })()}
+                          {ticket.disponibility
+                            ? `${ticket.start_time} → ${ticket.end_time}`
+                            : "N/A"}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -291,10 +264,7 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
                           <RejectDialog appointment={ticket} />
                         </Box>
                       )}
-                      <DetailsDialog
-                        target={ticket}
-                        disponibility={dispoData}
-                      />
+                      <DetailsDialog target={ticket} />
                     </TableCell>
                   </TableRow>
                 ))}

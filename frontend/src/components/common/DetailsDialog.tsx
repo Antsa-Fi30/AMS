@@ -13,7 +13,6 @@ import {
   CalendarMonth,
   LockClock,
   RemoveRedEye,
-  TimerOffRounded,
   LocalHospital,
   LocalPhone,
   TimerRounded,
@@ -22,17 +21,11 @@ import GenericDialog from "./GenericDialog";
 import type { Appointments } from "../../services/AppointmentServices";
 import DescriptionDetails from "./DescriptionDetails";
 import { formatDateToLocalString } from "../../utils/Formats";
-import type { DisponibilityResults } from "../../services/DisponibilityServices";
-
 interface DetailsDialogProps {
   target: Appointments;
-  disponibility?: DisponibilityResults[];
 }
 
-const DetailsDialog: React.FC<DetailsDialogProps> = ({
-  target,
-  disponibility,
-}) => {
+const DetailsDialog: React.FC<DetailsDialogProps> = ({ target }) => {
   const requested = new Date(target.requested_at);
   const updated = new Date(target.updated_at);
 
@@ -114,7 +107,11 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({
               <Tooltip title={"Date du rendez-vous"}>
                 <TimerRounded />
               </Tooltip>
-              <Typography variant="body1">{target.time || "N/A"}</Typography>
+              <Typography variant="caption" color="text.secondary">
+                {target.disponibility
+                  ? `${target.start_time} → ${target.end_time}`
+                  : `${target.time}`}
+              </Typography>
             </Stack>
             <Stack spacing={1} direction="row" alignItems={"center"}>
               <Tooltip title={"Type du rendez-vous"}>
@@ -125,21 +122,6 @@ const DetailsDialog: React.FC<DetailsDialogProps> = ({
                 color={target.type === "first" ? "info" : "secondary"}
                 size="small"
               />
-            </Stack>
-            <Stack spacing={1} direction="row" alignItems={"center"}>
-              <Tooltip title={"Creneau du rendez-vous"}>
-                <TimerOffRounded />
-              </Tooltip>
-              <Typography variant="caption" color="text.secondary">
-                {(() => {
-                  const dispo = disponibility?.find(
-                    (d: DisponibilityResults) => d.id === target.disponibility
-                  );
-                  return dispo
-                    ? `${dispo.start_time} → ${dispo.end_time}`
-                    : "N/Aasdasd";
-                })()}
-              </Typography>
             </Stack>
           </Stack>
         </Stack>

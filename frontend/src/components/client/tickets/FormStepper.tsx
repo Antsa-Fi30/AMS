@@ -14,10 +14,9 @@ import {
   Stack,
 } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
-import { TypeRDV } from "../../../constants/Symptoms";
 import {
   GetDoctorDispos,
-  type DisponibilityType,
+  type DisponibilityResults,
 } from "../../../services/DisponibilityServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 import EmptyData from "../../common/EmptyData";
@@ -26,7 +25,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { formatDateForBackend } from "../../../utils/Formats";
-import { lastAppointment } from "../../../services/AppointmentServices";
+import { getAppointmentPermissions } from "../../../utils/AppointmentsLogixs";
+import { type Appointments } from "../../../services/AppointmentServices";
 
 type AnswerType = {
   date: string | null;
@@ -42,9 +42,13 @@ type Props = {
   disponibility: number | null;
   setDisponibility: (value: number) => void;
   onSubmit: (answers: AnswerType) => void;
+  lastApt: Appointments;
+  setLastApt: (value: Appointments | null) => void;
 };
 
 const FormStepper: React.FC<Props> = ({
+  lastApt,
+  setLastApt,
   typeApt,
   setTypeApt,
   date,
@@ -55,12 +59,10 @@ const FormStepper: React.FC<Props> = ({
 }) => {
   const steps = ["Type de rendez-vous", "Créneaux à réserver", "Confirmation"];
   const [activeStep, setActiveStep] = useState(0);
-  const [dispoData, setDispoData] = useState<DisponibilityType[]>([]);
-  const [lastDoctor, setLastDoctor] = useState<{
-    name: string;
-    phone: string;
-  } | null>(null);
+  const [dispoData, setDispoData] = useState<DisponibilityResults[]>([]);
   const { showSnackbar } = useSnackbar();
+
+  const today = new Date();
 
   useEffect(() => {
     const fetchDispos = async () => {
@@ -79,28 +81,6 @@ const FormStepper: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    const fetchLastAppointment = async () => {
-      try {
-        const data = await lastAppointment();
-        setLastDoctor({
-          name: data.doctor_name,
-          phone: data.doctor_phone,
-        });
-      } catch (error) {
-        console.error(error);
-        showSnackbar("Aucun rendez-vous précédent trouvé.", "info");
-        setLastDoctor(null);
-      }
-    };
-
-    if (typeApt === "follow_up") {
-      fetchLastAppointment();
-    } else {
-      setLastDoctor(null);
-    }
-  }, [typeApt]);
-
-  useEffect(() => {
     if (activeStep === 0) {
       setDate(null);
       setDisponibility(0);
@@ -116,6 +96,7 @@ const FormStepper: React.FC<Props> = ({
       });
 
       setActiveStep(0);
+      setLastApt(null);
     } else {
       setActiveStep((prev) => prev + 1);
       if (typeApt && typeApt !== "first") {
@@ -133,6 +114,8 @@ const FormStepper: React.FC<Props> = ({
   };
 
   const selectedDispo = dispoData.find((d) => d.id === disponibility);
+
+  const permissions = getAppointmentPermissions(lastApt);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -156,11 +139,21 @@ const FormStepper: React.FC<Props> = ({
                 color="primary"
                 sx={{ flexWrap: "wrap", gap: 1 }}
               >
-                {TypeRDV.map((item, index) => (
-                  <ToggleButton key={index} value={item.value}>
-                    {item.label}
-                  </ToggleButton>
-                ))}
+                <ToggleButton
+                  value={"first"}
+                  disabled={
+                    !permissions.canConsult ||
+                    lastApt.descriptions?.notes === "Contrôle nécessaire"
+                  }
+                >
+                  Consultation
+                </ToggleButton>
+                <ToggleButton
+                  value={"follow_up"}
+                  disabled={!permissions.canFollow}
+                >
+                  Suivi / Contrôle
+                </ToggleButton>
               </ToggleButtonGroup>
             </Box>
           )}
@@ -199,6 +192,9 @@ const FormStepper: React.FC<Props> = ({
                 value={date}
                 onChange={setDate}
                 disablePast
+                shouldDisableDate={(date) =>
+                  date.toDateString() === today.toDateString()
+                }
                 format="dd/MM/yyyy"
               />
             </Stack>
@@ -231,14 +227,14 @@ const FormStepper: React.FC<Props> = ({
                   <strong>Docteur :</strong>{" "}
                   {typeApt === "first"
                     ? selectedDispo?.doctor_name || "Aucun"
-                    : lastDoctor?.name || "Aucun"}
+                    : lastApt?.doctor_name || "Aucun"}
                 </Typography>
 
                 <Typography>
                   <strong>Téléphone :</strong>{" "}
                   {typeApt === "first"
                     ? selectedDispo?.doctor_phone || "Aucun"
-                    : lastDoctor?.phone || "Aucun"}
+                    : lastApt?.doctor_phone || "Aucun"}
                 </Typography>
 
                 <Divider sx={{ borderStyle: "dashed", mt: 2 }} />

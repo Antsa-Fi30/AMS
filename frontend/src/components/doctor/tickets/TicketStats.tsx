@@ -16,12 +16,14 @@ import {
 } from "@mui/material";
 
 export const TicketStats = () => {
-  const { data = [], isLoading } = useGetAppointmentsQuery();
+  const { data, isLoading } = useGetAppointmentsQuery();
 
   const stats = useMemo(() => {
-    const pending = data.filter((a) => a.status === "pending").length;
-    const confirmed = data.filter((a) => a.status === "confirmed").length;
-    const refused = data.filter((a) => a.status === "rejected").length;
+    const pending = data?.results.filter((a) => a.status === "pending").length;
+    const confirmed = data?.results.filter(
+      (a) => a.status === "confirmed"
+    ).length;
+    const refused = data?.results.filter((a) => a.status === "rejected").length;
     // const today = data.filter((a) => {
     //   const date = new Date(a.date);
     //   const today = new Date();

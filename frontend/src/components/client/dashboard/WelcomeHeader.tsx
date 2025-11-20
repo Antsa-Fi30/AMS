@@ -2,7 +2,7 @@ import { Box, Typography, Chip, Skeleton } from "@mui/material";
 import { WavingHand } from "@mui/icons-material";
 import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 import { formatDateToLocalString } from "../../../utils/Formats";
-
+//38 29 258 87
 export const WelcomeHeader = () => {
   const { data, isLoading } = useGetAppointmentsQuery();
   const currentHour = new Date().getHours();
@@ -56,7 +56,7 @@ export const WelcomeHeader = () => {
           <Chip
             label={`Prochain RDV: ${
               target === now ? "Aujourd'hui" : formatDateToLocalString(target)
-            } ${nextAppointment?.time}`}
+            }-${nextAppointment?.time ? nextAppointment?.time : ""} `}
             color="primary"
             variant="outlined"
           />

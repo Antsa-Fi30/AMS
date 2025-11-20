@@ -8,6 +8,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
     doctor_name = serializers.CharField(source="doctor.name", read_only=True)
     doctor_phone = serializers.CharField(source="doctor.phone_number", read_only=True)
 
+    # ➕ nouveaux champs
+    start_time = serializers.SerializerMethodField()
+    end_time = serializers.SerializerMethodField()
+
     class Meta:
         model = Appointment
         fields = [
@@ -27,6 +31,19 @@ class AppointmentSerializer(serializers.ModelSerializer):
             "date",
             "time",
             "disponibility",
+            "start_time",  # <---
+            "end_time",  # <---
             "requested_at",
             "updated_at",
         ]
+
+    # Méthodes pour récupérer les données du modèle Disponibility
+    def get_start_time(self, obj):
+        if obj.disponibility:
+            return obj.disponibility.start_time
+        return None
+
+    def get_end_time(self, obj):
+        if obj.disponibility:
+            return obj.disponibility.end_time
+        return None

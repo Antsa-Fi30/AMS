@@ -93,10 +93,6 @@ def appointment_stats(request):
 
     finished = Appointment.objects.filter(date=today, status="rejected").count()
 
-    emergencies = Appointment.objects.filter(
-        date=today, reason__icontains="urgence"
-    ).count()
-
     next_appointment = (
         Appointment.objects.filter(
             date=today, status="confirmed", time__gte=time.today()
@@ -116,7 +112,6 @@ def appointment_stats(request):
             "patients_today": patients_today,
             "scheduled": scheduled,
             "finished": finished,
-            "emergencies": emergencies,
             "next_time": next_appointment.time if next_appointment else None,
             "last_finished": last_finished.time if last_finished else None,
         }
@@ -226,7 +221,9 @@ def delete_records(request):
 def last_appointment(request):
     try:
         last_apt = (
-            Appointment.objects.filter(patient=request.user).order_by("-date").first()
+            Appointment.objects.filter(patient=request.user)
+            .order_by("-requested_at")
+            .first()
         )
         serializer = AppointmentSerializer(last_apt)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -236,6 +233,19 @@ def last_appointment(request):
                 {"detail": "Aucun rendez-vous précédent trouvé."},
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def ticket_queue(request):
+    doctor = request.user
+
+    queue = Appointment.objects.filter(
+        doctor=doctor, type="first", status="confirmed", finished=False
+    ).order_by("requested_at")
+
+    serializer = AppointmentSerializer(queue, many=True)
+    return Response(serializer.data, status=200)
 
 
 # @api_view(["POST"])

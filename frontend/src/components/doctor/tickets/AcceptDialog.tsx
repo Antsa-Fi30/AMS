@@ -18,11 +18,11 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import {
   type Appointments,
   useUpdateAppointmentsMutation,
+  useGetAllAppointmentsQuery,
 } from "../../../services/AppointmentServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 import {
   combineDateAndTime,
-  DisableSpecificTime,
   formatDateForBackend,
   formatTimeToLocalString,
 } from "../../../utils/Formats";
@@ -33,11 +33,11 @@ interface AcceptDialogProps {
 
 const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
   const [date, setDate] = React.useState<Date | null>(null);
-  const [expireDate, setExpireDate] = React.useState<Date | null>(null);
   const [time, setTime] = React.useState<Date | null>(null);
   const { showSnackbar } = useSnackbar();
 
   const [updateAppointments, { isLoading }] = useUpdateAppointmentsMutation();
+  const { data } = useGetAllAppointmentsQuery();
 
   const handleConfirm = async (close: () => void) => {
     try {
@@ -53,7 +53,6 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
           ...appointment,
           date: formatDateForBackend(finalDate),
           time: formatTimeToLocalString(finalDate),
-          expire: expireDate ? formatDateForBackend(expireDate) : null,
           status: "confirmed",
         };
 
@@ -77,6 +76,21 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
       close();
     }
   };
+
+  const takenAppointments =
+    data
+      ?.filter((apt) => apt.status === "confirmed" && apt.type === "follow_up")
+      .map((apt) => new Date(`${apt.date}T${apt.time}`)) || [];
+
+  const takenSlots = takenAppointments
+    .filter(
+      (apt) =>
+        date &&
+        apt.getFullYear() === date.getFullYear() &&
+        apt.getMonth() === date.getMonth() &&
+        apt.getDate() === date.getDate()
+    )
+    .map((apt) => apt.getHours());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -164,17 +178,27 @@ const AcceptDialog: React.FC<AcceptDialogProps> = ({ appointment }) => {
                   <TimePicker
                     label="Choisir l'heure"
                     value={time}
-                    format="HH:mm"
                     onChange={(newValue) => setTime(newValue)}
                     ampm={false}
-                    disablePast={DisableSpecificTime(date)}
-                  />
+                    shouldDisableTime={(hour, clockType) => {
+                      if (!date) return false;
 
-                  <DatePicker
-                    label="Choisir l'expiration du ticket"
-                    value={expireDate}
-                    onChange={(newValue) => setExpireDate(newValue)}
-                    format="dd/MM/yyyy"
+                      const hourNum =
+                        typeof hour === "number"
+                          ? hour
+                          : (hour as Date).getHours();
+
+                      if (clockType === "hours") {
+                        return takenSlots.some(
+                          (takenHour) =>
+                            hourNum === takenHour ||
+                            hourNum === takenHour + 1 ||
+                            hourNum === takenHour - 1
+                        );
+                      }
+
+                      return false;
+                    }}
                   />
                 </Stack>
               </Stack>

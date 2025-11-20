@@ -1,4 +1,4 @@
-import React, { type SetStateAction } from "react";
+import React, { useEffect, useState, type SetStateAction } from "react";
 import {
   Box,
   Stack,
@@ -7,6 +7,11 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import AppointmentCreator from "./AppointmentCreator";
+import {
+  lastAppointment,
+  type Appointments,
+} from "../../../services/AppointmentServices";
+import { useSnackbar } from "../../../contexts/SnackbarContext";
 
 interface HeaderClientsProps {
   state: string;
@@ -15,6 +20,24 @@ interface HeaderClientsProps {
 }
 
 const Header: React.FC<HeaderClientsProps> = ({ state, set, client }) => {
+  const { showSnackbar } = useSnackbar();
+  const [lastApt, setLastApt] = useState<Appointments | null>(null);
+
+  useEffect(() => {
+    const fetchLastAppointment = async () => {
+      try {
+        const data = await lastAppointment();
+        setLastApt(data);
+      } catch (error) {
+        console.error(error);
+        showSnackbar("Aucun rendez-vous précédent trouvé.", "info");
+        setLastApt(null);
+      }
+    };
+
+    fetchLastAppointment();
+  }, []);
+
   const handleFilter = (
     _: React.MouseEvent<HTMLElement>,
     newFilter: string
@@ -51,7 +74,12 @@ const Header: React.FC<HeaderClientsProps> = ({ state, set, client }) => {
         </ToggleButtonGroup>
 
         {/* Action */}
-        {client && <AppointmentCreator />}
+        {client && (
+          <AppointmentCreator
+            lastApt={lastApt ? lastApt : ({} as Appointments)}
+            setLastApt={setLastApt}
+          />
+        )}
       </Stack>
     </Box>
   );
