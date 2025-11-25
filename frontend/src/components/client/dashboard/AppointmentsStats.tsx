@@ -10,7 +10,7 @@ export const AppointmentsStats = () => {
     (a) => a.status === "confirmed" && a.finished
   ).length;
   const refused = data?.results.filter(
-    (a) => a.status === "rejected" && a.finished
+    (a) => (a.status === "rejected" || a.status === "canceled") && a.finished
   ).length;
 
   const stats = [
