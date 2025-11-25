@@ -20,6 +20,7 @@ import DetailsDialog from "../../common/DetailsDialog";
 import EmptyData from "../../common/EmptyData";
 import { formatDateForBackend } from "../../../utils/Formats";
 import { useState, useEffect } from "react"; // Ajout de useEffect
+import { useTranslation } from "react-i18next";
 
 const TodayControl = () => {
   const { data, isLoading } = useGetAllAppointmentsQuery();
@@ -27,6 +28,7 @@ const TodayControl = () => {
     [key: string]: boolean;
   }>({});
   const [countdowns, setCountdowns] = useState<{ [key: string]: number }>({});
+  const { t } = useTranslation();
 
   const today = new Date();
 
@@ -123,7 +125,7 @@ const TodayControl = () => {
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <AccessTime color="primary" sx={{ mr: 1 }} />
         <Typography variant="h6" fontWeight="bold">
-          File d'attente de controle
+          {t("home.controltitle")}
         </Typography>
       </Box>
 
@@ -212,7 +214,7 @@ const TodayControl = () => {
                       >
                         {disabledButtons[appointment.id]
                           ? formatTime(countdowns[appointment.id] || 0)
-                          : "Appeler"}
+                          : t("home.btnCall")}
                       </Button>
                       <Button
                         startIcon={<Block />}

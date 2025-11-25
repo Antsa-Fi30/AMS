@@ -99,7 +99,7 @@ def appointment_stats(request):
         )
         .order_by("time")
         .first()
-    )
+    )   
 
     last_finished = (
         Appointment.objects.filter(date=today, status="rejected")

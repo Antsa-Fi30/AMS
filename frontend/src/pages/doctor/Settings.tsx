@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Switch, Button, TextField } from "@mui/material";
+import { Box, Typography, Button, TextField } from "@mui/material";
 import axiosInstance from "../../services/AxiosInstance";
 import { useSnackbar } from "../../contexts/SnackbarContext";
+import RadioGroup from "@mui/material/RadioGroup";
+import Radio from "@mui/material/Radio";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import { useColorScheme } from "@mui/material/styles";
 
 interface Preferences {
   theme: "light" | "dark";
@@ -11,6 +17,48 @@ interface Preferences {
     email: boolean;
   };
 }
+
+const ThemeChanger: React.FC = () => {
+  const { mode, setMode } = useColorScheme();
+  if (!mode) {
+    return null;
+  }
+  if (mode !== null) {
+    localStorage.setItem("theme", mode);
+  }
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "background.default",
+        color: "text.primary",
+        borderRadius: 1,
+        p: 3,
+        minHeight: "56px",
+      }}
+    >
+      <FormControl>
+        <FormLabel id="demo-theme-toggle">Theme</FormLabel>
+        <RadioGroup
+          aria-labelledby="demo-theme-toggle"
+          name="theme-toggle"
+          row
+          value={mode}
+          onChange={(event) =>
+            setMode(event.target.value as "system" | "light" | "dark")
+          }
+        >
+          <FormControlLabel value="system" control={<Radio />} label="System" />
+          <FormControlLabel value="light" control={<Radio />} label="Light" />
+          <FormControlLabel value="dark" control={<Radio />} label="Dark" />
+        </RadioGroup>
+      </FormControl>
+    </Box>
+  );
+};
 
 const Settings = () => {
   const { showSnackbar } = useSnackbar();
@@ -37,7 +85,7 @@ const Settings = () => {
       });
       showSnackbar("Paramètres sauvegardés !", "success");
     } catch (err) {
-      showSnackbar("Erreur lors de la sauvegarde", "error");
+      showSnackbar("Erreur lors de la sauvegarde" + err, "error");
     }
   };
 
@@ -48,16 +96,7 @@ const Settings = () => {
       </Typography>
 
       <Box sx={{ mb: 2 }}>
-        <Typography>Thème sombre</Typography>
-        <Switch
-          checked={preferences.theme === "dark"}
-          onChange={(e) =>
-            setPreferences((p) => ({
-              ...p,
-              theme: e.target.checked ? "dark" : "light",
-            }))
-          }
-        />
+        <ThemeChanger />
       </Box>
 
       <Box sx={{ mb: 2 }}>
@@ -75,6 +114,14 @@ const Settings = () => {
         </TextField>
       </Box>
 
+      <Button
+        sx={{ mr: 2 }}
+        variant="contained"
+        color="error"
+        onClick={() => alert("clear")}
+      >
+        Clear notifications
+      </Button>
       <Button variant="contained" onClick={handleSave}>
         Sauvegarder
       </Button>

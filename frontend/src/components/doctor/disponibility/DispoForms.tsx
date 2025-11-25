@@ -19,6 +19,7 @@ import {
   type DisponibilityResults,
 } from "../../../services/DisponibilityServices";
 import { Check } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 const isOverlapping = (
   newStart: Date,
@@ -36,7 +37,7 @@ const DispoForms = () => {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
   const { showSnackbar } = useSnackbar();
-
+  const { t } = useTranslation();
   const [addDispo, { isLoading }] = useAddDispoMutation();
   const { data } = useGetDisposQuery();
 
@@ -86,7 +87,7 @@ const DispoForms = () => {
         title={`Create`}
         renderTrigger={(open) => (
           <Button color="primary" variant="contained" onClick={open}>
-            Creer un creneaux de disponibilité;
+            {t("disponibility.btn1")}
           </Button>
         )}
         actions={(close) => (
@@ -101,7 +102,7 @@ const DispoForms = () => {
                 <CircularProgress color="primary" size="30px" /> <Check />
               </>
             ) : (
-              "Confirm"
+              t("confirm_btn")
             )}
           </Button>
         )}

@@ -1,7 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import { MedicalServices } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 export const WelcomeHeaderDoctor = () => {
+  const { t } = useTranslation();
   const currentHour = new Date().getHours();
   const greeting =
     currentHour < 12
@@ -28,7 +30,7 @@ export const WelcomeHeaderDoctor = () => {
           <MedicalServices sx={{ color: "primary.main", ml: 1 }} />
         </Typography>
         <Typography variant="h6" color="text.secondary">
-          Votre journée de consultation
+          {t("home.subgreeting")}
         </Typography>
       </Box>
     </Box>

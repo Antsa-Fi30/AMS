@@ -4,12 +4,13 @@ import { useDeleteAllDispoMutation } from "../../../services/DisponibilityServic
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 
 import GenericDialog from "../../common/GenericDialog";
+import { useTranslation } from "react-i18next";
 
 const ConfirmDeleteAll = () => {
   const [deleteAllDispo, { isLoading: isDeleting }] =
     useDeleteAllDispoMutation();
   const { showSnackbar } = useSnackbar();
-
+  const { t } = useTranslation();
   const handleConfirm = async (close: () => void) => {
     try {
       const data = await deleteAllDispo().unwrap();
@@ -36,7 +37,7 @@ const ConfirmDeleteAll = () => {
           onClick={open}
           disabled={isDeleting}
         >
-          Supprimer tous les creneaux
+          {t("disponibility.btn3")}
         </Button>
       )}
       actions={(close) => (
@@ -51,14 +52,12 @@ const ConfirmDeleteAll = () => {
               <CircularProgress color="primary" size="30px" /> <Check />
             </>
           ) : (
-            "Oui"
+            t("disponibility.btn3_1")
           )}
         </Button>
       )}
     >
-      <DialogContentText>
-        Voulez-vous supprimer tous les creneaux?
-      </DialogContentText>
+      <DialogContentText>{t("disponibility.btn3_2")}</DialogContentText>
     </GenericDialog>
   );
 };
