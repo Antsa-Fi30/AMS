@@ -5,12 +5,12 @@ import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
 export const AppointmentsStats = () => {
   const { data, isLoading } = useGetAppointmentsQuery();
 
-  const pending = data?.filter((a) => a.status === "pending").length;
-  const confirmed = data?.filter(
+  const pending = data?.results.filter((a) => a.status === "pending").length;
+  const confirmed = data?.results.filter(
     (a) => a.status === "confirmed" && a.finished
   ).length;
-  const refused = data?.filter(
-    (a) => a.status === "rejected" && a.finished
+  const refused = data?.results.filter(
+    (a) => (a.status === "rejected" || a.status === "canceled") && a.finished
   ).length;
 
   const stats = [

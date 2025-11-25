@@ -5,7 +5,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
-# Create your views here.
 class DisponibilityViewSet(viewsets.ModelViewSet):
     queryset = Disponibility.objects.all()
     serializer_class = DisponibilitySerializer
@@ -20,3 +19,10 @@ class DisponibilityViewSet(viewsets.ModelViewSet):
         disponibilities = Disponibility.objects.filter(doctor=request.user)
         count, _ = disponibilities.delete()
         return Response({"detail": f"{count} créneaux supprimés ✅"})
+
+    @action(detail=False, methods=["get"], url_path="doctor_dispo")
+    def fetch_disponibility(self, request):
+        doctor_id = request.query_params.get("id", request.user.id)
+        disponibilities = Disponibility.objects.filter(doctor_id=doctor_id)
+        serializer = self.get_serializer(disponibilities, many=True)
+        return Response(serializer.data)

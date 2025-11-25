@@ -10,6 +10,7 @@ import {
 import { CalendarMonth } from "@mui/icons-material";
 import { type Schedule } from "../../../pages/doctor/Dashboard";
 import EmptyData from "../../common/EmptyData";
+import { useTranslation } from "react-i18next";
 
 interface UpcomingScheduleProps {
   schedule: Schedule[];
@@ -19,6 +20,7 @@ interface UpcomingScheduleProps {
 export const UpcomingSchedule: React.FC<UpcomingScheduleProps> = memo(
   ({ schedule, isLoading }) => {
     const items = useMemo(() => schedule || [], [schedule]);
+    const { t } = useTranslation();
 
     if (isLoading && items.length === 0) {
       return (
@@ -38,7 +40,7 @@ export const UpcomingSchedule: React.FC<UpcomingScheduleProps> = memo(
         <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
           <CalendarMonth color="primary" sx={{ mr: 1 }} />
           <Typography variant="h6" fontWeight="bold">
-            Planning à venir
+            {t("home.plan")}
           </Typography>
         </Box>
 
@@ -86,8 +88,8 @@ export const UpcomingSchedule: React.FC<UpcomingScheduleProps> = memo(
           ) : (
             <>
               <EmptyData
-                title="No futur appointment"
-                hint="The ticket confirmed will appear here"
+                title={t("home.noDataFutur")}
+                hint={t("home.hintNoDataFutur")}
               />
             </>
           )}

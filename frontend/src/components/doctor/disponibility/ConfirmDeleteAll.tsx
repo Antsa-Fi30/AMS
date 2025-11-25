@@ -1,19 +1,19 @@
 import { Check } from "@mui/icons-material";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, DialogContentText } from "@mui/material";
 import { useDeleteAllDispoMutation } from "../../../services/DisponibilityServices";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 
 import GenericDialog from "../../common/GenericDialog";
+import { useTranslation } from "react-i18next";
 
 const ConfirmDeleteAll = () => {
   const [deleteAllDispo, { isLoading: isDeleting }] =
     useDeleteAllDispoMutation();
   const { showSnackbar } = useSnackbar();
-
+  const { t } = useTranslation();
   const handleConfirm = async (close: () => void) => {
     try {
       const data = await deleteAllDispo().unwrap();
-      console.log(data);
       showSnackbar(
         "Tous les créneaux ont été supprimés ✅ : " + data.detail,
         "success"
@@ -29,7 +29,7 @@ const ConfirmDeleteAll = () => {
   };
   return (
     <GenericDialog
-      title={`Create`}
+      title={`Delete all appointments`}
       renderTrigger={(open) => (
         <Button
           color="error"
@@ -37,7 +37,7 @@ const ConfirmDeleteAll = () => {
           onClick={open}
           disabled={isDeleting}
         >
-          Supprimer tous les creneaux
+          {t("disponibility.btn3")}
         </Button>
       )}
       actions={(close) => (
@@ -52,12 +52,12 @@ const ConfirmDeleteAll = () => {
               <CircularProgress color="primary" size="30px" /> <Check />
             </>
           ) : (
-            "Confirm"
+            t("disponibility.btn3_1")
           )}
         </Button>
       )}
     >
-      ConfirmDeleteAll
+      <DialogContentText>{t("disponibility.btn3_2")}</DialogContentText>
     </GenericDialog>
   );
 };

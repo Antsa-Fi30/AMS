@@ -7,10 +7,13 @@ import { createAppTheme } from "./utils/themes/ThemeMUI";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import { SnackbarProvider } from "./contexts/SnackbarContext";
+import "./i18n/i18n";
+
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
-// You can manage dark/light mode with state if needed
-const mode: "light" | "dark" = "light";
+const themeMode = localStorage.getItem("theme");
+const mode: "light" | "dark" =
+  themeMode === "light" ? "light" : themeMode === "dark" ? "dark" : "dark";
 const theme = createAppTheme(mode);
 
 root.render(

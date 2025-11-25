@@ -9,17 +9,24 @@ import {
   TableRow,
   Chip,
   Skeleton,
+  Stack,
+  Pagination,
+  IconButton,
+  CircularProgress,
 } from "@mui/material";
 
 import { useGetAppointmentsQuery } from "../../services/AppointmentServices";
 import AcceptDialog from "../doctor/tickets/AcceptDialog";
 import RejectDialog from "../common/RejectDialog";
 import DetailsDialog from "./DetailsDialog";
-import { Cancel, Check } from "@mui/icons-material";
+import { Cancel, Check, Sync } from "@mui/icons-material";
 import EmptyData from "./EmptyData";
-import { useMemo, memo } from "react";
+import { useMemo, memo, useEffect, useState } from "react";
 import { getStatusColor } from "../../utils/getColor";
 import { formatDateToLocalString } from "../../utils/Formats";
+import { useTranslation } from "react-i18next";
+
+// import { useSnackbar } from "../../contexts/SnackbarContext";
 
 interface TicketsTableProps {
   client?: boolean;
@@ -30,11 +37,11 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
   client,
   filter,
 }) => {
-  const { data, isLoading } = useGetAppointmentsQuery(undefined, {
-    pollingInterval: undefined,
-  });
-
-  const displayedData = useMemo(() => data || [], [data]);
+  const [page, setPage] = useState<number>(1);
+  const { data, isLoading, refetch } = useGetAppointmentsQuery(page);
+  // const { showSnackbar } = useSnackbar();
+  const { t } = useTranslation();
+  const displayedData = useMemo(() => data?.results || [], [data?.results]);
 
   const heinData = (filter: string | undefined) => {
     let dataFilter = [];
@@ -67,6 +74,24 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
 
   const filteredData = heinData(filter);
 
+  // Pagination
+  useEffect(() => {
+    setPage(1);
+  }, [filter]);
+
+  const totalPages = useMemo(() => {
+    if (!data?.count) return 1;
+    return Math.ceil(data.count / 5); // 10 éléments par page (basé sur votre API)
+  }, [data?.count]);
+
+  // Gérer le changement de page
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ mt: 2 }}>
@@ -89,12 +114,15 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
           }}
         >
           <Typography variant="h6" fontWeight="bold">
-            Liste des tickets
+            {t("tickets.etiqu")}
           </Typography>
+          <IconButton onClick={() => refetch()} disabled={isLoading}>
+            {isLoading ? <CircularProgress /> : <Sync />}
+          </IconButton>
           {filteredData?.length !== 0 && (
             <Chip
               label={`${
-                data?.filter((t) => t.status === "pending").length
+                data?.results.filter((t) => t.status === "pending").length
               } en attente`}
               color="warning"
               variant="outlined"
@@ -105,8 +133,8 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
         {filteredData?.length === 0 ? (
           <>
             <EmptyData
-              title="No ticket for this month"
-              hint="Any patient who sent an appointment-demand will appear here"
+              title={t("tickets.Nodata")}
+              hint={t("tickets.hintNoData")}
             />
           </>
         ) : (
@@ -118,6 +146,8 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
                   <TableCell>{client ? "Doctor" : "Patient"}</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Time</TableCell>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Creneau</TableCell>
                   <TableCell>Statut</TableCell>
                   <TableCell>Finished</TableCell>
                   {!client ? (
@@ -140,7 +170,7 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
                     }}
                   >
                     <TableCell>
-                      <Typography variant="body2">{ticket.reason}</Typography>
+                      <Typography variant="body2">{ticket.code}</Typography>
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -173,8 +203,28 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
                     </TableCell>
                     <TableCell>
                       <Box>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="body2" fontWeight="medium">
                           {ticket.time ? ticket.time : "N/A"}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={
+                          ticket.type === "first" ? "Consultation" : "Contrôle"
+                        }
+                        color={
+                          ticket.type === "first" ? "primary" : "secondary"
+                        }
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          {ticket.disponibility
+                            ? `${ticket.start_time} → ${ticket.end_time}`
+                            : "N/A"}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -222,6 +272,19 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
               </TableBody>
             </Table>
           </TableContainer>
+        )}
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <Stack spacing={2} sx={{ mt: 3, alignItems: "center" }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+              showFirstButton
+              showLastButton
+            />
+          </Stack>
         )}
       </Box>
     </div>

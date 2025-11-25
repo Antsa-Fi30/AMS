@@ -3,12 +3,14 @@ import DispoTable from "../../components/doctor/disponibility/DispoTable";
 import DispoForms from "../../components/doctor/disponibility/DispoForms";
 import ConfirmDeleteAll from "../../components/doctor/disponibility/ConfirmDeleteAll";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 const Disponibility = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const { t } = useTranslation();
   return (
     <Stack padding={5} spacing={2}>
       <Typography variant="h3" fontWeight={"Bold"}>
-        Votre créneaux horaires
+        {t("disponibility.title")}
       </Typography>
       <Card elevation={3}>
         <Stack spacing={1}>
@@ -19,7 +21,7 @@ const Disponibility = () => {
               variant="contained"
               onClick={() => setIsEdit(!isEdit)}
             >
-              Terminer la modification
+              {t("disponibility.btn2_1")}
             </Button>
           ) : (
             <Button
@@ -27,7 +29,7 @@ const Disponibility = () => {
               variant="contained"
               onClick={() => setIsEdit(!isEdit)}
             >
-              Modifier les creneaux
+              {t("disponibility.btn2")}
             </Button>
           )}
           <ConfirmDeleteAll />

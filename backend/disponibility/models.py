@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 
 
-# Create your models here.
 class Disponibility(models.Model):
     start_time = models.TimeField(blank=False, null=False)
     end_time = models.TimeField(blank=False, null=False)

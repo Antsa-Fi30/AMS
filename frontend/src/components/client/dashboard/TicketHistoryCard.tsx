@@ -16,8 +16,8 @@ import DetailsDialog from "../../common/DetailsDialog";
 const TicketHistoryCard = () => {
   const { data, isLoading, isFetching } = useGetAppointmentsQuery();
 
-  const appointments = data
-    ?.filter((a) => a.finished)
+  const appointments = data?.results
+    .filter((a) => a.finished)
     ?.sort(
       (a, b) =>
         (a.date ? new Date(a.date).getTime() : 0) -
@@ -105,7 +105,7 @@ const TicketHistoryCard = () => {
                             Reason
                           </Typography>
                           <Typography fontWeight="medium">
-                            {item.reason}
+                            {item.code}
                           </Typography>
                         </Box>
                       </Box>

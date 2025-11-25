@@ -364,6 +364,9 @@ export const shadows = defaultShadows;
 
 export const createAppTheme = (mode: "light" | "dark") =>
   createTheme({
+    colorSchemes: {
+      dark: true,
+    },
     ...getDesignTokens(mode),
     shape,
     shadows,

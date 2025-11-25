@@ -13,7 +13,7 @@ import Appointments from "./components/common/Appointments";
 import ProfilCli from "./pages/client/ProfileCli";
 import { useDispatch } from "react-redux";
 import { initializeAuth } from "./redux/AuthSlice";
-import Calendar from "./pages/doctor/AppointmentCalendar";
+import AppointmentCalendar from "./pages/doctor/AppointmentCalendar";
 import Profil from "./pages/doctor/Profil";
 import Settings from "./pages/doctor/Settings";
 import SettingsCli from "./pages/client/SettingsCli";
@@ -25,15 +25,6 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeAuth());
   }, [dispatch]);
-
-  useEffect(() => {
-    const handleUnload = () => {
-      dispatch(initializeAuth());
-    };
-
-    window.addEventListener("beforeunload", handleUnload);
-    return () => window.removeEventListener("beforeunload", handleUnload);
-  }, []);
 
   return (
     <BrowserRouter>
@@ -48,7 +39,7 @@ const App = () => {
             <Route path="home" element={<Dashboard />} />
             <Route path="disponibility" element={<Disponibility />} />
             <Route path="tickets" element={<Tickets />} />
-            <Route path="calendar" element={<Calendar />} />
+            <Route path="calendar" element={<AppointmentCalendar />} />
             <Route path="profil" element={<Profil />} />
             <Route path="settings" element={<Settings />} />
           </Route>

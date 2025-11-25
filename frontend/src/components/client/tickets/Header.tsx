@@ -1,4 +1,4 @@
-import React, { type SetStateAction } from "react";
+import React, { useEffect, useState, type SetStateAction } from "react";
 import {
   Box,
   Stack,
@@ -7,6 +7,12 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import AppointmentCreator from "./AppointmentCreator";
+import {
+  lastAppointment,
+  type Appointments,
+} from "../../../services/AppointmentServices";
+import { useSnackbar } from "../../../contexts/SnackbarContext";
+import { useTranslation } from "react-i18next";
 
 interface HeaderClientsProps {
   state: string;
@@ -15,6 +21,25 @@ interface HeaderClientsProps {
 }
 
 const Header: React.FC<HeaderClientsProps> = ({ state, set, client }) => {
+  const { showSnackbar } = useSnackbar();
+  const [lastApt, setLastApt] = useState<Appointments | null>(null);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const fetchLastAppointment = async () => {
+      try {
+        const data = await lastAppointment();
+        setLastApt(data);
+      } catch (error) {
+        console.error(error);
+        showSnackbar("Aucun rendez-vous précédent trouvé.", "info");
+        setLastApt(null);
+      }
+    };
+
+    fetchLastAppointment();
+  }, []);
+
   const handleFilter = (
     _: React.MouseEvent<HTMLElement>,
     newFilter: string
@@ -43,15 +68,20 @@ const Header: React.FC<HeaderClientsProps> = ({ state, set, client }) => {
           onChange={handleFilter}
           size="small"
         >
-          <ToggleButton value="all">All</ToggleButton>
-          <ToggleButton value="pending">⏳ Pending</ToggleButton>
-          <ToggleButton value="confirmed">✅ Accepted</ToggleButton>
-          <ToggleButton value="rejected">❌ Rejected</ToggleButton>
-          <ToggleButton value="canceled">💥 Canceled</ToggleButton>
+          <ToggleButton value="all">{t("tickets.btn1")}</ToggleButton>
+          <ToggleButton value="pending">⏳ {t("tickets.btn2")}</ToggleButton>
+          <ToggleButton value="confirmed">✅ {t("tickets.btn3")}</ToggleButton>
+          <ToggleButton value="rejected">❌ {t("tickets.btn4")}</ToggleButton>
+          <ToggleButton value="canceled">💥 {t("tickets.btn5")}</ToggleButton>
         </ToggleButtonGroup>
 
         {/* Action */}
-        {client && <AppointmentCreator />}
+        {client && (
+          <AppointmentCreator
+            lastApt={lastApt ? lastApt : ({} as Appointments)}
+            setLastApt={setLastApt}
+          />
+        )}
       </Stack>
     </Box>
   );

@@ -10,7 +10,8 @@ import {
 } from "@mui/material";
 import { WelcomeHeaderDoctor } from "../../components/doctor/dashboard/WelcomeHeaderDoctor";
 import { DoctorStats } from "../../components/doctor/dashboard/DoctorStats";
-import { TodayAppointments } from "../../components/doctor/dashboard/TodayAppointments";
+import TodayControl from "../../components/doctor/dashboard/TodayControl";
+import TodayConsultations from "../../components/doctor/dashboard/TodayConsultations";
 import { UpcomingSchedule } from "../../components/doctor/dashboard/UpcomingSchedule";
 import { futurAppointment } from "../../services/AppointmentServices";
 import { useSnackbar } from "../../contexts/SnackbarContext";
@@ -53,12 +54,18 @@ const Dashboard = () => {
         <DoctorStats />
       </Box>
 
+      <Card elevation={2} sx={{ borderRadius: 3, my: 2 }}>
+        <CardContent sx={{ p: 3 }}>
+          <TodayConsultations />
+        </CardContent>
+      </Card>
+
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, lg: 8 }}>
           <Stack spacing={3}>
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent sx={{ p: 3 }}>
-                <TodayAppointments />
+                <TodayControl />
               </CardContent>
             </Card>
           </Stack>
@@ -71,11 +78,10 @@ const Dashboard = () => {
                 <UpcomingSchedule schedule={futurData} isLoading={isLoading} />
               </CardContent>
             </Card>
-
-            <NotificationsContainer />
           </Stack>
         </Grid>
       </Grid>
+      <NotificationsContainer />
       {/* <Card elevation={2} sx={{ borderRadius: 3, my: 2 }}>
         <CardContent sx={{ p: 3 }}>
           <Conseils />
@@ -83,7 +89,7 @@ const Dashboard = () => {
       </Card> */}
 
       <Typography textAlign="center" color="text.secondary" sx={{ mt: 4 }}>
-        © 2024 Befiana - Solution Médicale
+        © 2025 Befiana
       </Typography>
     </Container>
   );

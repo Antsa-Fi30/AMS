@@ -1,0 +1,45 @@
+{
+  "home": {
+    "greeting": "Salama",
+    "subgreeting": "Andron'ny dinikao",
+    "patientNow": "Marary ankehitriny",
+    "rdvProg": "Fanendrena voatondro",
+    "plan": "Fandaharana ho avy",
+    "consultFin": "Vita ny consultations",
+    "noQueue": "Tsy misy fifampidinihana amin'izao fotoana izao",
+    "hintNoQueue": "Ny fanendrena aseho ao amin'ny fizarana drafitra ho avy dia haseho eto amin'ny andro",
+    "controltitle": "Fifandraisana voafehy",
+    "Nodata": "Tsy misy fanendrena amin'izao fotoana izao",
+    "hintNoData": "Mipoitra eto ny fanendrena voamarina.",
+    "noDataFutur": "Tsy misy fanendrena manaraka",
+    "hintNoDataFutur": "Ny tapakila voamarina dia hiseho eto",
+    "noDataNotif": "Tsy misy fampilazana mbola",
+    "hintNoDataNotif": "Hiseho eto ny fampandrenesana rehefa misy marary iray ny fangatahana tapakila",
+    "btnCall": "Miantso"
+  },
+  "tickets": {
+    "title": "Fitantanana tapakila",
+    "subtitle": "Mitantana ary manamafy ny fangatahana fanendrena",
+    "btn1": "rehetra",
+    "btn2": "Mihantona",
+    "btn3": "noraisina ho mpikambana",
+    "btn4": "TSY",
+    "btn5": "nofoanana ny",
+    "etiqu": "Lisitry ny tapakila",
+    "Nodata": "Tsy misy tapakila amin'ity volana ity",
+    "hintNoData": "Ny marary rehetra izay manaiky fangatahana fanendrena dia hiseho eto."
+  },
+  "disponibility": {
+    "title": "Ny fotoam-panao",
+    "btn1": "Mamorona varavarankely azo",
+    "btn2": "Toerana",
+    "btn2_1": "Famaranana ny fanovana",
+    "btn3": "Fafao ny toerana rehetra",
+    "btn3_1": "ENY",
+    "btn3_2": "Te hanaisotra ny slot rehetra ve ianao?",
+    "btn3_3": "afa-tsy",
+    "col1": "Fiandohana",
+    "col2": "TAPITRA"
+  },
+  "confirm_btn": "Manamarina"
+}
