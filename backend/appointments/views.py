@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from helpers.sms import send_sms
+from helpers.push import send_doctor_notification
 
 # Create your views here.
 from rest_framework import viewsets, permissions, status
@@ -57,15 +59,71 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         else:
             return Appointment.objects.none()
 
-    def update(self, request, *args, **kwargs):
-        # if "status" in request.data:
-        #     if request.user.role not in ["admin", "doctor"]:
-        #         return Response(
-        #             {"detail": "Non autorisé à changer le statut."},
-        #             status=status.HTTP_403_FORBIDDEN,
-        #         )
+    # def update(self, request, *args, **kwargs):
+    #     # if "status" in request.data:
+    #     #     if request.user.role not in ["admin", "doctor"]:
+    #     #         return Response(
+    #     #             {"detail": "Non autorisé à changer le statut."},
+    #     #             status=status.HTTP_403_FORBIDDEN,
+    #     #         )
 
-        return super().update(request, *args, **kwargs)
+    #     return super().update(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        prev_status = instance.status
+        response = super().update(request, *args, **kwargs)
+
+        instance.refresh_from_db()
+
+        new_status = response.data.get("status")
+
+        if prev_status != "confirmed" and new_status == "confirmed":
+            patient = instance.patient
+            phone = patient.phone_number
+
+            if instance.type == "follow_up":
+                horaire = instance.time
+                message = f"Bonjour {patient.name}, votre RDV du {instance.date} à {horaire} a été confirmé."
+                # message = f"RDV confirmé : {instance.date}, {horaire}. Merci."
+            else:
+                dispo = instance.disponibility
+                horaire = (
+                    f"entre {dispo.start_time} - {dispo.end_time}" if dispo else "N/A"
+                )
+                message = f"Bonjour {patient.name}, votre RDV de consultation du {instance.date} à {horaire} a été confirmé."
+                # message = f"RDV confirmé : {instance.date}, {horaire}. Merci."
+
+            send_sms(to_phone=phone, message=message)
+
+        elif prev_status != "rejected" and new_status == "rejected":
+            patient = instance.patient
+            phone = patient.phone_number
+
+            if instance.type == "follow_up":
+                horaire = instance.time
+                message = f"Bonjour {patient.name}, votre RDV du {horaire},le {instance.date} a été rejeté , noté: {instance.notes}.Merci"
+                # message = (
+                #     f"RDV rejeté : {instance.date}, {horaire}, {instance.notes}, Merci."
+                # )
+
+            else:
+                dispo = instance.disponibility
+                horaire = f"{dispo.start_time} - {dispo.end_time}" if dispo else "N/A"
+                message = f"Bonjour {patient.name}, votre RDV de consultation {instance.date} dans le creneau {horaire} a été rejeté , noté: {instance.notes}."
+                # message = f"RDV consultation rejeté : {instance.date}, {horaire}, {instance.notes}, Merci."
+
+            send_sms(to_phone=phone, message=message)
+
+        elif prev_status != "canceled" and new_status == "canceled":
+            patient = instance.patient
+            phone = patient.phone_number
+            message = f"Votre RDV du {instance.date} a été annulé. Merci."
+
+            # NOTIFICATION PUSH AU DOCTEUR
+            send_doctor_notification(instance)
+
+        return response
 
 
 @api_view(["GET"])
@@ -99,7 +157,7 @@ def appointment_stats(request):
         )
         .order_by("time")
         .first()
-    )   
+    )
 
     last_finished = (
         Appointment.objects.filter(date=today, status="rejected")

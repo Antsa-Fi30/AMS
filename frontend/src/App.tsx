@@ -18,11 +18,16 @@ import Profil from "./pages/doctor/Profil";
 import Settings from "./pages/doctor/Settings";
 import SettingsCli from "./pages/client/SettingsCli";
 import Disponibility from "./pages/doctor/Disponibility";
+import { useWebSocket } from "./hooks/useWebsocket";
 
 const App = () => {
   const dispatch = useDispatch();
+  useWebSocket();
 
   useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
     dispatch(initializeAuth());
   }, [dispatch]);
 

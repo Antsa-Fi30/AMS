@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { CalendarMonth, AccessTime } from "@mui/icons-material";
 import HistoryToggleOffRoundedIcon from "@mui/icons-material/HistoryToggleOffRounded";
-import { useGetAppointmentsQuery } from "../../../services/AppointmentServices";
+import { useGetAllAppointmentsQuery } from "../../../services/AppointmentServices";
 import DetailsDialog from "../../common/DetailsDialog";
 import RejectDialog from "../../common/RejectDialog";
 import EmptyData from "../../common/EmptyData";
@@ -20,7 +20,7 @@ import {
 import { useState, useEffect } from "react";
 
 export const NextAppointment = () => {
-  const { data, isLoading, isFetching } = useGetAppointmentsQuery();
+  const { data, isLoading, isFetching } = useGetAllAppointmentsQuery();
 
   const [dispo, setDispo] = useState<DisponibilityResults[]>([]);
 
@@ -36,8 +36,8 @@ export const NextAppointment = () => {
     fetchDispo();
   }, []);
 
-  const nextAppointment = data?.results
-    .filter((a) => a.status === "confirmed" && !a.finished)
+  const nextAppointment = data
+    ?.filter((a) => a.status === "confirmed" && !a.finished)
     ?.sort(
       (a, b) =>
         (a.date ? new Date(a.date).getTime() : 0) -

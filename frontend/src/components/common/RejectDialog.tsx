@@ -89,12 +89,11 @@ const RejectDialog: React.FC<RejectDialogProps> = ({ appointment, client }) => {
         {client ? (
           <Typography>
             <strong>{`Dr ${appointment.doctor_name}`}</strong> will be notified
-            about this appointment cancelled by SMS
+            about this appointment cancelled
           </Typography>
         ) : (
           <DialogContentText id="alert-dialog-slide-description">
             {`${appointment.patient_name}`} will be notified about the rejection
-            by SMS
           </DialogContentText>
         )}
         {!client && (
