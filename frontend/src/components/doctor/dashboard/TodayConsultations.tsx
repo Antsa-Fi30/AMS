@@ -144,7 +144,7 @@ const TodayConsultations = () => {
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <AccessTime color="primary" sx={{ mr: 1 }} />
         <Typography variant="h6" fontWeight="bold">
-          File d'attente du jour
+          File d'attente de consultations du jour
         </Typography>
       </Box>
 

@@ -81,7 +81,7 @@ const TicketsTableComponent: React.FC<TicketsTableProps> = ({
 
   const totalPages = useMemo(() => {
     if (!data?.count) return 1;
-    return Math.ceil(data.count / 5); // 10 éléments par page (basé sur votre API)
+    return Math.ceil(data.count / 20); // 10 éléments par page (basé sur votre API)
   }, [data?.count]);
 
   // Gérer le changement de page

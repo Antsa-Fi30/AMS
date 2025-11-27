@@ -30,12 +30,12 @@ const DashboardCli = () => {
 
         {/* Activité récente */}
         <Grid size={{ xs: 12, md: 6, lg: 5 }}>
-          <RecentActivity />
+          <HealthTips />
         </Grid>
 
         {/* Conseils santé */}
         <Grid size={{ xs: 12, lg: 3 }}>
-          <HealthTips />
+          <RecentActivity />
         </Grid>
       </Grid>
     </Container>

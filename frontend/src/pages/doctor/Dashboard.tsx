@@ -15,7 +15,7 @@ import TodayConsultations from "../../components/doctor/dashboard/TodayConsultat
 import { UpcomingSchedule } from "../../components/doctor/dashboard/UpcomingSchedule";
 import { futurAppointment } from "../../services/AppointmentServices";
 import { useSnackbar } from "../../contexts/SnackbarContext";
-import NotificationsContainer from "../../components/doctor/dashboard/NotificationsContainer";
+// import NotificationsContainer from "../../components/doctor/dashboard/NotificationsContainer";
 // import Conseils from "../../components/doctor/dashboard/Conseils";
 
 export type Schedule = {
@@ -81,7 +81,7 @@ const Dashboard = () => {
           </Stack>
         </Grid>
       </Grid>
-      <NotificationsContainer />
+      {/* <NotificationsContainer /> */}
       {/* <Card elevation={2} sx={{ borderRadius: 3, my: 2 }}>
         <CardContent sx={{ p: 3 }}>
           <Conseils />
